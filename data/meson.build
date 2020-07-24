@@ -39,3 +39,14 @@ if compile_schemas.found()
     args: ['--strict', '--dry-run', meson.current_source_dir()]
   )
 endif
+
+pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+moduledir = join_paths(pkgdatadir, 'tidalgtk')
+gnome = import('gnome')
+
+gnome.compile_resources('tidalgtk',
+  'com.github.Aurnytoraink.tidalgtk.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
+)

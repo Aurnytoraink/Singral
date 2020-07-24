@@ -18,7 +18,7 @@
 from gi.repository import Gtk
 
 
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/window.ui')
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Gtk.ApplicationWindow):
     __gtype_name__ = 'TidalgtkWindow'
 
