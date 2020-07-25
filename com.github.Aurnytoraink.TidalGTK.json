@@ -23,6 +23,23 @@
     ],
     "modules" : [
         {
+            "name" : "libhandy",
+            "buildsystem" : "meson",
+            "config-opts" : [
+                "-Dtests=false",
+                "-Dexamples=false",
+                "-Dglade_catalog=disabled",
+                "--buildtype=release"
+            ],
+            "sources" : [
+                {
+                    "type" : "git",
+                    "url" : "https://gitlab.gnome.org/GNOME/libhandy",
+                    "tag" : "0.84.0"
+                }
+            ]
+        },
+        {
             "name" : "tidalgtk",
             "builddir" : true,
             "buildsystem" : "meson",
@@ -33,5 +50,3 @@
                 }
             ]
         }
-    ]
-}

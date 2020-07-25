@@ -6,6 +6,7 @@ project('tidalgtk',
 )
 
 i18n = import('i18n')
+dependency('libhandy-1', version :'>=0.0.13')
 
 
 subdir('data')
