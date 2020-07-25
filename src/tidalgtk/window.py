@@ -25,7 +25,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     app_stack = Gtk.Template.Child()
     switchbar_bottom = Gtk.Template.Child()
     player_timebar = Gtk.Template.Child()
-    play_songinfo = Gtk.Template.Child()
+    player_reveal = Gtk.Template.Child()
+    player_songinfo = Gtk.Template.Child()
     enlarge_player_button = Gtk.Template.Child()
     close_player_button = Gtk.Template.Child()
     deck_app = Gtk.Template.Child()
@@ -41,11 +42,11 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         if self.header_switch.get_title_visible():
             self.switchbar_bottom.set_reveal(True)
             self.player_timebar.set_visible(False)
-            self.play_songinfo.set_hexpand(True)
+            self.player_songinfo.set_hexpand(True)
         else:
             self.switchbar_bottom.set_reveal(False)
             self.player_timebar.set_visible(True)
-            self.play_songinfo.set_hexpand(False)
+            self.player_songinfo.set_hexpand(False)
 
     def display_player(self, *_):
         if self.deck_app.get_visible_child_name() == "app_page":
