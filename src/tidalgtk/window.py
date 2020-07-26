@@ -22,6 +22,7 @@ from gi.repository import Gtk, Handy
 class TidalgtkWindow(Handy.ApplicationWindow):
     __gtype_name__ = 'TidalgtkWindow'
 
+    main_stack = Gtk.Template.Child()
     app_stack = Gtk.Template.Child()
     switchbar_bottom = Gtk.Template.Child()
     player_timebar = Gtk.Template.Child()
@@ -31,12 +32,22 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     close_player_button = Gtk.Template.Child()
     deck_app = Gtk.Template.Child()
     header_switch = Gtk.Template.Child()
+    header_stack = Gtk.Template.Child()
+    popup_searchbar = Gtk.Template.Child()
+
+    #Login Page
+    log_username = Gtk.Template.Child()
+    log_password = Gtk.Template.Child()
+    log_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
+        self.switchbar_bottom.connect("event",self.display_pages)
+        self.header_switch.connect("event",self.display_pages)
+        self.log_button.connect("clicked",self.show_apppage)
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
@@ -51,11 +62,21 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     def display_player(self, *_):
         if self.deck_app.get_visible_child_name() == "app_page":
             self.deck_app.set_visible_child_name("player_page")
-            self.switchbar_bottom.set_reveal(False)
-            self.player_reveal.set_reveal_child(False)
         elif self.deck_app.get_visible_child_name() == "player_page":
             self.deck_app.set_visible_child_name("app_page")
-            self.switchbar_bottom.set_reveal(True)
-            self.player_reveal.set_reveal_child(True)
-
             
+    def display_pages(self,*_):
+        if self.app_stack.get_visible_child_name() == "search_page":
+            if self.header_switch.get_title_visible():
+                self.header_stack.set_visible_child_name("search")
+            else:
+                self.popup_searchbar.set_search_mode(True)
+        else:
+            self.header_stack.set_visible_child_name("main")
+            self.popup_searchbar.set_search_mode(False)
+
+    def show_loginpage(self,*_):
+        self.main_stack.set_visible_child_name("login_page")
+
+    def show_apppage(self,*_):
+        self.main_stack.set_visible_child_name("app_page")

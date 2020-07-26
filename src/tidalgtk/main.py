@@ -29,15 +29,25 @@ class Application(Gtk.Application):
     def __init__(self):
         super().__init__(application_id='com.github.Aurnytoraink.TidalGTK',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
+        # This is for test
+        # In the futur, the app will check on startup if a user as already login or not
+        self.login = False
+
     def do_startup(self):
         Gtk.Application.do_startup(self)
         Handy.init()
 
     def do_activate(self):
-        win = self.props.active_window
-        if not win:
-            win = TidalgtkWindow(application=self)
-        win.present()
+        self.win = self.props.active_window
+        if not self.win:
+            self.win = TidalgtkWindow(application=self)
+        self.win.present()
+
+        # Check if or not the user has already logged in
+        if self.login:
+            self.win.show_apppage()
+        else:
+            self.win.show_loginpage()
 
 
 def main(version):
