@@ -52,7 +52,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.close_player_button.connect("clicked",self.display_player)
         self.switchbar_bottom.connect("event",self.display_pages)
         self.header_switch.connect("event",self.display_pages)
-        self.log_button.connect("clicked",self.show_apppage)
         # Connect player element
         self.player_play_button.connect("clicked",self.player_pause)
 
@@ -87,12 +86,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.header_stack.set_visible_child_name("main")
             self.popup_searchbar.set_search_mode(False)
 
-    def show_loginpage(self,*_):
-        self.main_stack.set_visible_child_name("login_page")
-
-    def show_apppage(self,*_):
-        self.main_stack.set_visible_child_name("app_page")
-
     def test(self,*_):
         # file:///home/aurnytoraink/Musique/L.E.J/Pas%20Peur/16%20Pas%20Peur.flac
         # https://aurnytoraink.ddns.net/s/HWcQEncSwnWf6gL/download?path=%2FEnjoy%20the%20Night&files=01%20Enjoy%20the%20Night.flac
@@ -114,7 +107,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.state = True
 
     def player_pause(self,*_):
-        print(self.player.player.get_state(Gst.CLOCK_TIME_NONE)["state"])
         if self.player.player.get_state(Gst.CLOCK_TIME_NONE) == Gst.State.PLAYING:
             self.player.change_state(2)
         if self.player.player.get_state(Gst.CLOCK_TIME_NONE) == Gst.State.PAUSED:

@@ -45,9 +45,9 @@ class Application(Gtk.Application):
 
         # Check if or not the user has already logged in
         if self.login:
-            self.win.show_apppage()
+            self.win.main_stack.set_visible_child_name("app_page")
         else:
-            self.win.show_loginpage()
+            self.win.main_stack.set_visible_child_name("login_page")
 
 
 def main(version):
