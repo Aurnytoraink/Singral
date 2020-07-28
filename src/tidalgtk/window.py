@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Gst, Handy
+from gi.repository import Gtk, Handy
 # from tidalgtk.api.session import Session
-from tidalgtk.player import GstPlayer
+from tidalgtk.gst import GstPlayer
+from tidalgtk.player import Player
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -35,6 +36,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     header_switch = Gtk.Template.Child()
     header_stack = Gtk.Template.Child()
     popup_searchbar = Gtk.Template.Child()
+    test_player_button = Gtk.Template.Child()
 
     #Login Page
     log_username = Gtk.Template.Child()
@@ -43,23 +45,26 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     #Player UI
     player_play_button = Gtk.Template.Child()
+    player_button_image = Gtk.Template.Child()
+
+    #Enlarge player UI
+    playerE_play_button = Gtk.Template.Child()
+    playerE_button_image = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
-        #self.enlarge_player_button.connect("clicked",self.display_player)
-        self.enlarge_player_button.connect("clicked",self.test)
+        self.enlarge_player_button.connect("clicked",self.display_player)
+        self.test_player_button.connect("clicked",self.test)
         self.close_player_button.connect("clicked",self.display_player)
         self.switchbar_bottom.connect("event",self.display_pages)
         self.header_switch.connect("event",self.display_pages)
         self.connect("delete-event",self.close_win)
-        # Connect player element
-        self.player_play_button.connect("clicked",self.player_pause)
 
         # init player
+        Player(self)
         self.player = GstPlayer()
-        self.player.change_state(0)
-        self.state = False
+        self.player.state = 0
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
@@ -88,8 +93,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.popup_searchbar.set_search_mode(False)
 
     def test(self,*_):
-        # file:///home/aurnytoraink/Musique/L.E.J/Pas%20Peur/16%20Pas%20Peur.flac
-        # https://aurnytoraink.ddns.net/s/HWcQEncSwnWf6gL/download?path=%2FEnjoy%20the%20Night&files=01%20Enjoy%20the%20Night.flac
         filechooser = Gtk.FileChooserDialog("Open File",
                                            self,
                                            Gtk.FileChooserAction.OPEN,
@@ -99,20 +102,12 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         response = filechooser.run()
         if response == Gtk.ResponseType.OK:
             filename = filechooser.get_uri()
-            print(filename)
+            self.player.state = 0
+            self.player.change_track(filename)
+            self.player.state = 3
         filechooser.destroy()
-        self.player.change_state(0)
-        self.player.url(filename)
-        self.player.change_state(3)
-        self.player.loop.run()
-        self.state = True
-
-    def player_pause(self,*_):
-        if self.player.player.get_state(Gst.CLOCK_TIME_NONE) == Gst.State.PLAYING:
-            self.player.change_state(2)
-        if self.player.player.get_state(Gst.CLOCK_TIME_NONE) == Gst.State.PAUSED:
-            self.player.change_state(3)
+        self.player_reveal.set_reveal_child(True)
 
     # Allow app to be totally close
     def close_win(self,*_):
-        self.player.loop.quit()
+        self.player.state = 0

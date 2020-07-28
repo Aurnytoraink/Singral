@@ -285,11 +285,13 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkImage">
+                              <object class="GtkButton" id="test_player_button">
+                                <property name="label" translatable="yes">Test player with a song</property>
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="pixel_size">81</property>
-                                <property name="icon_name">user-home-symbolic</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
                               </object>
                             </child>
                           </object>
@@ -399,8 +401,7 @@
                   <object class="GtkRevealer" id="player_reveal">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="transition_type">none</property>
-                    <property name="reveal_child">True</property>
+                    <property name="transition_type">slide-up</property>
                     <child>
                       <object class="GtkEventBox">
                         <property name="visible">True</property>
@@ -576,7 +577,7 @@
                                       <object class="GtkImage" id="player_button_image">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="icon_name">media-playback-start-symbolic</property>
+                                        <property name="icon_name">media-playback-pause-symbolic</property>
                                       </object>
                                     </child>
                                   </object>
@@ -843,17 +844,17 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton" id="player_play_button1">
+                          <object class="GtkButton" id="playerE_play_button">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="valign">center</property>
                             <child>
-                              <object class="GtkImage" id="player_button_image1">
+                              <object class="GtkImage" id="playerE_button_image">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="pixel_size">48</property>
-                                <property name="icon_name">media-playback-start-symbolic</property>
+                                <property name="icon_name">media-playback-pause-symbolic</property>
                               </object>
                             </child>
                           </object>

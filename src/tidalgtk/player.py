@@ -1,41 +1,34 @@
-import gi
-gi.require_version('Gst', '1.0')
-from gi.repository import Gst, GLib
+# player.py
+#
+# Copyright 2020 Aurnytoraink
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class GstPlayer():
-    def __init__(self):
+from gi.repository import Gtk, Handy
+class Player(Handy.ApplicationWindow):
+    def __init__(self, application):
         super().__init__()
+        self.app = application
+        self.app.player_play_button.connect("clicked",self.player_pause)
+        self.app.playerE_play_button.connect("clicked",self.player_pause)
 
-        Gst.init()
-
-        self.loop = GLib.MainLoop()
-
-        self.player = Gst.ElementFactory.make('playbin3', 'player')
-        self.bus = self.player.get_bus()
-        self.bus.add_signal_watch()
-        self.bus.connect("message", self.bus_call, self.loop)
-
-    def bus_call(self, bus, message, loop):
-        t = message.type
-        if t == Gst.MessageType.EOS:
-            sys.stdout.write("End-of-stream\n")
-            loop.quit()
-        elif t == Gst.MessageType.ERROR:
-            err, debug = message.parse_error()
-            sys.stderr.write("Error: %s: %s\n" % (err, debug))
-            loop.quit()
-        return True
-
-    def url(self, url):
-        self.player.set_property('uri', url)
-
-    def change_state(self, state):
-        if state == 2:
-            self.player.set_state(Gst.State.PAUSED)
-        if state == 0:
-            self.player.set_state(Gst.State.NULL)
-        if state == 1:
-            self.player.set_state(Gst.State.READY)
-        if state == 3:
-            self.player.set_state(Gst.State.PLAYING)
-
+    def player_pause(self,*_):
+        if self.app.player._state == 3:
+            self.app.player.state = 2
+            self.app.player_button_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
+            self.app.playerE_button_image.set_from_icon_name("media-playback-start-symbolic",-1)
+        elif self.app.player._state == 2:
+            self.app.player.state = 3
+            self.app.player_button_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
+            self.app.playerE_button_image.set_from_icon_name("media-playback-pause-symbolic",-1)
