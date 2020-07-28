@@ -17,7 +17,6 @@
 
 from gi.repository import Gtk, Handy
 # from tidalgtk.api.session import Session
-from tidalgtk.gst import GstPlayer
 from tidalgtk.player import Player
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
@@ -55,16 +54,12 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
-        self.test_player_button.connect("clicked",self.test)
         self.close_player_button.connect("clicked",self.display_player)
         self.switchbar_bottom.connect("event",self.display_pages)
         self.header_switch.connect("event",self.display_pages)
-        self.connect("delete-event",self.close_win)
 
-        # init player
+        # Init player
         Player(self)
-        self.player = GstPlayer()
-        self.player.state = 0
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
@@ -91,23 +86,3 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         else:
             self.header_stack.set_visible_child_name("main")
             self.popup_searchbar.set_search_mode(False)
-
-    def test(self,*_):
-        filechooser = Gtk.FileChooserDialog("Open File",
-                                           self,
-                                           Gtk.FileChooserAction.OPEN,
-                                           ("_Cancel", Gtk.ResponseType.CANCEL,
-                                            "_Open", Gtk.ResponseType.OK)
-                                           )
-        response = filechooser.run()
-        if response == Gtk.ResponseType.OK:
-            filename = filechooser.get_uri()
-            self.player.state = 0
-            self.player.change_track(filename)
-            self.player.state = 3
-        filechooser.destroy()
-        self.player_reveal.set_reveal_child(True)
-
-    # Allow app to be totally close
-    def close_win(self,*_):
-        self.player.state = 0

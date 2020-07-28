@@ -16,19 +16,51 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from gi.repository import Gtk, Handy
+from tidalgtk.gst import GstPlayer
+
 class Player(Handy.ApplicationWindow):
     def __init__(self, application):
         super().__init__()
-        self.app = application
-        self.app.player_play_button.connect("clicked",self.player_pause)
-        self.app.playerE_play_button.connect("clicked",self.player_pause)
 
-    def player_pause(self,*_):
-        if self.app.player._state == 3:
-            self.app.player.state = 2
+        # Init GstPlayer
+        self.player = GstPlayer()
+        self.player.state = 0
+
+        self.app = application
+        self.app.player_play_button.connect("clicked",self.play_pause)
+        self.app.playerE_play_button.connect("clicked",self.play_pause)
+        self.app.connect("delete-event",self.close_win)
+        self.app.test_player_button.connect("clicked",self.test)
+
+    def play_pause(self,*_):
+        if self.player._state == 3:
+            self.player.state = 2
             self.app.player_button_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
             self.app.playerE_button_image.set_from_icon_name("media-playback-start-symbolic",-1)
-        elif self.app.player._state == 2:
-            self.app.player.state = 3
+        elif self.player._state == 2:
+            self.player.state = 3
             self.app.player_button_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
             self.app.playerE_button_image.set_from_icon_name("media-playback-pause-symbolic",-1)
+
+    def play(self, track, title, artist, cover):
+        return
+
+    # Allow app to be totally close
+    def close_win(self,*_):
+        self.player.state = 0
+
+    def test(self,*_):
+        filechooser = Gtk.FileChooserDialog("Open File",
+                                           self.app,
+                                           Gtk.FileChooserAction.OPEN,
+                                           ("_Cancel", Gtk.ResponseType.CANCEL,
+                                            "_Open", Gtk.ResponseType.OK)
+                                           )
+        response = filechooser.run()
+        if response == Gtk.ResponseType.OK:
+            filename = filechooser.get_uri()
+            self.player.state = 0
+            self.player.change_track(filename)
+            self.player.state = 3
+        filechooser.destroy()
+        self.app.player_reveal.set_reveal_child(True)
