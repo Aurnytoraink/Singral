@@ -29,8 +29,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     player_timebar = Gtk.Template.Child()
     player_reveal = Gtk.Template.Child()
     player_songinfo = Gtk.Template.Child()
-    enlarge_player_button = Gtk.Template.Child()
-    close_player_button = Gtk.Template.Child()
+
     deck_app = Gtk.Template.Child()
     header_switch = Gtk.Template.Child()
     header_stack = Gtk.Template.Child()
@@ -43,12 +42,21 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_button = Gtk.Template.Child()
 
     #Player UI
+    enlarge_player_button = Gtk.Template.Child()
     player_play_button = Gtk.Template.Child()
-    player_button_image = Gtk.Template.Child()
+    player_play_image = Gtk.Template.Child()
+    player_cover = Gtk.Template.Child()
+    player_title = Gtk.Template.Child()
+    player_artist = Gtk.Template.Child()
+
 
     #Enlarge player UI
+    close_player_button = Gtk.Template.Child()
     playerE_play_button = Gtk.Template.Child()
-    playerE_button_image = Gtk.Template.Child()
+    playerE_play_image = Gtk.Template.Child()
+    playerE_cover = Gtk.Template.Child()
+    playerE_title = Gtk.Template.Child()
+    playerE_artist = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
