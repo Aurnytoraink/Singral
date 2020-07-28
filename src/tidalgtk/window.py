@@ -52,6 +52,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.close_player_button.connect("clicked",self.display_player)
         self.switchbar_bottom.connect("event",self.display_pages)
         self.header_switch.connect("event",self.display_pages)
+        self.connect("delete-event",self.close_win)
         # Connect player element
         self.player_play_button.connect("clicked",self.player_pause)
 
@@ -111,3 +112,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.player.change_state(2)
         if self.player.player.get_state(Gst.CLOCK_TIME_NONE) == Gst.State.PAUSED:
             self.player.change_state(3)
+
+    # Allow app to be totally close
+    def close_win(self,*_):
+        self.player.loop.quit()
