@@ -34,7 +34,10 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     header_switch = Gtk.Template.Child()
     header_stack = Gtk.Template.Child()
     popup_searchbar = Gtk.Template.Child()
+
+    # For test only
     test_player_button = Gtk.Template.Child()
+    test_stop_button = Gtk.Template.Child()
 
     #Login Page
     log_username = Gtk.Template.Child()
@@ -42,7 +45,10 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_button = Gtk.Template.Child()
 
     #Player UI
+    duration_scale = Gtk.Template.Child()
     enlarge_player_button = Gtk.Template.Child()
+    player_actual_duration = Gtk.Template.Child()
+    player_total_duration = Gtk.Template.Child()
     player_play_button = Gtk.Template.Child()
     player_play_image = Gtk.Template.Child()
     player_cover = Gtk.Template.Child()
@@ -51,6 +57,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
 
     #Enlarge player UI
+    playerE_actual_duration = Gtk.Template.Child()
+    playerE_total_duration = Gtk.Template.Child()
     close_player_button = Gtk.Template.Child()
     playerE_play_button = Gtk.Template.Child()
     playerE_play_image = Gtk.Template.Child()

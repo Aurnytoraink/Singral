@@ -17,9 +17,14 @@
 
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import Gst
+from gi.repository import Gst, GObject
 
-class GstPlayer():
+class GstPlayer(GObject.GObject):
+    __gsignals__ = {
+        "clock-tick": (GObject.SignalFlags.RUN_FIRST, None, (int, )),
+        "stream-finished": (GObject.SignalFlags.RUN_FIRST, None, ())
+    }
+
     def __init__(self):
         super().__init__()
 
@@ -31,10 +36,12 @@ class GstPlayer():
 
         self.bus.connect("message::eos", self.on_bus_eos)
         self.bus.connect("message::error", self.on_bus_error)
+        self.bus.connect("message::new-clock", self.new_clock)
 
-        self.player.connect("about-to-finish", self.on_stream_about_to_finish)
+        self.player.connect("about-to-finish", self.on_about_to_finish)
 
         self._state = 0
+        self._tick = 0
 
 
     def on_bus_error(self,*_):
@@ -65,7 +72,20 @@ class GstPlayer():
             self.player.set_state(Gst.State.PLAYING)
             self._state = 3
 
-    def on_stream_about_to_finish(self, *_):
-        print("finish")
-        # Générer un signal qui sera envoyer à player.py
+    def on_about_to_finish(self, *_):
+        self.emit("stream-finished")
 
+    def _get_duration(self,*_):
+        return int(self.player.query_position(Gst.Format.TIME)[1] / 1000000000)
+
+    #TODO Find a way to stop the clock when the song finished
+    def new_clock(self, bus, message):
+        clock = message.parse_new_clock()
+        id = clock.new_periodic_id(0, 1 * Gst.SECOND)
+        clock.id_wait_async(id, self._on_clock_tick, None)
+
+    def _on_clock_tick(self, clock, time, id, data):
+        self.emit("clock-tick", self._tick)
+        self._tick += 1
+
+        

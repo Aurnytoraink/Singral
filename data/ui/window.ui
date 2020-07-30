@@ -3,7 +3,7 @@
 <interface>
   <requires lib="gtk+" version="3.22"/>
   <requires lib="libhandy" version="1.0"/>
-  <object class="GtkAdjustment" id="adjustment1">
+  <object class="GtkAdjustment" id="duration_scale">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
@@ -285,13 +285,43 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkButton" id="test_player_button">
-                                <property name="label" translatable="yes">Test player with a song</property>
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
+                                <property name="can_focus">False</property>
                                 <property name="halign">center</property>
                                 <property name="valign">center</property>
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">8</property>
+                                <child>
+                                  <object class="GtkButton" id="test_player_button">
+                                    <property name="label" translatable="yes">Test player with a song</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="test_stop_button">
+                                    <property name="label" translatable="yes">Stop</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -411,8 +441,6 @@
                             <property name="height_request">50</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="margin_left">5</property>
-                            <property name="margin_right">5</property>
                             <property name="margin_start">5</property>
                             <property name="margin_end">5</property>
                             <property name="spacing">6</property>
@@ -496,8 +524,6 @@
                               <object class="GtkBox" id="player_timebar">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="margin_left">10</property>
-                                <property name="margin_right">10</property>
                                 <property name="margin_start">10</property>
                                 <property name="margin_end">10</property>
                                 <child>
@@ -516,7 +542,7 @@
                                   <object class="GtkScale">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="adjustment">adjustment1</property>
+                                    <property name="adjustment">duration_scale</property>
                                     <property name="draw_value">False</property>
                                   </object>
                                   <packing>
@@ -781,7 +807,7 @@
                     <property name="margin_start">10</property>
                     <property name="margin_end">10</property>
                     <child>
-                      <object class="GtkLabel" id="player_actual_duration1">
+                      <object class="GtkLabel" id="playerE_actual_duration">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">0:00</property>
@@ -796,7 +822,7 @@
                       <object class="GtkScale">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="adjustment">adjustment1</property>
+                        <property name="adjustment">duration_scale</property>
                         <property name="draw_value">False</property>
                       </object>
                       <packing>
@@ -806,7 +832,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="player_total_duration1">
+                      <object class="GtkLabel" id="playerE_total_duration">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">0:00</property>
