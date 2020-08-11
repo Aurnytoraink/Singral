@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GdkPixbuf, Gdk
+from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
 from tidalgtk.gst import GstPlayer
 
 class Player(Handy.ApplicationWindow):
@@ -32,6 +32,8 @@ class Player(Handy.ApplicationWindow):
         self.app.connect("delete-event",self.close_win)
         self.app.test_player_button.connect("clicked",self.test)
         self.app.test_stop_button.connect("clicked",self.stop)
+        self.app.player_duration_scale.connect("change-value",self.set_seek)
+        self.app.playerE_duration_scale.connect("change-value",self.set_seek)
 
         self.player.connect("clock-tick",self.update_duration)
         self.player.connect("stream-finished",self.stop)
@@ -54,6 +56,7 @@ class Player(Handy.ApplicationWindow):
         self.player.state = 0
         self.player.change_track(track)
         self.player.state = 3
+        print(dir(self.player.player))
         self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
         self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
         self.app.player_title.set_text(title)
@@ -66,7 +69,8 @@ class Player(Handy.ApplicationWindow):
             secondes = "0" + str(secondes)
         self.app.player_total_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
         self.app.playerE_total_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self._current_duration = self.app.duration_scale.props.lower
+
+        #Set duration scale
         self.app.duration_scale.set_upper(float(duration))
         self.app.duration_scale.set_value(self.app.duration_scale.props.lower)
 
@@ -80,17 +84,39 @@ class Player(Handy.ApplicationWindow):
             self.app.playerE_cover.set_from_icon_name("folder-music-symbolic",316)
 
     def stop(self,*_):
-        print("prou ahah")
         self.player.state = 0
         self.app.player_actual_duration.set_text("0:00")
         self.app.playerE_actual_duration.set_text("0:00")
         self.app.player_play_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
         self.app.playerE_play_image.set_from_icon_name("media-playback-start-symbolic",-1)
+        self.app.duration_scale.set_value(self.app.duration_scale.props.lower)
 
 
     # Allow app to be totally close
     def close_win(self,*_):
         self.player.state = 0
+
+    def update_duration(self,*_):
+        duration = self.player._get_duration()
+        minutes = int(duration/60)
+        secondes = duration % 60
+        if secondes < 10:
+            secondes = "0" + str(secondes)
+        self.app.player_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
+        self.app.playerE_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
+        self.app.duration_scale.set_value(self.player._get_duration())
+
+    #When user change the current duration
+    def set_seek(self, *args):
+        value = int(self.app.duration_scale.get_value())
+        if self.player.seek(value):
+            self.app.duration_scale.set_value(self.player._get_duration())
+
+
+
+
+
+
 
     # Only here for tests
     def test(self,*_):
@@ -107,13 +133,4 @@ class Player(Handy.ApplicationWindow):
             self.app.player_reveal.set_reveal_child(True)
         filechooser.destroy()
         
-    def update_duration(self,*_):
-        self._current_duration += 1.0
-        duration = self.player._get_duration()
-        minutes = int(duration/60)
-        secondes = duration % 60
-        if secondes < 10:
-            secondes = "0" + str(secondes)
-        self.app.player_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.playerE_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.duration_scale.set_value(self._current_duration)
+    

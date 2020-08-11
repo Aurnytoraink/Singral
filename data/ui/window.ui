@@ -25,6 +25,7 @@
               <object class="HdyHeaderBar">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="has_focus">True</property>
                 <property name="title" translatable="yes">Tidal</property>
                 <property name="show_close_button">True</property>
               </object>
@@ -63,30 +64,48 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkEntry" id="log_password">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="placeholder_text" translatable="yes">Password</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkEntry" id="log_password">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="placeholder_text" translatable="yes">Password</property>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="log_button">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <child>
+                              <object class="GtkImage">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="icon_name">step-in-symbolic</property>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <style>
+                          <class name="linked"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="log_button">
-                        <property name="label" translatable="yes">Login</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="halign">center</property>
-                        <property name="margin_top">5</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
@@ -113,7 +132,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_top">5</property>
-                    <property name="label" translatable="yes">Or login with social account</property>
+                    <property name="label" translatable="yes">Or login with your token</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -126,7 +145,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="margin_bottom">15</property>
-                    <property name="label" translatable="yes">(The app won't save your creditential information)</property>
+                    <property name="label" translatable="yes">Click here to learn how to obtain your personal token</property>
                     <attributes>
                       <attribute name="style" value="italic"/>
                       <attribute name="weight" value="book"/>
@@ -143,38 +162,31 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkButton" id="log_twitter">
-                        <property name="label" translatable="yes">Twitter</property>
+                      <object class="GtkEntry" id="token_entry">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="placeholder_text" translatable="yes">Paste your token</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">0</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="log_facebook">
-                        <property name="label" translatable="yes">Facebook</property>
+                      <object class="GtkButton" id="log_token">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="log_apple">
-                        <property name="label" translatable="yes">Apple</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">dialog-password-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -187,7 +199,7 @@
                     </style>
                   </object>
                   <packing>
-                    <property name="expand">True</property>
+                    <property name="expand">False</property>
                     <property name="fill">True</property>
                     <property name="position">4</property>
                   </packing>
@@ -539,7 +551,7 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkScale">
+                                  <object class="GtkScale" id="player_duration_scale">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="adjustment">duration_scale</property>
@@ -724,6 +736,7 @@
                     <property name="can_focus">False</property>
                     <property name="margin_start">15</property>
                     <property name="margin_end">15</property>
+                    <property name="spacing">6</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -768,11 +781,18 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
-                        <property name="label" translatable="yes">button</property>
+                      <object class="GtkButton" id="add_toplaylist_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="valign">center</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">add-toplaylist-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -781,11 +801,18 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
-                        <property name="label" translatable="yes">button</property>
+                      <object class="GtkButton" id="like_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
+                        <property name="valign">center</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">heart-outline-thin-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -808,6 +835,7 @@
                     <property name="margin_end">10</property>
                     <child>
                       <object class="GtkLabel" id="playerE_actual_duration">
+                        <property name="width_request">-1</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">0:00</property>
@@ -819,10 +847,12 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkScale">
+                      <object class="GtkScale" id="playerE_duration_scale">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="adjustment">duration_scale</property>
+                        <property name="lower_stepper_sensitivity">on</property>
+                        <property name="upper_stepper_sensitivity">on</property>
                         <property name="draw_value">False</property>
                       </object>
                       <packing>

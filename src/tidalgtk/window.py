@@ -49,6 +49,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     enlarge_player_button = Gtk.Template.Child()
     player_actual_duration = Gtk.Template.Child()
     player_total_duration = Gtk.Template.Child()
+    player_duration_scale = Gtk.Template.Child()
     player_play_button = Gtk.Template.Child()
     player_play_image = Gtk.Template.Child()
     player_cover = Gtk.Template.Child()
@@ -56,9 +57,11 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     player_artist = Gtk.Template.Child()
 
 
+
     #Enlarge player UI
     playerE_actual_duration = Gtk.Template.Child()
     playerE_total_duration = Gtk.Template.Child()
+    playerE_duration_scale = Gtk.Template.Child()
     close_player_button = Gtk.Template.Child()
     playerE_play_button = Gtk.Template.Child()
     playerE_play_image = Gtk.Template.Child()

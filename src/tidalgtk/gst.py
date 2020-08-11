@@ -38,7 +38,7 @@ class GstPlayer(GObject.GObject):
         self.bus.connect("message::error", self.on_bus_error)
         self.bus.connect("message::new-clock", self.new_clock)
 
-        self.player.connect("about-to-finish", self.on_about_to_finish)
+        #self.player.connect("about-to-finish", self.on_about_to_finish)
 
         self._state = 0
         self._tick = 0
@@ -47,13 +47,18 @@ class GstPlayer(GObject.GObject):
     def on_bus_error(self,*_):
         return
 
-    def on_bus_eos(self,*_):
-        print("Finished")
+    def on_bus_eos(self, bus, message):
+        self.emit("stream-finished")
+        return
+        #Envoie un signal
+        #Permet de passer à la musique suivante si existe
 
     def change_track(self, url):
         self.player.set_property('uri', url)
 
-    @property
+    @GObject.Property(
+        type=int, flags=GObject.ParamFlags.READWRITE
+        | GObject.ParamFlags.EXPLICIT_NOTIFY)
     def state(self):
         return self._state
 
@@ -73,7 +78,9 @@ class GstPlayer(GObject.GObject):
             self._state = 3
 
     def on_about_to_finish(self, *_):
-        self.emit("stream-finished")
+        return
+        #Envoie un signal
+        #Permet de précharger le prochain titre si existe
 
     def _get_duration(self,*_):
         return int(self.player.query_position(Gst.Format.TIME)[1] / 1000000000)
@@ -87,5 +94,15 @@ class GstPlayer(GObject.GObject):
     def _on_clock_tick(self, clock, time, id, data):
         self.emit("clock-tick", self._tick)
         self._tick += 1
+
+    def seek(self, position):
+        if self._state == 0:
+            return False
+
+        self.player.seek_simple(Gst.Format.TIME,
+                                      Gst.SeekFlags.FLUSH |
+                                      Gst.SeekFlags.KEY_UNIT,
+                                      position * 1000000000)
+        return True
 
         
