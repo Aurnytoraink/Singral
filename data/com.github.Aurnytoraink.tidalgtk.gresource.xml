@@ -9,5 +9,6 @@
     <file preprocess="xml-stripblanks">icons/add-toplaylist-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/step-in-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/media-playlist-norepeat-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/media-playlist-noshuffle-symbolic.svg</file>
   </gresource>
 </gresources>

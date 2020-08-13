@@ -18,6 +18,7 @@
 from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
 from tidalgtk.gst import GstPlayer
 from tidalgtk.models import Track
+import random
 
 class Player(Handy.ApplicationWindow):
     def __init__(self, application):
@@ -39,7 +40,8 @@ class Player(Handy.ApplicationWindow):
         self.app.player_duration_scale.connect("change-value",self.set_seek)
         self.app.playerE_duration_scale.connect("change-value",self.set_seek)
         self.app.like_button.connect("clicked",self.update_like)
-        self.app.playerE_repeat_button.connect("clicked",self.update_repeat_statue)
+        self.app.playerE_repeat_button.connect("clicked",self.update_repeat)
+        self.app.playerE_shuffle_button.connect("clicked",self.update_shuffle)
 
         self.app.test_player_button.connect("clicked",self.test)
 
@@ -51,6 +53,8 @@ class Player(Handy.ApplicationWindow):
         self.shuffle_state = False
 
         self.queue = []
+        #The saved queue is used when you user want to disable shuffle and returns to the original queues
+        self.saved_queue = []
         self.current_song = 0
 
         #THIS IS FOR TEST ONLY
@@ -114,11 +118,8 @@ class Player(Handy.ApplicationWindow):
         self.update_queue()
 
     def stop(self):
-        self.app.player_actual_duration.set_text("0:00")
-        self.app.playerE_actual_duration.set_text("0:00")
         self.app.player_play_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
         self.app.playerE_play_image.set_from_icon_name("media-playback-start-symbolic",-1)
-        self.app.duration_scale.set_value(self.app.duration_scale.props.lower)
 
     def has_next(self):
         if self.current_song >= (len(self.queue) - 1):
@@ -141,15 +142,14 @@ class Player(Handy.ApplicationWindow):
                 self.stop()
 
     def prev(self,*_):
-        if self.repeat_state == 2 or self.current_song == 0:
+        if self.repeat_state == 2 or self.current_song == 0 or self.player._get_duration() > 3:
             self.play(self.queue[self.current_song])
             return
 
-        #if duration>2 then make it play it restart the song
         self.current_song -= 1
         self.play(self.queue[self.current_song])
 
-    # Allow app to be totally close
+    #Stop music when user closes window
     def close_win(self,*_):
         self.player.state = 0
 
@@ -179,7 +179,7 @@ class Player(Handy.ApplicationWindow):
             self.queue[self.current_song].like = True
             self.app.like_button_img.set_from_icon_name("heart-filled-symbolic",Gtk.IconSize.BUTTON)
 
-    def update_repeat_statue(self,*_):
+    def update_repeat(self,*_):
         if self.repeat_state == 2:
             self.repeat_state = 0
         else:
@@ -193,6 +193,24 @@ class Player(Handy.ApplicationWindow):
             self.app.repeat_state_img.set_from_icon_name("media-playlist-repeat-symbolic",Gtk.IconSize.BUTTON)
         if self.repeat_state == 2:
             self.app.repeat_state_img.set_from_icon_name("media-playlist-repeat-song-symbolic",Gtk.IconSize.BUTTON)
+
+    def update_shuffle(self,*_):
+        if self.shuffle_state is False:
+            self.shuffle_state = True
+            current_song = self.queue[self.current_song]
+            self.saved_queue = self.queue.copy()
+            random.shuffle(self.queue)
+            self.queue.remove(current_song)
+            self.queue.insert(0,current_song)
+            self.current_song = 0
+            self.app.shuffle_state_img.set_from_icon_name("media-playlist-shuffle-symbolic",Gtk.IconSize.BUTTON)
+        else:
+            self.shuffle_state = False
+            current_song = self.queue[self.current_song]
+            self.queue = self.saved_queue.copy()
+            self.current_song = self.queue.index(current_song)
+            self.app.shuffle_state_img.set_from_icon_name("media-playlist-noshuffle-symbolic",Gtk.IconSize.BUTTON)
+        self.update_queue()
 
 
     #When user change the current duration
