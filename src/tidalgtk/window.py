@@ -35,10 +35,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     header_stack = Gtk.Template.Child()
     popup_searchbar = Gtk.Template.Child()
 
-    # For test only
-    test_player_button = Gtk.Template.Child()
-    test_stop_button = Gtk.Template.Child()
-
     #Login Page
     log_username = Gtk.Template.Child()
     log_password = Gtk.Template.Child()
@@ -52,6 +48,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     player_duration_scale = Gtk.Template.Child()
     player_play_button = Gtk.Template.Child()
     player_play_image = Gtk.Template.Child()
+    player_prev_button = Gtk.Template.Child()
+    player_next_button = Gtk.Template.Child()
     player_cover = Gtk.Template.Child()
     player_title = Gtk.Template.Child()
     player_artist = Gtk.Template.Child()
@@ -65,9 +63,21 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     close_player_button = Gtk.Template.Child()
     playerE_play_button = Gtk.Template.Child()
     playerE_play_image = Gtk.Template.Child()
+    playerE_prev_button = Gtk.Template.Child()
+    playerE_next_button = Gtk.Template.Child()
     playerE_cover = Gtk.Template.Child()
     playerE_title = Gtk.Template.Child()
     playerE_artist = Gtk.Template.Child()
+    playerE_shuffle_button = Gtk.Template.Child()
+    shuffle_state_img = Gtk.Template.Child()
+    playerE_repeat_button = Gtk.Template.Child()
+    repeat_state_img = Gtk.Template.Child()
+    like_button_img = Gtk.Template.Child()
+    like_button = Gtk.Template.Child()
+
+
+    # For test only
+    test_player_button = Gtk.Template.Child()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -79,6 +89,16 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
         # Init player
         Player(self)
+
+        #Setup CSS
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_resource('/com/github/Aurnytoraink/TidalGTK/css/style.css')
+        Gtk.StyleContext.add_provider_for_screen(
+            self.get_screen(), css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.playerE_play_button.get_style_context().add_class("pause_button")
+        self.playerE_next_button.get_style_context().add_class("next_button")
+        self.enlarge_player_button.get_style_context().add_class("enlarge_button")
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():

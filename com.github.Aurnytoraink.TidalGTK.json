@@ -51,5 +51,10 @@
                 }
             ]
         }
-   ]
+    ],
+    "build-options" : {
+        "env" : {
+            "G_MESSAGES_DEBUG=" : "False"
+        }
+    }
 }
