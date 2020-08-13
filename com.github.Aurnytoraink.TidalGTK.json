@@ -7,6 +7,7 @@
     "finish-args" : [
         "--share=network",
         "--share=ipc",
+        "--socket=pulseaudio",
         "--socket=fallback-x11",
         "--socket=wayland"
     ],
@@ -50,5 +51,10 @@
                 }
             ]
         }
-   ]
+    ],
+    "build-options" : {
+        "env" : {
+            "G_MESSAGES_DEBUG=" : "False"
+        }
+    }
 }

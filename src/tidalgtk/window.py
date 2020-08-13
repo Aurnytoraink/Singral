@@ -17,6 +17,7 @@
 
 from gi.repository import Gtk, Handy
 # from tidalgtk.api.session import Session
+from tidalgtk.player import Player
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -28,8 +29,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     player_timebar = Gtk.Template.Child()
     player_reveal = Gtk.Template.Child()
     player_songinfo = Gtk.Template.Child()
-    enlarge_player_button = Gtk.Template.Child()
-    close_player_button = Gtk.Template.Child()
+
     deck_app = Gtk.Template.Child()
     header_switch = Gtk.Template.Child()
     header_stack = Gtk.Template.Child()
@@ -40,6 +40,45 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_password = Gtk.Template.Child()
     log_button = Gtk.Template.Child()
 
+    #Player UI
+    duration_scale = Gtk.Template.Child()
+    enlarge_player_button = Gtk.Template.Child()
+    player_actual_duration = Gtk.Template.Child()
+    player_total_duration = Gtk.Template.Child()
+    player_duration_scale = Gtk.Template.Child()
+    player_play_button = Gtk.Template.Child()
+    player_play_image = Gtk.Template.Child()
+    player_prev_button = Gtk.Template.Child()
+    player_next_button = Gtk.Template.Child()
+    player_cover = Gtk.Template.Child()
+    player_title = Gtk.Template.Child()
+    player_artist = Gtk.Template.Child()
+
+
+
+    #Enlarge player UI
+    playerE_actual_duration = Gtk.Template.Child()
+    playerE_total_duration = Gtk.Template.Child()
+    playerE_duration_scale = Gtk.Template.Child()
+    close_player_button = Gtk.Template.Child()
+    playerE_play_button = Gtk.Template.Child()
+    playerE_play_image = Gtk.Template.Child()
+    playerE_prev_button = Gtk.Template.Child()
+    playerE_next_button = Gtk.Template.Child()
+    playerE_cover = Gtk.Template.Child()
+    playerE_title = Gtk.Template.Child()
+    playerE_artist = Gtk.Template.Child()
+    playerE_shuffle_button = Gtk.Template.Child()
+    shuffle_state_img = Gtk.Template.Child()
+    playerE_repeat_button = Gtk.Template.Child()
+    repeat_state_img = Gtk.Template.Child()
+    like_button_img = Gtk.Template.Child()
+    like_button = Gtk.Template.Child()
+
+
+    # For test only
+    test_player_button = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
@@ -47,7 +86,19 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.close_player_button.connect("clicked",self.display_player)
         self.switchbar_bottom.connect("event",self.display_pages)
         self.header_switch.connect("event",self.display_pages)
-        self.log_button.connect("clicked",self.show_apppage)
+
+        # Init player
+        Player(self)
+
+        #Setup CSS
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_resource('/com/github/Aurnytoraink/TidalGTK/css/style.css')
+        Gtk.StyleContext.add_provider_for_screen(
+            self.get_screen(), css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.playerE_play_button.get_style_context().add_class("pause_button")
+        self.playerE_next_button.get_style_context().add_class("next_button")
+        self.enlarge_player_button.get_style_context().add_class("enlarge_button")
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
@@ -74,9 +125,3 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         else:
             self.header_stack.set_visible_child_name("main")
             self.popup_searchbar.set_search_mode(False)
-
-    def show_loginpage(self,*_):
-        self.main_stack.set_visible_child_name("login_page")
-
-    def show_apppage(self,*_):
-        self.main_stack.set_visible_child_name("app_page")

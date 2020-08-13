@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="add-toplaylist-symbolic.svg"
+   id="svg8"
+   version="1.1"
+   height="16"
+   width="16">
+  <metadata
+     id="metadata14">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs12" />
+  <sodipodi:namedview
+     inkscape:current-layer="svg8"
+     inkscape:window-maximized="1"
+     inkscape:window-y="0"
+     inkscape:window-x="0"
+     inkscape:cy="10.453337"
+     inkscape:cx="10.778178"
+     inkscape:zoom="64"
+     showgrid="true"
+     id="namedview10"
+     inkscape:window-height="1016"
+     inkscape:window-width="1920"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff">
+    <inkscape:grid
+       id="grid912"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <g
+     transform="matrix(1.5386874,0,0,1.5386874,-4.6459811,-4.8477912)"
+     id="g6"
+     fill="#2e3436">
+    <path
+       id="path4"
+       d="M 8,4.5 V 7.77 A 2,2 0 0 0 7,7.5 a 2,2 0 0 0 -2,2 2,2 0 0 0 2,2 2,2 0 0 0 2,-2 v -3 h 2 v -2 H 9 Z" />
+  </g>
+  <g
+     transform="matrix(1.5386874,0,0,1.5386874,-10.080311,-9.0029362)"
+     fill="#2e3436"
+     id="g918">
+    <path
+       style="stroke-width:0.624633"
+       d="M 13.750734,11.750734 V 13 h -1.249266 v 1.249266 h 1.249266 v 1.249266 H 15 v -1.249266 h 1.249266 V 13 H 15 v -1.249266 z"
+       id="path916" />
+  </g>
+</svg>

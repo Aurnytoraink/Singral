@@ -31,7 +31,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
         # This is for test
         # In the futur, the app will check on startup if a user as already login or not
-        self.login = False
+        self.login = True
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -45,9 +45,9 @@ class Application(Gtk.Application):
 
         # Check if or not the user has already logged in
         if self.login:
-            self.win.show_apppage()
+            self.win.main_stack.set_visible_child_name("app_page")
         else:
-            self.win.show_loginpage()
+            self.win.main_stack.set_visible_child_name("login_page")
 
 
 def main(version):
