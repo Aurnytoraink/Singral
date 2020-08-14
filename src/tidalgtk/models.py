@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 class Track():
 	def __init__(self, uri, title, artist, duration, cover, like=False):
 		self.uri = uri
