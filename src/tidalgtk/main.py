@@ -17,6 +17,8 @@
 
 import sys
 import gi
+import os
+import os.path
 
 gi.require_version('Gtk', '3.0')
 gi.require_version('Handy', '1')
@@ -31,9 +33,13 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
         # This is for test
         # In the futur, the app will check on startup if a user as already login or not
-        self.login = True
+        self.logged = False
 
     def do_startup(self):
+        if os.path.isdir('/var/cache/files') is False:
+            os.mkdir('/var/cache/files')
+            os.mkdir('/var/cache/files/covers')
+            os.mkdir('/var/cache/files/songs')
         Gtk.Application.do_startup(self)
         Handy.init()
 
@@ -44,7 +50,7 @@ class Application(Gtk.Application):
         self.win.present()
 
         # Check if or not the user has already logged in
-        if self.login:
+        if self.logged:
             self.win.main_stack.set_visible_child_name("app_page")
         else:
             self.win.main_stack.set_visible_child_name("login_page")

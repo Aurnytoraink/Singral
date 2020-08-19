@@ -37,13 +37,11 @@ class Player(Handy.ApplicationWindow):
         self.app.playerE_prev_button.connect("clicked",self.prev)
         self.app.player_next_button.connect("clicked",self.next)
         self.app.playerE_next_button.connect("clicked",self.next)
-        self.app.player_duration_scale.connect("change-value",self.set_seek)
-        self.app.playerE_duration_scale.connect("change-value",self.set_seek)
+        self.app.player_duration_scale.connect("button-release-event",self.set_seek)
+        self.app.playerE_duration_scale.connect("button-release-event",self.set_seek)
         self.app.like_button.connect("clicked",self.update_like)
         self.app.playerE_repeat_button.connect("clicked",self.update_repeat)
         self.app.playerE_shuffle_button.connect("clicked",self.update_shuffle)
-
-        self.app.test_player_button.connect("clicked",self.test)
 
         self.player.connect("clock-tick",self.update_duration)
         self.player.connect("stream-finished",self.next)
@@ -56,11 +54,6 @@ class Player(Handy.ApplicationWindow):
         #The saved queue is used when you user want to disable shuffle and returns to the original queues
         self.saved_queue = []
         self.current_song = 0
-
-        #THIS IS FOR TEST ONLY
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/N%20U%20I%20T/Enjoy%20the%20Night/02%20I%20Feel%20Love.flac", "I Feel Love","N U I T",240,"/home/aurnytoraink/Musique/N U I T/Enjoy the Night/Enjoy the Night.jpg",True))
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/L.E.J/Pas%20Peur/16%20Pas%20Peur.flac", "Pas peur","L.E.J",196,"/home/aurnytoraink/Musique/L.E.J/Pas Peur/Pas Peur.jpg",True))
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/Eddy%20de%20Pretto/Culte/02%20Random.flac", "Random","Eddy de Pretto",250,"/home/aurnytoraink/Musique/Eddy de Pretto/Culte/Culte.jpg"))
 
     def play_pause(self,*_):
         if self.player._state == 3:
@@ -218,28 +211,3 @@ class Player(Handy.ApplicationWindow):
         value = int(self.app.duration_scale.get_value())
         if self.player.seek(value):
             self.app.duration_scale.set_value(self.player._get_duration())
-
-
-
-
-
-    # Only here for tests
-    def test(self,*_):
-        filechooser = Gtk.FileChooserDialog("Open File",
-                                           self.app,
-                                           Gtk.FileChooserAction.OPEN,
-                                           ("_Cancel", Gtk.ResponseType.CANCEL,
-                                            "_Open", Gtk.ResponseType.OK)
-                                           )
-        response = filechooser.run()
-        if response == Gtk.ResponseType.OK:
-            filename = filechooser.get_uri()
-            self.queue.append(Track(filename, "I Feel Love","N U I T",240,"/home/aurnytoraink/Musique/N U I T/Enjoy the Night/Enjoy the Night.jpg"))
-            if self.player._state == 0:
-                print(self.current_song)
-                self.play(self.queue[self.current_song])
-            self.app.player_reveal.set_reveal_child(True)
-        filechooser.destroy()
-        self.update_queue()
-        
-    

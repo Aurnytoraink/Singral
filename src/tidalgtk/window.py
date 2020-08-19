@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy
-# from tidalgtk.api.session import Session
+from gi.repository import Gtk, Handy, GObject
 from tidalgtk.player import Player
+from tidalgtk.search import Search
+from tidalgtk.api.session import Session
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -25,20 +26,29 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     main_stack = Gtk.Template.Child()
     app_stack = Gtk.Template.Child()
-    switchbar_bottom = Gtk.Template.Child()
-    player_timebar = Gtk.Template.Child()
-    player_reveal = Gtk.Template.Child()
-    player_songinfo = Gtk.Template.Child()
-
     deck_app = Gtk.Template.Child()
     header_switch = Gtk.Template.Child()
-    header_stack = Gtk.Template.Child()
-    popup_searchbar = Gtk.Template.Child()
+    switchbar_bottom = Gtk.Template.Child()
 
     #Login Page
     log_username = Gtk.Template.Child()
     log_password = Gtk.Template.Child()
     log_button = Gtk.Template.Child()
+    token_entry = Gtk.Template.Child()
+    log_token = Gtk.Template.Child()
+
+    #Search Page
+    search_stack = Gtk.Template.Child()
+    popup_searchbar = Gtk.Template.Child()
+    popup_searchbar_entry = Gtk.Template.Child()
+    topsearch_box = Gtk.Template.Child()
+    album_flowbox = Gtk.Template.Child()
+    album_box = Gtk.Template.Child()
+    artist_flowbox = Gtk.Template.Child()
+    artist_box = Gtk.Template.Child()
+    track_box = Gtk.Template.Child()
+    playlist_flowbox = Gtk.Template.Child()
+    playlist_box = Gtk.Template.Child()
 
     #Player UI
     duration_scale = Gtk.Template.Child()
@@ -53,8 +63,9 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     player_cover = Gtk.Template.Child()
     player_title = Gtk.Template.Child()
     player_artist = Gtk.Template.Child()
-
-
+    player_timebar = Gtk.Template.Child()
+    player_reveal = Gtk.Template.Child()
+    player_songinfo = Gtk.Template.Child()
 
     #Enlarge player UI
     playerE_actual_duration = Gtk.Template.Child()
@@ -75,20 +86,20 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     like_button_img = Gtk.Template.Child()
     like_button = Gtk.Template.Child()
 
-
-    # For test only
-    test_player_button = Gtk.Template.Child()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
-        self.switchbar_bottom.connect("event",self.display_pages)
-        self.header_switch.connect("event",self.display_pages)
+        self.log_token.connect("clicked",self.login_token)
+        self.log_button.connect("clicked",self.login_username)
 
         # Init player
         Player(self)
+
+        #Init API
+        Search(self)
+        self.session = Session()
 
         #Setup CSS
         css_provider = Gtk.CssProvider()
@@ -115,13 +126,17 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("player_page")
         elif self.deck_app.get_visible_child_name() == "player_page":
             self.deck_app.set_visible_child_name("app_page")
-            
-    def display_pages(self,*_):
-        if self.app_stack.get_visible_child_name() == "search_page":
-            if self.header_switch.get_title_visible():
-                self.header_stack.set_visible_child_name("search")
-            else:
-                self.popup_searchbar.set_search_mode(True)
-        else:
-            self.header_stack.set_visible_child_name("main")
-            self.popup_searchbar.set_search_mode(False)
+
+    def login_token(self,*_):
+        sessionId = self.token_entry.get_text()
+        self.session.load_session(sessionId)
+        if self.session.check_login():
+            self.main_stack.set_visible_child_name("app_page")
+            self.token_entry.set_text("")
+
+    def login_username(self,*_):
+        username = self.log_username.get_text()
+        if self.session.login(username, self.log_password.get_text()):
+            self.main_stack.set_visible_child_name("app_page")
+            self.log_username.set_text("")
+            self.log_password.set_text("")
