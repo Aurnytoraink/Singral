@@ -60,6 +60,7 @@ class Artist(object):
             self.role = roles[0]
 
         self.picture = json_obj.get('picture')
+        self.cover_url = self.image(320)
 
         return copy.copy(self)
 

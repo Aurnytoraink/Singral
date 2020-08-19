@@ -83,6 +83,7 @@ class Playlist(object):
 
         self.picture = json_obj['image']
         self.square_picture = json_obj['squareImage']
+        self.picture_url = self.image(320)
 
         promoted_artists = json_obj['promotedArtists']
         if promoted_artists:

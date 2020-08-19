@@ -19,7 +19,7 @@ import requests
 import os.path
 import os
 
-def dl_image(id, type, url):
+def get_cover(id, type, url):
     if os.path.isfile('/var/cache/files/covers/{0}_{1}.jpg'.format(type,id)) is False:
         cover = requests.get(url).content
         with open('/var/cache/files/covers/{0}_{1}.jpg'.format(type,id),'xb') as file:

@@ -15,10 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib, Pango
+from gi.repository import Gtk, Handy, GLib, Pango
 from tidalgtk.api.session import Session
-from tidalgtk.api.download import dl_image
-from tidalgtk.art import round_image
+from tidalgtk.art import Artwork
 
 class Search(Handy.ApplicationWindow):
 
@@ -29,6 +28,7 @@ class Search(Handy.ApplicationWindow):
         self.app.popup_searchbar_entry.connect("search_changed",self.on_search_changed)
         self.timeout = None
         self.query = None
+        self.artwork = Artwork()
 
     def search(self,*_):
         if self.query != "":
@@ -87,7 +87,7 @@ class Search(Handy.ApplicationWindow):
         if results["albums"] != []:
             self.app.album_box.set_visible(True)
             for i in range(len(results["albums"])):
-                self.display_album(results["albums"][i],results["albums"][i].artist, i)
+                self.display_album(results["albums"][i], i)
         else:
             self.app.album_box.set_visible(False)
 
@@ -112,62 +112,28 @@ class Search(Handy.ApplicationWindow):
     def display_track(self, result, i):
         return
 
-    def display_album(self, result, artist, i):
+    def display_album(self, result, i):
         #BUG: There is a lag between the album's name and artist's name
         #TODO: In album module (and others), in the image(), make it return a premade GdkPixbuf
-        img = Gtk.Image.new()
-        dl_image(result.id,'album',result.image(320))
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale('/var/cache/files/covers/album_{}.jpg'.format(result.id),200,200,True)
-        img.set_from_pixbuf(pixbuf)
+        img = self.artwork.album_artwork(result)
         name = Gtk.Label.new()
         name.set_markup(
             "<b>" + GLib.markup_escape_text(result.name) + "</b>")
         name.set_ellipsize(Pango.EllipsizeMode(3))
-        artists = Gtk.Label.new(artist.name)
-        artists.set_ellipsize(Pango.EllipsizeMode(3))
+        artist = Gtk.Label.new(result.artist.name)
+        artist.set_ellipsize(Pango.EllipsizeMode(3))
         box = Gtk.Box.new(Gtk.Orientation(1),0)
         box.pack_start(img,False,False,0)
         box.pack_start(name,False,False,0)
-        box.pack_start(artists,False,False,0)
-        self.app.album_flowbox.insert(box,i)
+        box.pack_start(artist,False,False,0)
         box.set_visible(True)
         name.set_visible(True)
-        artists.set_visible(True)
-        img.set_visible(True)
+        artist.set_visible(True)
+        self.app.album_flowbox.insert(box,i)
 
     def display_artist(self, result, i):
         #BUG: Bug with the artist Adele
-        name = Gtk.Label.new()
-        name.set_markup(
-            "<b>" + GLib.markup_escape_text(result.name) + "</b>")
-        name.set_ellipsize(Pango.EllipsizeMode(3))
-        box = Gtk.Box.new(Gtk.Orientation(1),0)
-
-        # If the artist doesn't have a picture (for ex: 6338535)
-        if result.image(320) != None:
-            dl_image(result.id,'artist',result.image(320))
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale('/var/cache/files/covers/artist_{}.jpg'.format(result.id),200,200,True)
-            pixbuf = round_image(pixbuf)
-            img = Gtk.Image.new()
-            img.set_from_pixbuf(pixbuf)
-            box.pack_start(img,False,False,0)
-            img.set_visible(True)
-        else:
-            avatar = Handy.Avatar.new(200,result.name,True)
-            box.pack_start(avatar,False,False,0)
-            avatar.set_visible(True)
-
-        box.pack_start(name,False,False,0)
-        self.app.artist_flowbox.insert(box,i)
-        box.set_visible(True)
-        name.set_visible(True)
-
-
-    def display_playlist(self, result, i):
-        img = Gtk.Image.new()
-        dl_image(result.id,'playlist',result.image(320))
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale('/var/cache/files/covers/playlist_{}.jpg'.format(result.id),200,200,True)
-        img.set_from_pixbuf(pixbuf)
+        img = self.artwork.artist_artwork(result)
         name = Gtk.Label.new()
         name.set_markup(
             "<b>" + GLib.markup_escape_text(result.name) + "</b>")
@@ -175,7 +141,21 @@ class Search(Handy.ApplicationWindow):
         box = Gtk.Box.new(Gtk.Orientation(1),0)
         box.pack_start(img,False,False,0)
         box.pack_start(name,False,False,0)
-        self.app.playlist_flowbox.insert(box,i)
         box.set_visible(True)
         name.set_visible(True)
-        img.set_visible(True)          
+        self.app.artist_flowbox.insert(box,i)
+
+
+    def display_playlist(self, result, i):
+        img = self.artwork.playlist_artwork(result)
+        name = Gtk.Label.new()
+        name.set_markup(
+            "<b>" + GLib.markup_escape_text(result.name) + "</b>")
+        name.set_ellipsize(Pango.EllipsizeMode(3))
+
+        box = Gtk.Box.new(Gtk.Orientation(1),0)
+        box.pack_start(img,False,False,0)
+        box.pack_start(name,False,False,0)
+        box.set_visible(True)
+        name.set_visible(True)
+        self.app.playlist_flowbox.insert(box,i)

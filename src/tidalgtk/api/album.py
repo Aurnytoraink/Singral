@@ -70,6 +70,7 @@ class Album(object):
         self.id = json_obj['id']
         self.name = json_obj['title']
         self.cover = json_obj['cover']
+        self.cover_url = self.image(320)
         self.video_cover = json_obj['videoCover']
 
         self.duration = json_obj.get('duration')
