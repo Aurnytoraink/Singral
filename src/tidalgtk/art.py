@@ -9,27 +9,27 @@ class Artwork():
     def __init__(self):
         return
 
-    def album_artwork(self,album):
+    def album_artwork(self,album,dimension=200):
         img = Gtk.Image.new()
         get_cover(album.id,'album',album.cover_url)
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',200,200,True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',dimension,dimension,True)
         img.set_from_pixbuf(pixbuf)
         img.set_visible(True)
         return img
 
-    def playlist_artwork(self,playlist):
+    def playlist_artwork(self,playlist,dimension=200):
         img = Gtk.Image.new()
         get_cover(playlist.id,'playlist',playlist.picture_url)
-        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/playlist_{playlist.id}.jpg',200,200,True)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/playlist_{playlist.id}.jpg',dimension,dimension,True)
         img.set_from_pixbuf(pixbuf)
         img.set_visible(True)
         return img
 
-    def artist_artwork(self,artist):
+    def artist_artwork(self,artist,dimension=200):
         # If the artist doesn't have a picture (for ex: 6338535)
         if artist.cover_url != None:
             get_cover(artist.id,'artist',artist.cover_url)
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/artist_{artist.id}.jpg',200,200,True)
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/artist_{artist.id}.jpg',dimension,dimension,True)
             pixbuf = self.round_image(pixbuf)
             img = Gtk.Image.new()
             img.set_from_pixbuf(pixbuf)
