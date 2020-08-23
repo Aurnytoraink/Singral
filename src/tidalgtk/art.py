@@ -1,4 +1,4 @@
-from gi.repository import Gdk, Gtk, GdkPixbuf, Handy
+from gi.repository import Gtk, Handy, Gdk, GdkPixbuf, GLib, Pango
 from tidalgtk.api.download import get_cover
 import cairo
 import time
@@ -39,6 +39,49 @@ class Artwork():
             avatar = Handy.Avatar.new(200,artist.name,True)
             avatar.set_visible(True)
             return avatar
+
+    def album_boxchild(self,album):
+        img = self.album_artwork(album)
+        name = Gtk.Label.new()
+        name.set_markup(
+            "<b>" + GLib.markup_escape_text(album.name) + "</b>")
+        name.set_ellipsize(Pango.EllipsizeMode(3))
+        artistname = Gtk.Label.new(album.artist.name)
+        artistname.set_ellipsize(Pango.EllipsizeMode(3))
+        box = Gtk.Box.new(Gtk.Orientation(1),0)
+        box.pack_start(img,False,False,0)
+        box.pack_start(name,False,False,0)
+        box.pack_start(artistname,False,False,0)
+        box.set_visible(True)
+        name.set_visible(True)
+        artistname.set_visible(True)
+        return box
+
+    def artist_boxchild(self,artist):
+        img = self.artist_artwork(artist)
+        name = Gtk.Label.new()
+        name.set_markup(
+            "<b>" + GLib.markup_escape_text(artist.name) + "</b>")
+        name.set_ellipsize(Pango.EllipsizeMode(3))
+        box = Gtk.Box.new(Gtk.Orientation(1),0)
+        box.pack_start(img,False,False,0)
+        box.pack_start(name,False,False,0)
+        box.set_visible(True)
+        name.set_visible(True)
+        return box
+
+    def playlist_boxchild(self,playlist):
+        img = self.playlist_artwork(playlist)
+        name = Gtk.Label.new()
+        name.set_markup(
+            "<b>" + GLib.markup_escape_text(playlist.name) + "</b>")
+        name.set_ellipsize(Pango.EllipsizeMode(3))
+        box = Gtk.Box.new(Gtk.Orientation(1),0)
+        box.pack_start(img,False,False,0)
+        box.pack_start(name,False,False,0)
+        box.set_visible(True)
+        name.set_visible(True)
+        return box
 
     def round_image(self,pixbuf):
         size = pixbuf.get_width()

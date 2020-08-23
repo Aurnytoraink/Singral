@@ -437,9 +437,17 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkListBox">
+                                              <object class="GtkBox" id="topsearch_result">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="valign">center</property>
+                                                <property name="margin_start">15</property>
+                                                <property name="margin_end">15</property>
+                                                <property name="orientation">vertical</property>
+                                                <child>
+                                                  <placeholder/>
+                                                </child>
                                               </object>
                                               <packing>
                                                 <property name="expand">False</property>

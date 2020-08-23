@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GLib, Pango
+from gi.repository import Gtk, Handy, GLib
 from tidalgtk.api.session import Session
 from tidalgtk.art import Artwork
+import tidalgtk
 
 class Search(Handy.ApplicationWindow):
 
@@ -46,6 +47,8 @@ class Search(Handy.ApplicationWindow):
             self.app.artist_flowbox.remove(child)
         for child in self.app.playlist_flowbox.get_children():
             self.app.playlist_flowbox.remove(child)
+        for child in self.app.topsearch_result.get_children():
+            self.app.topsearch_result.remove(child)
         self.app.topsearch_box.set_visible(False)
         self.app.track_box.set_visible(False)
         self.app.album_box.set_visible(False)
@@ -84,78 +87,44 @@ class Search(Handy.ApplicationWindow):
         else:
             self.app.track_box.set_visible(False)
 
+        #BUG: There is a lag between the album's name and artist's name
         if results["albums"] != []:
             self.app.album_box.set_visible(True)
             for i in range(len(results["albums"])):
-                self.display_album(results["albums"][i], i)
+                box = self.artwork.album_boxchild(results["albums"][i])
+                self.app.album_flowbox.insert(box,i)
         else:
             self.app.album_box.set_visible(False)
 
         if results["artists"] != []:
             self.app.artist_box.set_visible(True)
             for i in range(len(results["artists"])):
-                self.display_artist(results["artists"][i], i)
+                box = self.artwork.artist_boxchild(results["artists"][i])
+                self.app.artist_flowbox.insert(box,i)
         else:
             self.app.artist_box.set_visible(False)
 
         if results["playlists"] != []:
             self.app.playlist_box.set_visible(True)
             for i in range(len(results["playlists"])):
-                self.display_playlist(results["playlists"][i], i)
+                box = self.artwork.playlist_boxchild(results["playlists"][i])
+                self.app.playlist_flowbox.insert(box,i)
+
         else:
             self.app.playlist_box.set_visible(False)
 
 
     def display_topsearch(self, result):
-        return
+        if type(result) == tidalgtk.api.artist.Artist:
+            box = self.artwork.artist_boxchild(result)
+        elif type(result) == tidalgtk.api.album.Album:
+            box = self.artwork.album_boxchild(result)
+        elif type(result) == tidalgtk.api.media.Track:
+            print("top track",result)
+        elif type(result) == tidalgtk.api.playlist.Playlist:
+            box = self.artwork.playlist_boxchild(results["playlists"][i])
+        self.app.topsearch_result.pack_start(box,False,False,0)
 
+    # TODO: Needs to be implement
     def display_track(self, result, i):
-        return
-
-    def display_album(self, result, i):
-        #BUG: There is a lag between the album's name and artist's name
-        #TODO: In album module (and others), in the image(), make it return a premade GdkPixbuf
-        img = self.artwork.album_artwork(result)
-        name = Gtk.Label.new()
-        name.set_markup(
-            "<b>" + GLib.markup_escape_text(result.name) + "</b>")
-        name.set_ellipsize(Pango.EllipsizeMode(3))
-        artist = Gtk.Label.new(result.artist.name)
-        artist.set_ellipsize(Pango.EllipsizeMode(3))
-        box = Gtk.Box.new(Gtk.Orientation(1),0)
-        box.pack_start(img,False,False,0)
-        box.pack_start(name,False,False,0)
-        box.pack_start(artist,False,False,0)
-        box.set_visible(True)
-        name.set_visible(True)
-        artist.set_visible(True)
-        self.app.album_flowbox.insert(box,i)
-
-    def display_artist(self, result, i):
-        #BUG: Bug with the artist Adele
-        img = self.artwork.artist_artwork(result)
-        name = Gtk.Label.new()
-        name.set_markup(
-            "<b>" + GLib.markup_escape_text(result.name) + "</b>")
-        name.set_ellipsize(Pango.EllipsizeMode(3))
-        box = Gtk.Box.new(Gtk.Orientation(1),0)
-        box.pack_start(img,False,False,0)
-        box.pack_start(name,False,False,0)
-        box.set_visible(True)
-        name.set_visible(True)
-        self.app.artist_flowbox.insert(box,i)
-
-
-    def display_playlist(self, result, i):
-        img = self.artwork.playlist_artwork(result)
-        name = Gtk.Label.new()
-        name.set_markup(
-            "<b>" + GLib.markup_escape_text(result.name) + "</b>")
-        name.set_ellipsize(Pango.EllipsizeMode(3))
-
-        box = Gtk.Box.new(Gtk.Orientation(1),0)
-        box.pack_start(img,False,False,0)
-        box.pack_start(name,False,False,0)
-        box.set_visible(True)
-        name.set_visible(True)
-        self.app.playlist_flowbox.insert(box,i)
+        print(result)

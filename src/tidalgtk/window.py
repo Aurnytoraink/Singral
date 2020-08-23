@@ -42,6 +42,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     popup_searchbar = Gtk.Template.Child()
     popup_searchbar_entry = Gtk.Template.Child()
     topsearch_box = Gtk.Template.Child()
+    topsearch_result = Gtk.Template.Child()
     album_flowbox = Gtk.Template.Child()
     album_box = Gtk.Template.Child()
     artist_flowbox = Gtk.Template.Child()
