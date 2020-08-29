@@ -48,6 +48,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     artist_flowbox = Gtk.Template.Child()
     artist_box = Gtk.Template.Child()
     track_box = Gtk.Template.Child()
+    track_flowbox = Gtk.Template.Child()
     playlist_flowbox = Gtk.Template.Child()
     playlist_box = Gtk.Template.Child()
 

@@ -83,7 +83,8 @@ class Search(Handy.ApplicationWindow):
         if results["tracks"] != []:
             self.app.track_box.set_visible(True)
             for i in range(len(results["tracks"])):
-                self.display_track(results["tracks"][i], i)
+                box = self.artwork.track_boxchild(results["tracks"][i])
+                self.app.track_flowbox.insert(box,i)
         else:
             self.app.track_box.set_visible(False)
 
@@ -120,11 +121,7 @@ class Search(Handy.ApplicationWindow):
         elif type(result) == tidalgtk.api.album.Album:
             box = self.artwork.album_boxchild(result)
         elif type(result) == tidalgtk.api.media.Track:
-            print("top track",result)
+            box = self.artwork.track_boxchild(result)
         elif type(result) == tidalgtk.api.playlist.Playlist:
             box = self.artwork.playlist_boxchild(results["playlists"][i])
         self.app.topsearch_result.pack_start(box,False,False,0)
-
-    # TODO: Needs to be implement
-    def display_track(self, result, i):
-        print(result)

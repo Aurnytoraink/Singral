@@ -516,19 +516,45 @@
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkListBox">
+                                              <object class="GtkScrolledWindow">
                                                 <property name="visible">True</property>
-                                                <property name="can_focus">False</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="hscrollbar_policy">never</property>
+                                                <property name="min_content_height">170</property>
+                                                <child>
+                                                  <object class="GtkViewport">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="hscroll_policy">natural</property>
+                                                    <property name="shadow_type">none</property>
+                                                    <child>
+                                                      <object class="GtkFlowBox" id="track_flowbox">
+                                                        <property name="visible">True</property>
+                                                        <property name="can_focus">False</property>
+                                                        <property name="halign">start</property>
+                                                        <property name="valign">center</property>
+                                                        <property name="margin_left">15</property>
+                                                        <property name="margin_right">15</property>
+                                                        <property name="margin_start">15</property>
+                                                        <property name="margin_end">15</property>
+                                                        <property name="column_spacing">5</property>
+                                                        <property name="row_spacing">3</property>
+                                                        <property name="max_children_per_line">50</property>
+                                                        <property name="selection_mode">none</property>
+                                                      </object>
+                                                    </child>
+                                                  </object>
+                                                </child>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
+                                                <property name="expand">True</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">1</property>
                                               </packing>
                                             </child>
                                           </object>
                                           <packing>
-                                            <property name="expand">False</property>
+                                            <property name="expand">True</property>
                                             <property name="fill">True</property>
                                             <property name="position">1</property>
                                           </packing>
@@ -655,7 +681,7 @@
                                                 </child>
                                               </object>
                                               <packing>
-                                                <property name="expand">False</property>
+                                                <property name="expand">True</property>
                                                 <property name="fill">True</property>
                                                 <property name="position">1</property>
                                               </packing>
