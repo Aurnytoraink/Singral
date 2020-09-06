@@ -34,8 +34,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_username = Gtk.Template.Child()
     log_password = Gtk.Template.Child()
     log_button = Gtk.Template.Child()
-    token_entry = Gtk.Template.Child()
-    log_token = Gtk.Template.Child()
 
     #Search Page
     search_stack = Gtk.Template.Child()
@@ -93,7 +91,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
-        self.log_token.connect("clicked",self.login_token)
         self.log_button.connect("clicked",self.login_username)
 
         # Init player
@@ -128,13 +125,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("player_page")
         elif self.deck_app.get_visible_child_name() == "player_page":
             self.deck_app.set_visible_child_name("app_page")
-
-    def login_token(self,*_):
-        sessionId = self.token_entry.get_text()
-        self.session.load_session(sessionId)
-        if self.session.check_login():
-            self.main_stack.set_visible_child_name("app_page")
-            self.token_entry.set_text("")
 
     def login_username(self,*_):
         username = self.log_username.get_text()
