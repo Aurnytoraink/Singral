@@ -18,13 +18,12 @@
 # import gi
 # gi.require_version('Secret', '1')
 # from gi.repository import Secret
-import requests
 import json
 # import tidalgtk.api.spoofbuz as spoofbuz
 # import tidalgtk.api.request as request
 
 # FOR DEBUGING ONLY
-import request
+from request import Requests
 import spoofbuz
 import os
 from dotenv import load_dotenv
@@ -33,11 +32,7 @@ class Session():
     def __init__(self):
         self.spoofer = spoofbuz.Spoofer()
         self.id = self.spoofer.getAppId()
-        self.request = requests.Session()
-        self.request.headers.update({
-			'User-Agent':'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
-			"X-App-Id": self.id})
-        self.base_url = "https://www.qobuz.com/api.json/0.2/"
+        self.request = Requests(self.id)
 
     def login(self,email=None,pwd=None,token=None):
         if token == None:
@@ -50,28 +45,23 @@ class Session():
                 "user_auth_token":token,
             }
 
-        r = self.request.post(self.base_url+"user/login",data=params)
+        r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
             return False
         elif r.status_code == 400:
             return False
         self.uat = r.json()["user_auth_token"]
-        zone = r.json()["user"]["zone"]
-        store = r.json()["user"]["store"]
-        self.store_token()
 
-        self.request.headers.update({
-            "X-User-Auth-Token": self.uat,
-            "X-Store": store,
-            "X-Zone": zone,})
+        self.request.update_session("X-User-Auth-Token",self.uat)
+        self.request.update_session("X-Store",r.json()["user"]["store"])
+        self.request.update_session("X-Zone",r.json()["user"]["zone"])
 
     def search(self,query,limit=10):
-        url = self.base_url + "catalog/search"
         params={
             "query": query,
             "limit": limit
         }
-        r = self.request.get(url,params=params)
+        r = self.request.get("catalog/search",params=params)
         results = r.json()
         albums = results["albums"]["items"]
         tracks = results["tracks"]["items"]
