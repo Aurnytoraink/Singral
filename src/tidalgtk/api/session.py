@@ -14,11 +14,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import gi
-gi.require_version('Secret', '1')
-from gi.repository import Secret
+
+# import gi
+# gi.require_version('Secret', '1')
+# from gi.repository import Secret
 import requests
+# import tidalgtk.api.spoofbuz as spoofbuz
+# import tidalgtk.api.request as request
+import request
 import spoofbuz
+import json
+# For Debug only
+import os
+from dotenv import load_dotenv
 
 class Session():
     def __init__(self):
@@ -35,33 +43,31 @@ class Session():
             params={
                     "email": email,
                     "password": pwd,
-                    "app_id": self.id}
+            }
         else:
             params={
                 "user_auth_token":token,
-                "app_id": self.id}
+            }
 
-        r = requests.post(self.base_url+"user/login",data=params)
+        r = self.request.post(self.base_url+"user/login",data=params)
         if r.status_code == 401:
             return False
         elif r.status_code == 400:
             return False
         self.uat = r.json()["user_auth_token"]
-        self.zone = r.json()["user"]["zone"]
-        self.store = r.json()["user"]["store"]
+        zone = r.json()["user"]["zone"]
+        store = r.json()["user"]["store"]
         self.store_token()
 
         self.request.headers.update({
-            "X-User-Auth-Token": self.uat})
-
-    def store_token(self):
-        return
+            "X-User-Auth-Token": self.uat,
+            "X-Store": store,
+            "X-Zone": zone,})
 
     def search(self,query,limit=10):
         url = self.base_url + "catalog/search"
         params={
             "query": query,
-            "zone": self.zone,
             "limit": limit
         }
         r = self.request.get(url,params=params)
@@ -72,7 +78,11 @@ class Session():
         playlists = results["playlists"]["items"]
         return albums, tracks, artists, playlists
 
+load_dotenv()
+token = os.getenv('token')
 session = Session()
-session.login(token="your token")
-result = session.search("oui")
-print(result[1])
+session.login(token=token)
+query = str(input("query: "))
+result = session.search(query,1)
+for i in result:
+    print(i,"\n")
