@@ -19,12 +19,13 @@
 # gi.require_version('Secret', '1')
 # from gi.repository import Secret
 import requests
+import json
 # import tidalgtk.api.spoofbuz as spoofbuz
 # import tidalgtk.api.request as request
+
+# FOR DEBUGING ONLY
 import request
 import spoofbuz
-import json
-# For Debug only
 import os
 from dotenv import load_dotenv
 
@@ -78,6 +79,7 @@ class Session():
         playlists = results["playlists"]["items"]
         return albums, tracks, artists, playlists
 
+# FOR DEBUGING ONLY
 load_dotenv()
 token = os.getenv('token')
 session = Session()
