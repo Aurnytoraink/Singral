@@ -19,12 +19,18 @@
 # gi.require_version('Secret', '1')
 # from gi.repository import Secret
 import json
+import time
+import hashlib
 # import tidalgtk.api.spoofbuz as spoofbuz
 # import tidalgtk.api.request as request
+# from tidalgtk.api.models import *
+# from tidalgtk.api.exceptions import *
 
 # FOR DEBUGING ONLY
 from request import Requests
 import spoofbuz
+from models import *
+from exceptions import *
 import os
 from dotenv import load_dotenv
 
@@ -32,7 +38,7 @@ class Session():
     def __init__(self):
         self.spoofer = spoofbuz.Spoofer()
         self.id = self.spoofer.getAppId()
-        self.request = Requests(self.id)
+        self.request = Requests(self.id,"") #Key is set later
 
     def login(self,email=None,pwd=None,token=None):
         params={
@@ -43,9 +49,9 @@ class Session():
 
         r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
-            return False
+            raise InvalidCreditentials("Invalid username/email and password combination")
         elif r.status_code == 400:
-            return False
+            raise InternalError("An error occured")
         self.uat = r.json()["user_auth_token"]
 
         self.request.update_session("X-User-Auth-Token",self.uat)
@@ -65,15 +71,65 @@ class Session():
         playlists = results["playlists"]["items"]
         return albums, tracks, artists, playlists
 
+    def get_album(self,id,limit=100,extra=None):
+        params={
+            "album_id": id,
+            "limit": limit,
+            "extra": extra
+        }
+        r = self.request.get("album/get",params=params)
+        return Album(r.json())
+
+    def get_track(self,id,limit=100,extra=None):
+        params={
+            "track_id": id,
+            "limit": limit,
+            "extra": extra
+        }
+        r = self.request.get("track/get",params=params)
+        return Track(self.request,r.json())
+
+    def test_secret(self,key):
+        unix = time.time()
+        r_sig = "userLibrarygetAlbumsList" + str(unix) + key
+        r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
+        params={
+            "app_id": self.id,
+            "user_auth_token": self.uat,
+            "request_ts": unix,
+            "request_sig": r_sig_hashed}
+        r = self.request.get('userLibrary/getAlbumsList?',params=params)
+        print(r.content)
+        return r.ok
+
+    def setup_secret(self):
+        for secret in self.spoofer.getSecrets().values():
+            if self.test_secret(secret):
+                self.request.key = secret
+                print(secret)
+                break
+
 # FOR DEBUGING ONLY
 load_dotenv()
 token = os.getenv('token')
 email = os.getenv('email')
 pwd = os.getenv('pwd')
+
 session = Session()
-# session.login(token=token)
-session.login(email,pwd)
-query = str(input("query: "))
-result = session.search(query,1)
-for i in result:
-    print(i,"\n")
+session.login(token=token)
+# session.login(email,pwd)
+session.setup_secret()
+
+
+# query = str(input("Search: "))
+# result = session.search(query,1)
+# for i in result:
+#     print(i,"\n")
+
+# result = session.get_album("z395ggwwn3qka")
+# print(result)
+
+track = session.get_track(72956512)
+result = track.get_url(27)
+print(result)
+print(result.json())
