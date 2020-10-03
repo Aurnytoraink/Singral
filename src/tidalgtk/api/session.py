@@ -58,6 +58,11 @@ class Session():
         self.request.update_session("X-Store",r.json()["user"]["store"])
         self.request.update_session("X-Zone",r.json()["user"]["zone"])
 
+        for secret in self.spoofer.getSecrets().values():
+            if self.test_secret(secret):
+                self.request.key = secret
+                break
+
     def search(self,query,limit=10):
         params={
             "query": query,
@@ -99,15 +104,8 @@ class Session():
             "request_ts": unix,
             "request_sig": r_sig_hashed}
         r = self.request.get('userLibrary/getAlbumsList?',params=params)
-        print(r.content)
         return r.ok
-
-    def setup_secret(self):
-        for secret in self.spoofer.getSecrets().values():
-            if self.test_secret(secret):
-                self.request.key = secret
-                print(secret)
-                break
+        
 
 # FOR DEBUGING ONLY
 load_dotenv()
@@ -118,7 +116,6 @@ pwd = os.getenv('pwd')
 session = Session()
 session.login(token=token)
 # session.login(email,pwd)
-session.setup_secret()
 
 
 # query = str(input("Search: "))
@@ -129,7 +126,6 @@ session.setup_secret()
 # result = session.get_album("z395ggwwn3qka")
 # print(result)
 
-track = session.get_track(72956512)
+track = session.get_track(62776106)
 result = track.get_url(27)
-print(result)
-print(result.json())
+print(result.json()["url"])
