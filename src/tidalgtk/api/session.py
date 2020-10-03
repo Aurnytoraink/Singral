@@ -35,15 +35,11 @@ class Session():
         self.request = Requests(self.id)
 
     def login(self,email=None,pwd=None,token=None):
-        if token == None:
-            params={
-                    "email": email,
-                    "password": pwd,
-            }
-        else:
-            params={
+        params={
+                "email": email,
+                "password": pwd,
                 "user_auth_token":token,
-            }
+        }
 
         r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
@@ -72,8 +68,11 @@ class Session():
 # FOR DEBUGING ONLY
 load_dotenv()
 token = os.getenv('token')
+email = os.getenv('email')
+pwd = os.getenv('pwd')
 session = Session()
-session.login(token=token)
+# session.login(token=token)
+session.login(email,pwd)
 query = str(input("query: "))
 result = session.search(query,1)
 for i in result:
