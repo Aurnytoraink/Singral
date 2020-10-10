@@ -21,18 +21,18 @@
 import json
 import time
 import hashlib
-# import tidalgtk.api.spoofbuz as spoofbuz
-# import tidalgtk.api.request as request
-# from tidalgtk.api.models import *
-# from tidalgtk.api.exceptions import *
+import tidalgtk.api.spoofbuz as spoofbuz
+from tidalgtk.api.request import Requests
+from tidalgtk.api.models import *
+from tidalgtk.api.exceptions import *
 
 # FOR DEBUGING ONLY
-from request import Requests
-import spoofbuz
-from models import *
-from exceptions import *
-import os
-from dotenv import load_dotenv
+# from request import Requests
+# import spoofbuz
+# from models import *
+# from exceptions import *
+# import os
+# from dotenv import load_dotenv
 
 class Session():
     def __init__(self):
@@ -62,6 +62,7 @@ class Session():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
+        return True
 
     def test_secret(self,key):
         unix = time.time()
@@ -116,10 +117,10 @@ class Session():
         
 
 # FOR DEBUGING ONLY
-load_dotenv()
-session = Session()
+# load_dotenv()
+# session = Session()
 # session.login(token=os.getenv('token'))
-session.login(os.getenv('email'),os.getenv('pwd'))
+# session.login(os.getenv('email'),os.getenv('pwd'))
 
 
 # query = str(input("Search: "))
@@ -138,8 +139,8 @@ session.login(os.getenv('email'),os.getenv('pwd'))
 # print(result)
 
 """ Stream a track from a search"""
-query = str(input("Search: "))
-result = session.search(query,1)
-track = session.get_track(result[1][0]["id"])
-print(f"⏯Playing: {track.title} from {track.artist.name}")
-print(track.get_url(27))
+# query = str(input("Search: "))
+# result = session.search(query,1)
+# track = session.get_track(result[1][0]["id"])
+# print(f"⏯Playing: {track.title} from {track.artist.name}")
+# print(track.get_url(27))

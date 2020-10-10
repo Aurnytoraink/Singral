@@ -127,8 +127,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("app_page")
 
     def login_username(self,*_):
-        username = self.log_username.get_text()
-        if self.session.login(username, self.log_password.get_text()):
+        if self.session.login(self.log_username.get_text(), self.log_password.get_text()):
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
