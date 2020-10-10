@@ -36,6 +36,12 @@ class Track():
         self.replaygain_peak = item["audio_info"]["replaygain_track_peak"]
 
     def get_url(self,quality):
+        """Quality:
+            MP3: 5
+            CD 16 bits/44.1kHz: 6
+            HiRes 24 bits/96kHz: 7
+            HiRes 24 bits/192kHz: 27
+        """
         unix = time.time()
         r_sig = f"trackgetFileUrlformat_id{quality}intentstreamtrack_id{self.id}{unix}{self.request.key}"
         r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
