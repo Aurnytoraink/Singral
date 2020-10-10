@@ -19,6 +19,7 @@ from gi.repository import Gtk, Handy, GObject
 from tidalgtk.player import Player
 from tidalgtk.search import Search
 from tidalgtk.api.session import Session
+from tidalgtk.api.exceptions import *
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -34,6 +35,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_username = Gtk.Template.Child()
     log_password = Gtk.Template.Child()
     log_button = Gtk.Template.Child()
+    log_error_reveal = Gtk.Template.Child()
+    log_error_label = Gtk.Template.Child()
 
     #Search Page
     search_stack = Gtk.Template.Child()
@@ -127,7 +130,15 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("app_page")
 
     def login_username(self,*_):
-        if self.session.login(self.log_username.get_text(), self.log_password.get_text()):
+        self.log_error_reveal.set_visible(False)
+        try:
+            self.session.login(self.log_username.get_text(), self.log_password.get_text())
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
+        except InvalidCreditentials:
+            self.log_error_label.set_text("Wrong email/password")
+            self.log_error_reveal.set_visible(True)
+        except InternalError:
+            self.log_error_label.set_text("A internal error occured")
+            self.log_error_reveal.set_visible(True)

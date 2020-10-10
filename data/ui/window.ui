@@ -118,11 +118,11 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkRevealer">
+                  <object class="GtkRevealer" id="log_error_reveal">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="log_error_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="label" translatable="yes">error</property>
