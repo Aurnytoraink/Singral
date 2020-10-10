@@ -87,34 +87,10 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <child>
-                              <object class="GtkStack" id="log_button_stack">
+                              <object class="GtkImage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="transition_duration">50</property>
-                                <property name="transition_type">crossfade</property>
-                                <child>
-                                  <object class="GtkImage">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="icon_name">step-in-symbolic</property>
-                                  </object>
-                                  <packing>
-                                    <property name="name">icon</property>
-                                    <property name="title" translatable="yes">page0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkSpinner">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="active">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="name">try</property>
-                                    <property name="title" translatable="yes">page1</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
+                                <property name="icon_name">step-in-symbolic</property>
                               </object>
                             </child>
                           </object>

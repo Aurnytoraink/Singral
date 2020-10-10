@@ -19,5 +19,5 @@ class Requests():
             else: #POST method
                 return self.request.post(self.base_url+url,data=params)
         except:
-            print("Request failed!")
+            print("LOG: Request failed!")
             return False
