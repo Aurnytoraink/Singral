@@ -37,6 +37,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_button = Gtk.Template.Child()
     log_error_reveal = Gtk.Template.Child()
     log_error_label = Gtk.Template.Child()
+    log_button_stack = Gtk.Template.Child()
 
     #Search Page
     search_stack = Gtk.Template.Child()
@@ -131,14 +132,22 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     def login_username(self,*_):
         self.log_error_reveal.set_visible(False)
+        self.log_button_stack.set_visible_child_name("icon")
+        self.log_button.set_sensitive(True)
         try:
+            self.log_button.set_sensitive(False)
+            self.log_button_stack.set_visible_child_name("try")
             self.session.login(self.log_username.get_text(), self.log_password.get_text())
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
         except InvalidCreditentials:
+            self.log_button.set_sensitive(True)
+            self.log_button_stack.set_visible_child_name("icon")
             self.log_error_label.set_text("Wrong email/password")
             self.log_error_reveal.set_visible(True)
         except InternalError:
+            self.log_button.set_sensitive(True)
+            self.log_button_stack.set_visible_child_name("icon")
             self.log_error_label.set_text("A internal error occured")
             self.log_error_reveal.set_visible(True)
