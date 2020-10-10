@@ -2,7 +2,8 @@ import time
 import hashlib
 
 class Album():
-    def __init__(self, item):
+    def __init__(self,request,item):
+        self.request = request
         self.id = item["id"]
         self.title = item["title"]
         self.duration = item["duration"]
@@ -12,6 +13,11 @@ class Album():
         self.hires = item["hires"]
         self.date = item["release_date_original"]
         self.explicit = item["parental_warning"]
+        self.tracks = item["tracks"]["items"]
+
+    def get_tracks(self):
+        return
+
 
 class Track():
     def __init__(self,request,item):
@@ -21,7 +27,8 @@ class Track():
         self.duration = item["duration"]
         # self.cover = item["album"]["image"]["large"]
         # self.artist = item["album"]["artist"]
-        # self.artistname = item["album"]["artist"]["name"]
+        self.artist = Artist(item["album"]["artist"])
+        self.composer = Artist(item["album"]["composer"])
         self.album = item["album"]
         self.hires = item["hires"]
         self.isrc = item["isrc"]
@@ -39,12 +46,14 @@ class Track():
             "format_id": quality,
             "intent": 'stream'}
 
-        return self.request.get("track/getFileUrl?",params=params)
+        return self.request.get("track/getFileUrl?",params=params).json()["url"]
 
 
 class Artist():
     def __init__(self, item):
         self.id = item["id"]
+        self.cover = item["image"]
+        self.name = item["name"]
 
 class Playlist():
     def __init__(self, item):

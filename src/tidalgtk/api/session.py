@@ -63,6 +63,18 @@ class Session():
                 self.request.key = secret
                 break
 
+    def test_secret(self,key):
+        unix = time.time()
+        r_sig = "userLibrarygetAlbumsList" + str(unix) + key
+        r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
+        params={
+            "app_id": self.id,
+            "user_auth_token": self.uat,
+            "request_ts": unix,
+            "request_sig": r_sig_hashed}
+        r = self.request.get('userLibrary/getAlbumsList?',params=params)
+        return r.ok
+
     def search(self,query,limit=10):
         params={
             "query": query,
@@ -83,7 +95,7 @@ class Session():
             "extra": extra
         }
         r = self.request.get("album/get",params=params)
-        return Album(r.json())
+        return Album(self.request,r.json())
 
     def get_track(self,id,limit=100,extra=None):
         params={
@@ -94,28 +106,20 @@ class Session():
         r = self.request.get("track/get",params=params)
         return Track(self.request,r.json())
 
-    def test_secret(self,key):
-        unix = time.time()
-        r_sig = "userLibrarygetAlbumsList" + str(unix) + key
-        r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
+    def get_artist(self,id,extra=None):
         params={
-            "app_id": self.id,
-            "user_auth_token": self.uat,
-            "request_ts": unix,
-            "request_sig": r_sig_hashed}
-        r = self.request.get('userLibrary/getAlbumsList?',params=params)
-        return r.ok
+            "artist_id": id,
+            "extra": extra
+        }
+        r = self.request.get("artist/get",params=params)
+        return Artist(self.request,r.json())
         
 
 # FOR DEBUGING ONLY
 load_dotenv()
-token = os.getenv('token')
-email = os.getenv('email')
-pwd = os.getenv('pwd')
-
 session = Session()
-session.login(token=token)
-# session.login(email,pwd)
+# session.login(token=os.getenv('token'))
+session.login(os.getenv('email'),os.getenv('pwd'))
 
 
 # query = str(input("Search: "))
@@ -123,9 +127,19 @@ session.login(token=token)
 # for i in result:
 #     print(i,"\n")
 
-# result = session.get_album("z395ggwwn3qka")
+# result = session.get_album("me0u2on4vwh8a")
+# print(result.tracks)
+
+""" Get a track URL"""
+# track = session.get_track(62776106)
+# track = session.get_track(102280007)
+# result = track.get_url(27)
+# print(f"⏯Playing: {track.title} from {track.artist.name}")
 # print(result)
 
-track = session.get_track(62776106)
-result = track.get_url(27)
-print(result.json()["url"])
+""" Stream a track from a search"""
+query = str(input("Search: "))
+result = session.search(query,1)
+track = session.get_track(result[1][0]["id"])
+print(f"⏯Playing: {track.title} from {track.artist.name}")
+print(track.get_url(27))

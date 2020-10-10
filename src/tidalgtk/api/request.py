@@ -13,7 +13,11 @@ class Requests():
         self.request.headers.update({method:data})
 
     def get(self,url,method='get',params=None):
-        if method == 'get':
-            return self.request.get(self.base_url+url,params=params)
-        else: #POST method
-            return self.request.post(self.base_url+url,data=params)
+        try:
+            if method == 'get':
+                return self.request.get(self.base_url+url,params=params)
+            else: #POST method
+                return self.request.post(self.base_url+url,data=params)
+        except:
+            print("LOG: Request failed!")
+            return False
