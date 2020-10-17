@@ -16,6 +16,7 @@ class Album():
         self.tracks = item["tracks"]["items"]
 
     def get_tracks(self):
+        #TODO: Implement this function
         return
 
 

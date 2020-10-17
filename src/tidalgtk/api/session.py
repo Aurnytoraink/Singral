@@ -55,11 +55,25 @@ class Session():
         elif r.status_code == 400:
             GLib.idle_add(function=self.app.on_login_error())
             return
-        self.uat = r.json()["user_auth_token"]
+        result = r.json()
+        self.uat = result["user_auth_token"]
+        self.offer = result["user"]["subscription"]["offer"]
+        if self.offer ==  "studio": # Set the maximum quality by default depending on the user's offer
+            self.quality = 27
+        else:
+            self.quality = 6
+
+        if result["user"]["firstname"] is None:
+            self.username = result["user"]["display_name"]
+        elif result["user"]["lastname"] is None:
+            self.username = result["user"]["firstname"]
+        else:
+            self.username = result["user"]["firstname"] + " " + result["user"]["lastname"]
+
 
         self.request.update_session("X-User-Auth-Token",self.uat)
-        self.request.update_session("X-Store",r.json()["user"]["store"])
-        self.request.update_session("X-Zone",r.json()["user"]["zone"])
+        self.request.update_session("X-Store",result["user"]["store"])
+        self.request.update_session("X-Zone",result["user"]["zone"])
 
         for secret in self.spoofer.getSecrets().values():
             if self.test_secret(secret):

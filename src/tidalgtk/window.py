@@ -40,6 +40,9 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_error_label = Gtk.Template.Child()
     log_button_stack = Gtk.Template.Child()
 
+    #Discover Page
+    welcome_label = Gtk.Template.Child()
+
     #Search Page
     search_stack = Gtk.Template.Child()
     popup_searchbar = Gtk.Template.Child()
@@ -142,16 +145,15 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_error_reveal.set_reveal_child(False)
         self.log_button.set_sensitive(False)
         self.log_button_stack.set_visible_child_name("try")
-        #test = GLib.idle_add(self.session.login,self.log_username.get_text(),self.log_password.get_text())
-        #print(test)
         threading.Thread(target=self.session.login,args=(self.log_username.get_text(), self.log_password.get_text(),)).start()
 
     def on_login_sucess(self):
-            self.main_stack.set_visible_child_name("app_page")
-            self.log_username.set_text("")
-            self.log_password.set_text("")
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
+        self.welcome_label.set_text(f"Welcome, {self.session.username}")
+        self.main_stack.set_visible_child_name("app_page")
+        self.log_username.set_text("")
+        self.log_password.set_text("")
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
 
     def on_login_unsucess(self,*_):
         self.log_button.set_sensitive(True)
