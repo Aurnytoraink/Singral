@@ -824,7 +824,7 @@
                       </object>
                       <packing>
                         <property name="name">search_page</property>
-                        <property name="title" translatable="yes">Discover</property>
+                        <property name="title" translatable="yes">Search</property>
                         <property name="icon_name">folder-saved-search-symbolic</property>
                         <property name="position">1</property>
                       </packing>
