@@ -97,6 +97,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
         self.log_button.connect("clicked",self.login_username)
+        self.log_username.connect("changed",self.update_login_page)
+        self.log_password.connect("changed",self.update_login_page)
 
         # Init player
         Player(self)
@@ -132,34 +134,29 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("app_page")
 
     def login_username(self,*_):
-        self.log_error_reveal.set_visible(False)
+        self.log_error_reveal.set_reveal_child(False)
         self.log_button.set_sensitive(False)
         self.log_button_stack.set_visible_child_name("try")
         #test = GLib.idle_add(self.session.login,self.log_username.get_text(),self.log_password.get_text())
         #print(test)
         threading.Thread(target=self.session.login,args=(self.log_username.get_text(), self.log_password.get_text(),)).start()
 
-    def on_login_sucess(self,*_):
+    def on_login_sucess(self):
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
 
-            #thread.start()
-            #print(thread)
-            #ok = thread.join()
-            #print(thread)
-            #print(ok)
-            # if ok:
-            #     self.main_stack.set_visible_child_name("app_page")
-            #     self.log_username.set_text("")
-            #     self.log_password.set_text("")
-        # except InvalidCreditentials:
-        #     self.log_button.set_sensitive(True)
-        #     self.log_button_stack.set_visible_child_name("icon")
-        #     self.log_error_label.set_text("Wrong email/password")
-        #     self.log_error_reveal.set_visible(True)
-        # except InternalError:
-        #     self.log_button.set_sensitive(True)
-        #     self.log_button_stack.set_visible_child_name("icon")
-        #     self.log_error_label.set_text("A internal error occured")
-        #     self.log_error_reveal.set_visible(True)
+    def on_login_unsucess(self,*_):
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
+        self.log_error_label.set_text("Wrong email/password")
+        self.log_error_reveal.set_reveal_child(True)
+
+    def on_login_error(self,*_):
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
+        self.log_error_label.set_text("A internal error occured")
+        self.log_error_reveal.set_reveal_child(True)
+
+    def update_login_page(self,*_):
+         self.log_error_reveal.set_reveal_child(False)

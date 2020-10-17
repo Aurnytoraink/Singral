@@ -50,9 +50,11 @@ class Session():
 
         r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
-            raise InvalidCreditentials("Invalid username/email and password combination")
+            GLib.idle_add(function=self.app.on_login_unsucess())
+            return
         elif r.status_code == 400:
-            raise InternalError("An error occured")
+            GLib.idle_add(function=self.app.on_login_error())
+            return
         self.uat = r.json()["user_auth_token"]
 
         self.request.update_session("X-User-Auth-Token",self.uat)
