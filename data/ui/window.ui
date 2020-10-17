@@ -404,6 +404,8 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="margin_start">15</property>
+                                <property name="margin_end">15</property>
                                 <property name="label" translatable="yes">Search artists, albums, tracks, playlists</property>
                                 <property name="ellipsize">end</property>
                                 <attributes>
