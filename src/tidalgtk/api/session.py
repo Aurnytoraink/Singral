@@ -17,7 +17,7 @@
 
 # import gi
 # gi.require_version('Secret', '1')
-from gi.repository import GLib
+# from gi.repository import GLib
 import json
 import time
 import hashlib
@@ -37,7 +37,7 @@ from tidalgtk.api.exceptions import *
 class Session():
     def __init__(self, app):
         self.app = app
-        self.spoofer = spoofbuz.Spoofer()
+        self.spoofer = spoofbuz.Spoofer() # TODO: Fix issue #4
         self.id = self.spoofer.getAppId()
         self.request = Requests(self.id,"") #Key is set later
 
@@ -67,6 +67,12 @@ class Session():
                 break
         print("Logged !")
         GLib.idle_add(function=self.app.on_login_sucess())
+
+    def logoff(self):
+        """ Log off:
+            This overwrite the old request session by a new one """
+        self.uat =  ""
+        self.request = Requests(self.id,"")
 
     def test_secret(self,key):
         unix = time.time()
@@ -122,7 +128,7 @@ class Session():
 
 # FOR DEBUGING ONLY
 # load_dotenv()
-# session = Session()
+# session = Session("")
 # session.login(token=os.getenv('token'))
 # session.login(os.getenv('email'),os.getenv('pwd'))
 
@@ -143,6 +149,14 @@ class Session():
 # print(result)
 
 """ Stream a track from a search"""
+# query = str(input("Search: "))
+# result = session.search(query,1)
+# track = session.get_track(result[1][0]["id"])
+# print(f"⏯Playing: {track.title} from {track.artist.name}")
+# print(track.get_url(27))
+
+# session.logoff()
+# # Supposed to break at this point
 # query = str(input("Search: "))
 # result = session.search(query,1)
 # track = session.get_track(result[1][0]["id"])
