@@ -17,7 +17,7 @@
 
 # import gi
 # gi.require_version('Secret', '1')
-# from gi.repository import GLib
+from gi.repository import GLib
 import json
 import time
 import hashlib
