@@ -17,7 +17,7 @@
 
 # import gi
 # gi.require_version('Secret', '1')
-# from gi.repository import Secret
+from gi.repository import GLib
 import json
 import time
 import hashlib
@@ -35,7 +35,8 @@ from tidalgtk.api.exceptions import *
 # from dotenv import load_dotenv
 
 class Session():
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.spoofer = spoofbuz.Spoofer()
         self.id = self.spoofer.getAppId()
         self.request = Requests(self.id,"") #Key is set later
@@ -62,7 +63,8 @@ class Session():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
-        return True
+        print("Logged !")
+        GLib.idle_add(function=self.app.on_login_sucess())
 
     def test_secret(self,key):
         unix = time.time()

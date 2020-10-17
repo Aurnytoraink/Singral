@@ -15,7 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GObject
+import threading
+from gi.repository import Gtk, Handy, GObject, GLib
 from tidalgtk.player import Player
 from tidalgtk.search import Search
 from tidalgtk.api.session import Session
@@ -102,7 +103,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
         #Init API
         Search(self)
-        self.session = Session()
+        self.session = Session(self)
 
         #Setup CSS
         css_provider = Gtk.CssProvider()
@@ -132,22 +133,33 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     def login_username(self,*_):
         self.log_error_reveal.set_visible(False)
-        self.log_button_stack.set_visible_child_name("icon")
-        self.log_button.set_sensitive(True)
-        try:
-            self.log_button.set_sensitive(False)
-            self.log_button_stack.set_visible_child_name("try")
-            self.session.login(self.log_username.get_text(), self.log_password.get_text())
+        self.log_button.set_sensitive(False)
+        self.log_button_stack.set_visible_child_name("try")
+        #test = GLib.idle_add(self.session.login,self.log_username.get_text(),self.log_password.get_text())
+        #print(test)
+        threading.Thread(target=self.session.login,args=(self.log_username.get_text(), self.log_password.get_text(),)).start()
+
+    def on_login_sucess(self,*_):
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
-        except InvalidCreditentials:
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
-            self.log_error_label.set_text("Wrong email/password")
-            self.log_error_reveal.set_visible(True)
-        except InternalError:
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
-            self.log_error_label.set_text("A internal error occured")
-            self.log_error_reveal.set_visible(True)
+
+            #thread.start()
+            #print(thread)
+            #ok = thread.join()
+            #print(thread)
+            #print(ok)
+            # if ok:
+            #     self.main_stack.set_visible_child_name("app_page")
+            #     self.log_username.set_text("")
+            #     self.log_password.set_text("")
+        # except InvalidCreditentials:
+        #     self.log_button.set_sensitive(True)
+        #     self.log_button_stack.set_visible_child_name("icon")
+        #     self.log_error_label.set_text("Wrong email/password")
+        #     self.log_error_reveal.set_visible(True)
+        # except InternalError:
+        #     self.log_button.set_sensitive(True)
+        #     self.log_button_stack.set_visible_child_name("icon")
+        #     self.log_error_label.set_text("A internal error occured")
+        #     self.log_error_reveal.set_visible(True)
