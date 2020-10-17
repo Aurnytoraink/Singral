@@ -65,7 +65,6 @@ class Session():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
-        print("Logged !")
         GLib.idle_add(function=self.app.on_login_sucess())
 
     def logoff(self):

@@ -91,6 +91,9 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     like_button_img = Gtk.Template.Child()
     like_button = Gtk.Template.Child()
 
+    # TEST ONLY
+    test_button = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
@@ -99,6 +102,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_button.connect("clicked",self.login_username)
         self.log_username.connect("changed",self.update_login_page)
         self.log_password.connect("changed",self.update_login_page)
+        # TEST ONLY
+        self.test_button.connect("clicked",self.logoff)
 
         # Init player
         Player(self)
@@ -145,6 +150,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
+            self.log_button.set_sensitive(True)
+            self.log_button_stack.set_visible_child_name("icon")
 
     def on_login_unsucess(self,*_):
         self.log_button.set_sensitive(True)
@@ -160,3 +167,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     def update_login_page(self,*_):
          self.log_error_reveal.set_reveal_child(False)
+
+    def logoff(self,*_):
+        self.session.logoff()
+        self.main_stack.set_visible_child_name("login_page")
