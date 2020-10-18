@@ -188,3 +188,17 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     def forget_pwd(self,*_):
         Gtk.show_uri_on_window(self,"https://www.qobuz.com/reset-password",Gdk.CURRENT_TIME)
+
+    # Library Page #
+
+    def get_fav_albums(self,*_):
+        threading.Thread(target=self.session.get_userfav_albums).start()
+
+    def get_fav_artists(self,*_):
+        threading.Thread(target=self.session.get_userfav_artists).start()
+
+    def get_fav_tracks(self,*_):
+        threading.Thread(target=self.session.get_userfav_tracks).start()
+
+    def get_fav_playlists(self,*_):
+        threading.Thread(target=self.session.get_userfav_playlists).start()

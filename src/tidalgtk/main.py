@@ -40,6 +40,7 @@ class Application(Gtk.Application):
             os.mkdir('/var/cache/files')
             os.mkdir('/var/cache/files/covers')
             os.mkdir('/var/cache/files/songs')
+
         Gtk.Application.do_startup(self)
         Handy.init()
 
@@ -54,6 +55,22 @@ class Application(Gtk.Application):
             self.win.main_stack.set_visible_child_name("app_page")
         else:
             self.win.main_stack.set_visible_child_name("login_page")
+
+        action = Gio.SimpleAction.new("fav_albums", None)
+        action.connect("activate", self.win.get_fav_albums)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new("fav_artists", None)
+        action.connect("activate", self.win.get_fav_artists)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new("fav_tracks", None)
+        action.connect("activate", self.win.get_fav_tracks)
+        self.add_action(action)
+
+        action = Gio.SimpleAction.new("fav_playlists", None)
+        action.connect("activate", self.win.get_fav_playlists)
+        self.add_action(action)
 
 
 def main(version):

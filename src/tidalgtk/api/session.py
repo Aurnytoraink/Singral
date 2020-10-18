@@ -145,6 +145,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Album("", x).parse(),r.json()["albums"]["items"]))
 
     def get_userfav_artists(self,limit=1000):
         params = {
@@ -153,6 +154,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
 
     def get_userfav_tracks(self,limit=1000):
         params = {
@@ -161,6 +163,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Tracks("", x).parse(),r.json()["tracks"]["items"]))
 
     def get_userfav_playlists(self,limit=1000):
         params = {
@@ -168,6 +171,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("playlist/getUserPlaylists",params=params)
+        return list(map(lambda x: Playlist(x).parse(),r.json()["playlists"]["items"]))
 
 
 
