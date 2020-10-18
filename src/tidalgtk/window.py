@@ -20,7 +20,6 @@ from gi.repository import Gtk, Handy, GObject, GLib
 from tidalgtk.player import Player
 from tidalgtk.search import Search
 from tidalgtk.api.session import Session
-from tidalgtk.api.exceptions import *
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
