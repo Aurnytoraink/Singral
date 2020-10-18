@@ -70,6 +70,7 @@ class Session():
         else:
             self.username = result["user"]["firstname"] + " " + result["user"]["lastname"]
 
+        self.user_id = result["user"]["id"]
 
         self.request.update_session("X-User-Auth-Token",self.uat)
         self.request.update_session("X-Store",result["user"]["store"])
@@ -138,6 +139,40 @@ class Session():
         r = self.request.get("artist/get",params=params)
         return Artist(self.request,r.json())
         
+    def get_userfav_albums(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "albums",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+
+    def get_userfav_artists(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "artists",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+
+    def get_userfav_tracks(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "tracks",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+
+    def get_userfav_playlists(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "user_id": self.user_id
+        }
+        r = self.request.get("playlist/getUserPlaylists",params=params)
+
+
+
+
 
 # FOR DEBUGING ONLY
 # load_dotenv()
