@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import threading
-from gi.repository import Gtk, Handy, GObject, GLib
+from gi.repository import Gtk, Handy, GObject, GLib, Gdk
 from tidalgtk.player import Player
 from tidalgtk.search import Search
 from tidalgtk.api.session import Session
@@ -38,6 +38,9 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_error_reveal = Gtk.Template.Child()
     log_error_label = Gtk.Template.Child()
     log_button_stack = Gtk.Template.Child()
+    create_account_btn = Gtk.Template.Child()
+    log_forget_reveal = Gtk.Template.Child()
+    forget_pwd_btn = Gtk.Template.Child()
 
     #Discover Page
     welcome_label = Gtk.Template.Child()
@@ -107,6 +110,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_button.connect("clicked",self.login_username)
         self.log_username.connect("changed",self.update_login_page)
         self.log_password.connect("changed",self.update_login_page)
+        self.create_account_btn.connect("clicked",self.create_account)
+        self.forget_pwd_btn.connect("clicked",self.forget_pwd)
         # TEST ONLY
         self.test_button.connect("clicked",self.logoff)
 
@@ -162,6 +167,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_button_stack.set_visible_child_name("icon")
         self.log_error_label.set_text("Wrong email/password")
         self.log_error_reveal.set_reveal_child(True)
+        self.log_forget_reveal.set_reveal_child(True)
 
     def on_login_error(self,*_):
         self.log_button.set_sensitive(True)
@@ -170,8 +176,15 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_error_reveal.set_reveal_child(True)
 
     def update_login_page(self,*_):
-         self.log_error_reveal.set_reveal_child(False)
+        self.log_error_reveal.set_reveal_child(False)
+        self.log_forget_reveal.set_reveal_child(False)
 
     def logoff(self,*_):
         self.session.logoff()
         self.main_stack.set_visible_child_name("login_page")
+
+    def create_account(self,*_):
+        Gtk.show_uri_on_window(self,"https://www.qobuz.com",Gdk.CURRENT_TIME)
+
+    def forget_pwd(self,*_):
+        Gtk.show_uri_on_window(self,"https://www.qobuz.com/reset-password",Gdk.CURRENT_TIME)
