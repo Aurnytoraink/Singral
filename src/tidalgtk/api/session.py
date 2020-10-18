@@ -24,7 +24,6 @@ import hashlib
 import tidalgtk.api.spoofbuz as spoofbuz
 from tidalgtk.api.request import Requests
 from tidalgtk.api.models import *
-from tidalgtk.api.exceptions import *
 
 # FOR DEBUGING ONLY
 # from request import Requests
