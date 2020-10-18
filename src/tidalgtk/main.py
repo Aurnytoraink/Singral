@@ -33,7 +33,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
         # This is for test
         # In the futur, the app will check on startup if a user as already login or not
-        self.logged = False
+        self.logged = True
 
     def do_startup(self):
         if os.path.isdir('/var/cache/files') is False:
