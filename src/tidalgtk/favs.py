@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
+from gi.repository import Gtk, Handy
 from tidalgtk.art import Artwork
 
 class Favs(Handy.ApplicationWindow):
@@ -39,3 +39,11 @@ class Favs(Handy.ApplicationWindow):
         for i in range(len(result)):
             box = Artwork().artist_boxchild(result[i])
             self.app.fav_artists_flowbox.insert(box,i)
+
+    def show_tracks(self,result):
+        self.app.fav_stack.set_visible_child_name("fav_tracks_page")
+        for child in self.app.fav_tracks_flowbox.get_children():
+            self.app.fav_tracks_flowbox.remove(child)
+        for i in range(len(result)):
+            box = Artwork().track_boxchild(result[i])
+            self.app.fav_tracks_flowbox.insert(box,i)

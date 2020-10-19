@@ -90,18 +90,20 @@ class Artwork():
         return box
 
     def track_boxchild(self,track):
-        img = self.album_artwork(track.album,50)
+        #img = self.album_artwork(track.album,50)
         name = Gtk.Label.new()
         name.set_markup(
-            "<b>" + GLib.markup_escape_text(track.name) + "</b>")
+            "<b>" + GLib.markup_escape_text(track.title) + "</b>")
         name.set_ellipsize(Pango.EllipsizeMode(3))
+        name.set_xalign(0)
         artist = Gtk.Label.new(track.artist.name)
         artist.set_ellipsize(Pango.EllipsizeMode(3))
+        artist.set_xalign(0)
         box_name = Gtk.Box.new(Gtk.Orientation(1),0)
         box_name.pack_start(name,False,False,0)
         box_name.pack_start(artist,False,False,0)
         box = Gtk.Box.new(Gtk.Orientation(0),0)
-        box.pack_start(img,False,False,0)
+        #box.pack_start(img,False,False,0)
         box.pack_start(box_name,False,False,0)
         box.set_visible(True)
         name.set_visible(True)
