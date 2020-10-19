@@ -33,7 +33,7 @@ class Application(Gtk.Application):
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
         # This is for test
         # In the futur, the app will check on startup if a user as already login or not
-        self.logged = True
+        self.logged = False
 
     def do_startup(self):
         if os.path.isdir('/var/cache/files') is False:
@@ -56,6 +56,7 @@ class Application(Gtk.Application):
         else:
             self.win.main_stack.set_visible_child_name("login_page")
 
+        # Actions that are used in the favs page
         action = Gio.SimpleAction.new("fav_albums", None)
         action.connect("activate", self.win.get_fav_albums)
         self.add_action(action)

@@ -61,7 +61,14 @@ class Track():
 class Artist():
     def __init__(self, item):
         self.id = item["id"]
-        self.cover = item["image"]
+        if item["image"] is None:
+            self.cover = None
+        elif "mega" in item["image"]:
+            self.cover = item["image"]["mega"]
+        elif "extralarge" in item["image"]:
+            self.cover = item["image"]["extralarge"]
+        elif "large" in item["image"]:
+            self.cover = item["image"]["large"]
         self.name = item["name"]
 
     def parse(self):

@@ -60,8 +60,13 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     playlist_flowbox = Gtk.Template.Child()
     playlist_box = Gtk.Template.Child()
 
-    #Library Page
-    library_listbox = Gtk.Template.Child()
+    #Favorites Page
+    fav_listbox = Gtk.Template.Child()
+    fav_stack = Gtk.Template.Child()
+    fav_albums_flowbox = Gtk.Template.Child()
+    fav_artists_flowbox = Gtk.Template.Child()
+    fav_tracks_flowbox = Gtk.Template.Child()
+    fav_playlists_flowbox = Gtk.Template.Child()
 
     #Player UI
     duration_scale = Gtk.Template.Child()

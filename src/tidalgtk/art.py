@@ -11,7 +11,7 @@ class Artwork():
 
     def album_artwork(self,album,dimension=200):
         img = Gtk.Image.new()
-        get_cover(album.id,'album',album.cover_url)
+        get_cover(album.id,'album',album.cover)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',dimension,dimension,True)
         img.set_from_pixbuf(pixbuf)
         img.set_visible(True)
@@ -27,8 +27,8 @@ class Artwork():
 
     def artist_artwork(self,artist,dimension=150):
         # If the artist doesn't have a picture (for ex: 6338535)
-        if artist.cover_url != None:
-            get_cover(artist.id,'artist',artist.cover_url)
+        if artist.cover != None:
+            get_cover(artist.id,'artist',artist.cover)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/artist_{artist.id}.jpg',dimension,dimension,True)
             pixbuf = self.round_image(pixbuf)
             img = Gtk.Image.new()
@@ -44,14 +44,17 @@ class Artwork():
         img = self.album_artwork(album)
         name = Gtk.Label.new()
         name.set_markup(
-            "<b>" + GLib.markup_escape_text(album.name) + "</b>")
+            "<b>" + GLib.markup_escape_text(album.title) + "</b>")
         name.set_ellipsize(Pango.EllipsizeMode(3))
+        name.set_max_width_chars(0)
         artistname = Gtk.Label.new(album.artist.name)
         artistname.set_ellipsize(Pango.EllipsizeMode(3))
         box = Gtk.Box.new(Gtk.Orientation(1),0)
         box.pack_start(img,False,False,0)
         box.pack_start(name,False,False,0)
         box.pack_start(artistname,False,False,0)
+        box.set_halign(Gtk.Align.CENTER)
+        box.set_valign(Gtk.Align.CENTER)
         box.set_visible(True)
         name.set_visible(True)
         artistname.set_visible(True)
@@ -63,9 +66,12 @@ class Artwork():
         name.set_markup(
             "<b>" + GLib.markup_escape_text(artist.name) + "</b>")
         name.set_ellipsize(Pango.EllipsizeMode(3))
+        name.set_max_width_chars(0)
         box = Gtk.Box.new(Gtk.Orientation(1),0)
         box.pack_start(img,False,False,0)
         box.pack_start(name,False,False,0)
+        box.set_halign(Gtk.Align.CENTER)
+        box.set_valign(Gtk.Align.CENTER)
         box.set_visible(True)
         name.set_visible(True)
         return box
@@ -104,7 +110,7 @@ class Artwork():
         return box
 
     def round_image(self,pixbuf):
-        size = pixbuf.get_width()
+        size = pixbuf.get_height()
         surface = cairo.ImageSurface(cairo.Format.ARGB32, size, size)
         ctx = cairo.Context(surface)
         ctx.arc(size/2, size/2, size/2, 0, 2 * PI)
@@ -113,5 +119,4 @@ class Artwork():
         Gdk.cairo_set_source_pixbuf(ctx,pixbuf,0,0)
         ctx.paint()
         dest = Gdk.pixbuf_get_from_surface(surface, 0, 0, size, size);
-        end = time.time()
         return dest

@@ -861,14 +861,16 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="HdyLeaflet" id="library_leaflet">
+                      <object class="HdyLeaflet" id="fav_leaflet">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="can_swipe_back">True</property>
                         <child>
-                          <object class="GtkListBox" id="library_listbox">
+                          <object class="GtkListBox" id="fav_listbox">
+                            <property name="width_request">175</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
+                            <property name="hexpand">False</property>
                             <child>
                               <object class="GtkListBoxRow">
                                 <property name="visible">True</property>
@@ -1055,10 +1057,11 @@
                           </object>
                         </child>
                         <child>
-                          <object class="GtkStack">
+                          <object class="GtkStack" id="fav_stack">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="hexpand">True</property>
+                            <property name="transition_type">crossfade</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="visible">True</property>
@@ -1068,14 +1071,112 @@
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <child>
-                                      <placeholder/>
+                                      <object class="GtkFlowBox" id="fav_albums_flowbox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="valign">start</property>
+                                        <property name="border_width">15</property>
+                                        <property name="homogeneous">True</property>
+                                        <property name="column_spacing">5</property>
+                                        <property name="row_spacing">5</property>
+                                        <property name="max_children_per_line">10</property>
+                                        <property name="selection_mode">none</property>
+                                      </object>
                                     </child>
                                   </object>
                                 </child>
                               </object>
                               <packing>
-                                <property name="name">page0</property>
+                                <property name="name">fav_albums_page</property>
                                 <property name="title" translatable="yes">page0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child>
+                                  <object class="GtkViewport">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <object class="GtkFlowBox" id="fav_artists_flowbox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="valign">start</property>
+                                        <property name="border_width">15</property>
+                                        <property name="homogeneous">True</property>
+                                        <property name="column_spacing">5</property>
+                                        <property name="row_spacing">5</property>
+                                        <property name="max_children_per_line">10</property>
+                                        <property name="selection_mode">none</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="name">fav_artists_page</property>
+                                <property name="title" translatable="yes">page0</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child>
+                                  <object class="GtkViewport">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <object class="GtkFlowBox" id="fav_tracks_flowbox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="border_width">15</property>
+                                        <property name="homogeneous">True</property>
+                                        <property name="column_spacing">5</property>
+                                        <property name="row_spacing">5</property>
+                                        <property name="max_children_per_line">10</property>
+                                        <property name="selection_mode">none</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="name">fav_tracks_page</property>
+                                <property name="title" translatable="yes">page1</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child>
+                                  <object class="GtkViewport">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <object class="GtkFlowBox" id="fav_playlists_flowbox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="border_width">15</property>
+                                        <property name="homogeneous">True</property>
+                                        <property name="column_spacing">5</property>
+                                        <property name="row_spacing">5</property>
+                                        <property name="max_children_per_line">10</property>
+                                        <property name="selection_mode">none</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="name">fav_playlists_page</property>
+                                <property name="title" translatable="yes">page2</property>
+                                <property name="position">3</property>
                               </packing>
                             </child>
                           </object>

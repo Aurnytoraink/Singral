@@ -24,6 +24,7 @@ import hashlib
 import tidalgtk.api.spoofbuz as spoofbuz
 from tidalgtk.api.request import Requests
 from tidalgtk.api.models import *
+from tidalgtk.favs import Favs
 
 # FOR DEBUGING ONLY
 # from request import Requests
@@ -36,11 +37,13 @@ from tidalgtk.api.models import *
 class Session():
     def __init__(self, app):
         self.app = app
-        self.spoofer = spoofbuz.Spoofer() # TODO: Fix issue #4
-        self.id = self.spoofer.getAppId()
-        self.request = Requests(self.id,"") #Key is set later
+        self.favs = Favs(self.app)
+        self.id = 0
 
     def login(self,email=None,pwd=None,token=None):
+        spoofer = spoofbuz.Spoofer()
+        self.id = spoofer.getAppId()
+        self.request = Requests(self.id,"") #Key is set later
         params={
                 "email": email,
                 "password": pwd,
@@ -75,11 +78,11 @@ class Session():
         self.request.update_session("X-Store",result["user"]["store"])
         self.request.update_session("X-Zone",result["user"]["zone"])
 
-        for secret in self.spoofer.getSecrets().values():
+        for secret in spoofer.getSecrets().values():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
-        GLib.idle_add(function=self.app.on_login_sucess())
+        GLib.idle_add(self.app.on_login_sucess())
 
     def logoff(self):
         """ Log off:
@@ -145,7 +148,8 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        return list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
+        result = list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
+        GLib.idle_add(self.favs.show_albums,result)
 
     def get_userfav_artists(self,limit=1000):
         params = {
@@ -154,7 +158,8 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        return list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
+        result = list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
+        GLib.idle_add(self.favs.show_artists,result)
 
     def get_userfav_tracks(self,limit=1000):
         params = {
