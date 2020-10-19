@@ -122,7 +122,7 @@ class Session():
             "extra": extra
         }
         r = self.request.get("album/get",params=params)
-        return Album(self.request,r.json())
+        return Album(r.json())
 
     def get_track(self,id,limit=100,extra=None):
         params={
@@ -131,7 +131,7 @@ class Session():
             "extra": extra
         }
         r = self.request.get("track/get",params=params)
-        return Track(self.request,r.json())
+        return Track(r.json())
 
     def get_artist(self,id,extra=None):
         params={
@@ -139,7 +139,7 @@ class Session():
             "extra": extra
         }
         r = self.request.get("artist/get",params=params)
-        return Artist(self.request,r.json())
+        return Artist(r.json())
         
     def get_userfav_albums(self,limit=1000):
         params = {
