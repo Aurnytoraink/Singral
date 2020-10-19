@@ -74,12 +74,6 @@ class Search(Handy.ApplicationWindow):
         self.clear()
         #TODO: Add threads
         #Divide results into categories
-        if results["top_hit"] != None:
-            self.app.topsearch_box.set_visible(True)
-            self.display_topsearch(results["top_hit"])
-        else:
-            self.app.topsearch_box.set_visible(False)
-
         if results["tracks"] != []:
             self.app.track_box.set_visible(True)
             for i in range(len(results["tracks"])):

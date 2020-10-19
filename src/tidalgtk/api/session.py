@@ -17,14 +17,13 @@
 
 # import gi
 # gi.require_version('Secret', '1')
-# from gi.repository import Secret
+from gi.repository import GLib
 import json
 import time
 import hashlib
 import tidalgtk.api.spoofbuz as spoofbuz
 from tidalgtk.api.request import Requests
 from tidalgtk.api.models import *
-from tidalgtk.api.exceptions import *
 
 # FOR DEBUGING ONLY
 # from request import Requests
@@ -35,8 +34,9 @@ from tidalgtk.api.exceptions import *
 # from dotenv import load_dotenv
 
 class Session():
-    def __init__(self):
-        self.spoofer = spoofbuz.Spoofer()
+    def __init__(self, app):
+        self.app = app
+        self.spoofer = spoofbuz.Spoofer() # TODO: Fix issue #4
         self.id = self.spoofer.getAppId()
         self.request = Requests(self.id,"") #Key is set later
 
@@ -49,20 +49,43 @@ class Session():
 
         r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
-            raise InvalidCreditentials("Invalid username/email and password combination")
+            GLib.idle_add(function=self.app.on_login_unsucess())
+            return
         elif r.status_code == 400:
-            raise InternalError("An error occured")
-        self.uat = r.json()["user_auth_token"]
+            GLib.idle_add(function=self.app.on_login_error())
+            return
+        result = r.json()
+        self.uat = result["user_auth_token"]
+        self.offer = result["user"]["subscription"]["offer"]
+        if self.offer ==  "studio": # Set the maximum quality by default depending on the user's offer
+            self.quality = 27
+        else:
+            self.quality = 6
+
+        if result["user"]["firstname"] is None:
+            self.username = result["user"]["display_name"]
+        elif result["user"]["lastname"] is None:
+            self.username = result["user"]["firstname"]
+        else:
+            self.username = result["user"]["firstname"] + " " + result["user"]["lastname"]
+
+        self.user_id = result["user"]["id"]
 
         self.request.update_session("X-User-Auth-Token",self.uat)
-        self.request.update_session("X-Store",r.json()["user"]["store"])
-        self.request.update_session("X-Zone",r.json()["user"]["zone"])
+        self.request.update_session("X-Store",result["user"]["store"])
+        self.request.update_session("X-Zone",result["user"]["zone"])
 
         for secret in self.spoofer.getSecrets().values():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
-        return True
+        GLib.idle_add(function=self.app.on_login_sucess())
+
+    def logoff(self):
+        """ Log off:
+            This overwrite the old request session by a new one """
+        self.uat =  ""
+        self.request = Requests(self.id,"")
 
     def test_secret(self,key):
         unix = time.time()
@@ -115,10 +138,48 @@ class Session():
         r = self.request.get("artist/get",params=params)
         return Artist(self.request,r.json())
         
+    def get_userfav_albums(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "albums",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
+
+    def get_userfav_artists(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "artists",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
+
+    def get_userfav_tracks(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "type" : "tracks",
+            "user_id": self.user_id
+        }
+        r = self.request.get("favorite/getUserFavorites",params=params)
+        return list(map(lambda x: Tracks(x).parse(),r.json()["tracks"]["items"]))
+
+    def get_userfav_playlists(self,limit=1000):
+        params = {
+            "limit" : limit,
+            "user_id": self.user_id
+        }
+        r = self.request.get("playlist/getUserPlaylists",params=params)
+        return list(map(lambda x: Playlist(x).parse(),r.json()["playlists"]["items"]))
+
+
+
+
 
 # FOR DEBUGING ONLY
 # load_dotenv()
-# session = Session()
+# session = Session("")
 # session.login(token=os.getenv('token'))
 # session.login(os.getenv('email'),os.getenv('pwd'))
 
@@ -139,6 +200,14 @@ class Session():
 # print(result)
 
 """ Stream a track from a search"""
+# query = str(input("Search: "))
+# result = session.search(query,1)
+# track = session.get_track(result[1][0]["id"])
+# print(f"⏯Playing: {track.title} from {track.artist.name}")
+# print(track.get_url(27))
+
+# session.logoff()
+# # Supposed to break at this point
 # query = str(input("Search: "))
 # result = session.search(query,1)
 # track = session.get_track(result[1][0]["id"])

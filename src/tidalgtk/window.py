@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GObject
+import threading
+from gi.repository import Gtk, Handy, GObject, GLib, Gdk
 from tidalgtk.player import Player
 from tidalgtk.search import Search
 from tidalgtk.api.session import Session
-from tidalgtk.api.exceptions import *
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -38,6 +38,12 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_error_reveal = Gtk.Template.Child()
     log_error_label = Gtk.Template.Child()
     log_button_stack = Gtk.Template.Child()
+    create_account_btn = Gtk.Template.Child()
+    log_forget_reveal = Gtk.Template.Child()
+    forget_pwd_btn = Gtk.Template.Child()
+
+    #Discover Page
+    welcome_label = Gtk.Template.Child()
 
     #Search Page
     search_stack = Gtk.Template.Child()
@@ -53,6 +59,9 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     track_flowbox = Gtk.Template.Child()
     playlist_flowbox = Gtk.Template.Child()
     playlist_box = Gtk.Template.Child()
+
+    #Library Page
+    library_listbox = Gtk.Template.Child()
 
     #Player UI
     duration_scale = Gtk.Template.Child()
@@ -90,19 +99,28 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     like_button_img = Gtk.Template.Child()
     like_button = Gtk.Template.Child()
 
+    # TEST ONLY
+    test_button = Gtk.Template.Child()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
         self.log_button.connect("clicked",self.login_username)
+        self.log_username.connect("changed",self.update_login_page)
+        self.log_password.connect("changed",self.update_login_page)
+        self.create_account_btn.connect("clicked",self.create_account)
+        self.forget_pwd_btn.connect("clicked",self.forget_pwd)
+        # TEST ONLY
+        self.test_button.connect("clicked",self.logoff)
 
         # Init player
         Player(self)
 
         #Init API
         Search(self)
-        self.session = Session()
+        self.session = Session(self)
 
         #Setup CSS
         css_provider = Gtk.CssProvider()
@@ -131,23 +149,56 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.deck_app.set_visible_child_name("app_page")
 
     def login_username(self,*_):
-        self.log_error_reveal.set_visible(False)
-        self.log_button_stack.set_visible_child_name("icon")
+        self.log_error_reveal.set_reveal_child(False)
+        self.log_button.set_sensitive(False)
+        self.log_button_stack.set_visible_child_name("try")
+        threading.Thread(target=self.session.login,args=(self.log_username.get_text(), self.log_password.get_text(),)).start()
+
+    def on_login_sucess(self):
+        self.welcome_label.set_text(f"Welcome, {self.session.username}")
+        self.main_stack.set_visible_child_name("app_page")
+        self.log_username.set_text("")
+        self.log_password.set_text("")
         self.log_button.set_sensitive(True)
-        try:
-            self.log_button.set_sensitive(False)
-            self.log_button_stack.set_visible_child_name("try")
-            self.session.login(self.log_username.get_text(), self.log_password.get_text())
-            self.main_stack.set_visible_child_name("app_page")
-            self.log_username.set_text("")
-            self.log_password.set_text("")
-        except InvalidCreditentials:
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
-            self.log_error_label.set_text("Wrong email/password")
-            self.log_error_reveal.set_visible(True)
-        except InternalError:
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
-            self.log_error_label.set_text("A internal error occured")
-            self.log_error_reveal.set_visible(True)
+        self.log_button_stack.set_visible_child_name("icon")
+
+    def on_login_unsucess(self,*_):
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
+        self.log_error_label.set_text("Wrong email/password")
+        self.log_error_reveal.set_reveal_child(True)
+        self.log_forget_reveal.set_reveal_child(True)
+
+    def on_login_error(self,*_):
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
+        self.log_error_label.set_text("A internal error occured")
+        self.log_error_reveal.set_reveal_child(True)
+
+    def update_login_page(self,*_):
+        self.log_error_reveal.set_reveal_child(False)
+        self.log_forget_reveal.set_reveal_child(False)
+
+    def logoff(self,*_):
+        self.session.logoff()
+        self.main_stack.set_visible_child_name("login_page")
+
+    def create_account(self,*_):
+        Gtk.show_uri_on_window(self,"https://www.qobuz.com",Gdk.CURRENT_TIME)
+
+    def forget_pwd(self,*_):
+        Gtk.show_uri_on_window(self,"https://www.qobuz.com/reset-password",Gdk.CURRENT_TIME)
+
+    # Library Page #
+
+    def get_fav_albums(self,*_):
+        threading.Thread(target=self.session.get_userfav_albums).start()
+
+    def get_fav_artists(self,*_):
+        threading.Thread(target=self.session.get_userfav_artists).start()
+
+    def get_fav_tracks(self,*_):
+        threading.Thread(target=self.session.get_userfav_tracks).start()
+
+    def get_fav_playlists(self,*_):
+        threading.Thread(target=self.session.get_userfav_playlists).start()
