@@ -187,6 +187,14 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     def logoff(self,*_):
         self.session.logoff()
         self.main_stack.set_visible_child_name("login_page")
+        for child in self.fav_albums_flowbox.get_children():
+            self.fav_albums_flowbox.remove(child)
+        for child in self.fav_artists_flowbox.get_children():
+            self.fav_artists_flowbox.remove(child)
+        for child in self.fav_tracks_flowbox.get_children():
+            self.fav_tracks_flowbox.remove(child)
+        for child in self.fav_playlists_flowbox.get_children():
+            self.fav_playlists_flowbox.remove(child)
 
     def create_account(self,*_):
         Gtk.show_uri_on_window(self,"https://www.qobuz.com",Gdk.CURRENT_TIME)

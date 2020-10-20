@@ -9,6 +9,11 @@ class Artwork():
     def __init__(self):
         return
 
+    def album_pixbuf(self,album,dimension=200):
+        get_cover(album.id,'album',album.cover)
+        pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',dimension,dimension,True)
+        return pixbuf
+
     def album_artwork(self,album,dimension=200):
         img = Gtk.Image.new()
         get_cover(album.id,'album',album.cover)
@@ -26,7 +31,7 @@ class Artwork():
         return img
 
     def artist_artwork(self,artist,dimension=150):
-        # If the artist doesn't have a picture (for ex: 6338535)
+        # If the artist doesn't have a picture
         if artist.cover != None:
             get_cover(artist.id,'artist',artist.cover)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/artist_{artist.id}.jpg',dimension,dimension,True)

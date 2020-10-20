@@ -18,6 +18,7 @@
 from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
 from tidalgtk.gst import GstPlayer
 from tidalgtk.models import Track
+from tidalgtk.art import Artwork
 import random
 
 class Player(Handy.ApplicationWindow):
@@ -46,6 +47,8 @@ class Player(Handy.ApplicationWindow):
         self.player.connect("clock-tick",self.update_duration)
         self.player.connect("stream-finished",self.next)
 
+        self.app.fav_tracks_flowbox.connect("child-activated",self.load)
+
         #Repeat(0: Disabled, 1:Playlist, 2:Current song)
         self.repeat_state = 0
         self.shuffle_state = False
@@ -69,9 +72,15 @@ class Player(Handy.ApplicationWindow):
             self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
             self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
 
+    def load(self,*_):
+        self.queue = self.app.session.result
+        self.current_song = 0
+        self.play(self.queue[self.current_song])
+
     def play(self, track):
         self.player.state = 0
-        self.player.change_track(track.uri)
+        url = track.get_url(self.app.session.request,self.app.session.quality)
+        self.player.change_track(url)
         self.player.state = 3
 
         #Display songs info
@@ -79,8 +88,8 @@ class Player(Handy.ApplicationWindow):
         self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
         self.app.player_title.set_text(track.title)
         self.app.playerE_title.set_text(track.title)
-        self.app.player_artist.set_text(track.artist)
-        self.app.playerE_artist.set_text(track.artist)
+        self.app.player_artist.set_text(track.artist.name)
+        self.app.playerE_artist.set_text(track.artist.name)
         minutes = int(track.duration/60)
         secondes = track.duration % 60
         if secondes < 10:
@@ -94,20 +103,21 @@ class Player(Handy.ApplicationWindow):
 
         #Display cover (if avaible)
         if track.cover is not None:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(track.cover,32,32,True)
+            pixbuf = Artwork().album_pixbuf(track.album,32)
             self.app.player_cover.set_from_pixbuf(pixbuf)
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(track.cover,316,316,True)
+            pixbuf = Artwork().album_pixbuf(track.album,316)
             self.app.playerE_cover.set_from_pixbuf(pixbuf)
         else:
             self.app.player_cover.set_from_icon_name("folder-music-symbolic",32)
             self.app.playerE_cover.set_from_icon_name("folder-music-symbolic",316)
 
         #Display like statue:
-        if track.like:
-            self.app.like_button_img.set_from_icon_name("heart-filled-symbolic",Gtk.IconSize.BUTTON)
-        else:
-            self.app.like_button_img.set_from_icon_name("heart-outline-thin-symbolic",Gtk.IconSize.BUTTON)
+        # if track.like:
+        #     self.app.like_button_img.set_from_icon_name("heart-filled-symbolic",Gtk.IconSize.BUTTON)
+        # else:
+        #     self.app.like_button_img.set_from_icon_name("heart-outline-thin-symbolic",Gtk.IconSize.BUTTON)
 
+        self.app.player_reveal.set_reveal_child(True)
         self.update_queue()
 
     def stop(self):

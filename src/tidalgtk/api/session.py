@@ -168,8 +168,8 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        result = list(map(lambda x: Track(x).parse(),r.json()["tracks"]["items"]))
-        GLib.idle_add(self.favs.show_tracks,result)
+        self.result = list(map(lambda x: Track(x).parse(),r.json()["tracks"]["items"]))
+        GLib.idle_add(self.favs.show_tracks,self.result)
 
     def get_userfav_playlists(self,limit=1000):
         params = {
