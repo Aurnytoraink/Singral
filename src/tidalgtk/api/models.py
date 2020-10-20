@@ -25,11 +25,11 @@ class Track():
         self.id = item["id"]
         self.title = item["title"]
         self.duration = item["duration"]
-        # self.cover = item["album"]["image"]["large"]
-        self.artist = Artist(item["album"]["artist"])
+        self.album = Album(item["album"])
+        self.cover = self.album.cover
+        self.artist = self.album.artist
         if "composer" in item["album"]:
             self.composer = Artist(item["album"]["composer"])
-        self.album = item["album"]
         self.hires = item["hires"]
         self.isrc = item["isrc"]
         self.replaygain_gain = item["audio_info"]["replaygain_track_gain"]
