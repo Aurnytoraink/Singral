@@ -867,7 +867,7 @@
                         <property name="can_swipe_back">True</property>
                         <child>
                           <object class="GtkListBox" id="fav_listbox">
-                            <property name="width_request">175</property>
+                            <property name="width_request">200</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="hexpand">False</property>
@@ -1058,6 +1058,7 @@
                         </child>
                         <child>
                           <object class="GtkStack" id="fav_stack">
+                            <property name="width_request">250</property>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="hexpand">True</property>
