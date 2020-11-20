@@ -65,8 +65,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     fav_stack = Gtk.Template.Child()
     fav_albums_flowbox = Gtk.Template.Child()
     fav_artists_flowbox = Gtk.Template.Child()
-    fav_tracks_flowbox = Gtk.Template.Child()
-    fav_playlists_flowbox = Gtk.Template.Child()
+    fav_tracks_listbox = Gtk.Template.Child()
 
     #Player UI
     duration_scale = Gtk.Template.Child()
@@ -193,8 +192,8 @@ class TidalgtkWindow(Handy.ApplicationWindow):
             self.fav_artists_flowbox.remove(child)
         for child in self.fav_tracks_flowbox.get_children():
             self.fav_tracks_flowbox.remove(child)
-        for child in self.fav_playlists_flowbox.get_children():
-            self.fav_playlists_flowbox.remove(child)
+        for child in self.fav_tracks_listbox.get_children():
+            self.fav_tracks_listbox.remove(child)
 
     def create_account(self,*_):
         Gtk.show_uri_on_window(self,"https://www.qobuz.com",Gdk.CURRENT_TIME)

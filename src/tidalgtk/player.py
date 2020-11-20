@@ -47,7 +47,6 @@ class Player(Handy.ApplicationWindow):
         self.player.connect("clock-tick",self.update_duration)
         self.player.connect("stream-finished",self.next)
 
-        self.app.fav_tracks_flowbox.connect("child-activated",self.load)
 
         #Repeat(0: Disabled, 1:Playlist, 2:Current song)
         self.repeat_state = 0

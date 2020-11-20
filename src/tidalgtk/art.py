@@ -9,12 +9,12 @@ class Artwork():
     def __init__(self):
         return
 
-    def album_pixbuf(self,album,dimension=200):
+    def album_pixbuf(self,album,dimension=175):
         get_cover(album.id,'album',album.cover)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',dimension,dimension,True)
         return pixbuf
 
-    def album_artwork(self,album,dimension=200):
+    def album_artwork(self,album,dimension=175):
         img = Gtk.Image.new()
         get_cover(album.id,'album',album.cover)
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/album_{album.id}.jpg',dimension,dimension,True)
@@ -35,7 +35,9 @@ class Artwork():
         if artist.cover != None:
             get_cover(artist.id,'artist',artist.cover)
             pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(f'/var/cache/files/covers/artist_{artist.id}.jpg',dimension,dimension,True)
-            pixbuf = self.round_image(pixbuf)
+            avatar = Handy.Avatar.new(dimension,"",True)
+            avatar.set_image_load_func(Handy.AvatarImageLoadFunc(pixbuf))
+            data = Handy.AvatarImageLoadFunc(dimension,pixbuf)
             img = Gtk.Image.new()
             img.set_from_pixbuf(pixbuf)
             img.set_visible(True)
@@ -111,7 +113,7 @@ class Artwork():
         box.pack_start(img,False,False,0)
         box.pack_start(box_name,False,False,0)
         box.set_visible(True)
-        box.set_spacing(5)
+        box.set_spacing(10)
         name.set_visible(True)
         artist.set_visible(True)
         box_name.set_visible(True)

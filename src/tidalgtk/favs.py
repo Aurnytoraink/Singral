@@ -42,8 +42,8 @@ class Favs(Handy.ApplicationWindow):
 
     def show_tracks(self,result):
         self.app.fav_stack.set_visible_child_name("fav_tracks_page")
-        for child in self.app.fav_tracks_flowbox.get_children():
-            self.app.fav_tracks_flowbox.remove(child)
+        for child in self.app.fav_tracks_listbox.get_children():
+            self.app.fav_tracks_listbox.remove(child)
         for i in range(len(result)):
             box = Artwork().track_boxchild(result[i])
-            self.app.fav_tracks_flowbox.insert(box,i)
+            self.app.fav_tracks_listbox.insert(box,i)
