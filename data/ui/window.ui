@@ -1047,11 +1047,7 @@
                         </child>
                         <child>
                           <object class="GtkStack" id="fav_stack">
-<<<<<<< HEAD
-                            <property name="width_request">250</property>
-=======
                             <property name="width_request">428</property>
->>>>>>> 035e57f... WIP changes
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="hexpand">True</property>
