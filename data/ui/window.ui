@@ -325,12 +325,73 @@
                     <property name="centering_policy">strict</property>
                     <property name="interpolate_size">True</property>
                     <child type="title">
-                      <object class="HdyViewSwitcherTitle" id="header_switch">
+                      <object class="GtkStack">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="stack">app_stack</property>
-                        <property name="title">Tidal</property>
+                        <property name="transition_type">crossfade</property>
+                        <child>
+                          <object class="HdyViewSwitcherTitle" id="header_switch">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="policy">wide</property>
+                            <property name="stack">app_stack</property>
+                            <property name="title">Singral</property>
+                          </object>
+                          <packing>
+                            <property name="name">page0</property>
+                            <property name="title" translatable="yes">page0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkSearchEntry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="primary_icon_name">edit-find-symbolic</property>
+                            <property name="primary_icon_activatable">False</property>
+                            <property name="primary_icon_sensitive">False</property>
+                          </object>
+                          <packing>
+                            <property name="name">page1</property>
+                            <property name="title" translatable="yes">page1</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
+                    </child>
+                    <child>
+                      <object class="GtkMenuButton" id="menu_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="focus_on_click">False</property>
+                        <property name="receives_default">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">open-menu-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="pack_type">end</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="left_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">system-search-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
@@ -340,82 +401,208 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkStack" id="app_stack">
+                  <object class="GtkStack">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="transition_type">slide-left-right</property>
+                    <property name="transition_type">crossfade</property>
                     <child>
-                      <object class="GtkScrolledWindow" id="home_page">
+                      <object class="GtkStack" id="app_stack">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="transition_type">slide-left-right</property>
                         <child>
-                          <object class="GtkViewport">
+                          <object class="GtkScrolledWindow" id="home_page">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can_focus">True</property>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkViewport">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
-                                <property name="halign">center</property>
-                                <property name="valign">center</property>
-                                <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkLabel" id="welcome_label">
+                                  <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">Welcome :D</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                      <attribute name="scale" value="3"/>
-                                    </attributes>
+                                    <property name="halign">center</property>
+                                    <property name="valign">center</property>
+                                    <property name="orientation">vertical</property>
+                                    <child>
+                                      <object class="GtkLabel" id="welcome_label">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Welcome :D</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                          <attribute name="scale" value="3"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">This app is in development</property>
+                                        <attributes>
+                                          <attribute name="weight" value="bold"/>
+                                          <attribute name="scale" value="1"/>
+                                        </attributes>
+                                        <style>
+                                          <class name="dim-label"/>
+                                        </style>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkButton" id="test_button">
+                                        <property name="label" translatable="yes">Log off</property>
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                        <property name="receives_default">True</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">2</property>
+                                      </packing>
+                                    </child>
                                   </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkLabel">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="label" translatable="yes">This app is in development</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                      <attribute name="scale" value="1"/>
-                                    </attributes>
-                                    <style>
-                                      <class name="dim-label"/>
-                                    </style>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="test_button">
-                                    <property name="label" translatable="yes">Log off</property>
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">True</property>
-                                    <property name="receives_default">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
                                 </child>
                               </object>
                             </child>
                           </object>
+                          <packing>
+                            <property name="name">home_page</property>
+                            <property name="title" translatable="yes">Home</property>
+                            <property name="icon_name">user-home-symbolic</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="album_page">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <child>
+                              <object class="GtkViewport">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="shadow_type">none</property>
+                                <child>
+                                  <object class="GtkFlowBox" id="albums_flowbox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="valign">start</property>
+                                    <property name="border_width">15</property>
+                                    <property name="homogeneous">True</property>
+                                    <property name="column_spacing">5</property>
+                                    <property name="row_spacing">5</property>
+                                    <property name="max_children_per_line">10</property>
+                                    <property name="selection_mode">none</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">album_page</property>
+                            <property name="title" translatable="yes">Album</property>
+                            <property name="icon_name">media-optical-cd-audio-symbolic</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="HdyLeaflet" id="artist_page">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkListBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <child>
+                                  <object class="GtkViewport">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">artist_page</property>
+                            <property name="title" translatable="yes">Artist</property>
+                            <property name="icon_name">avatar-default-symbolic</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="song_page">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <child>
+                              <object class="GtkViewport">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="HdyClamp" id="songs_viewport">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="border_width">15</property>
+                                    <property name="maximum_size">1200</property>
+                                    <child>
+                                      <placeholder/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">song_page</property>
+                            <property name="title" translatable="yes">Song</property>
+                            <property name="icon_name">music-note-single-symbolic</property>
+                            <property name="position">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkScrolledWindow" id="playlist_page">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <child>
+                              <object class="GtkViewport">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">playlist_page</property>
+                            <property name="title" translatable="yes">Playlist</property>
+                            <property name="icon_name">playlist-symbolic</property>
+                            <property name="position">4</property>
+                          </packing>
                         </child>
                       </object>
                       <packing>
-                        <property name="name">home_page</property>
-                        <property name="title" translatable="yes">Home</property>
-                        <property name="icon_name">user-home-symbolic</property>
+                        <property name="name">page0</property>
+                        <property name="title" translatable="yes">page0</property>
                       </packing>
                     </child>
                     <child>
@@ -455,6 +642,8 @@
                               <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="margin_left">15</property>
+                                <property name="margin_right">15</property>
                                 <property name="margin_start">15</property>
                                 <property name="margin_end">15</property>
                                 <property name="label" translatable="yes">Search artists, albums, tracks, playlists</property>
@@ -496,6 +685,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="margin_left">20</property>
                                                 <property name="margin_start">20</property>
                                                 <property name="label" translatable="yes">Top search</property>
                                                 <property name="xalign">0</property>
@@ -519,6 +709,8 @@
                                                 <property name="can_focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="valign">center</property>
+                                                <property name="margin_left">15</property>
+                                                <property name="margin_right">15</property>
                                                 <property name="margin_start">15</property>
                                                 <property name="margin_end">15</property>
                                                 <property name="orientation">vertical</property>
@@ -551,6 +743,7 @@
                                                   <object class="GtkLabel">
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
+                                                    <property name="margin_left">20</property>
                                                     <property name="margin_start">20</property>
                                                     <property name="label" translatable="yes">Tracks</property>
                                                     <property name="single_line_mode">True</property>
@@ -575,6 +768,7 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">True</property>
                                                     <property name="receives_default">True</property>
+                                                    <property name="relief">none</property>
                                                     <style>
                                                       <class name="flat"/>
                                                     </style>
@@ -610,6 +804,8 @@
                                                         <property name="can_focus">False</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
+                                                        <property name="margin_left">15</property>
+                                                        <property name="margin_right">15</property>
                                                         <property name="margin_start">15</property>
                                                         <property name="margin_end">15</property>
                                                         <property name="column_spacing">5</property>
@@ -642,6 +838,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="margin_left">20</property>
                                                 <property name="margin_start">20</property>
                                                 <property name="label" translatable="yes">Artist</property>
                                                 <property name="xalign">0</property>
@@ -676,6 +873,8 @@
                                                         <property name="can_focus">False</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
+                                                        <property name="margin_left">15</property>
+                                                        <property name="margin_right">15</property>
                                                         <property name="margin_start">15</property>
                                                         <property name="margin_end">15</property>
                                                         <property name="orientation">vertical</property>
@@ -709,6 +908,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="margin_left">20</property>
                                                 <property name="margin_start">20</property>
                                                 <property name="label" translatable="yes">Album</property>
                                                 <property name="xalign">0</property>
@@ -743,6 +943,8 @@
                                                         <property name="can_focus">False</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
+                                                        <property name="margin_left">15</property>
+                                                        <property name="margin_right">15</property>
                                                         <property name="margin_start">15</property>
                                                         <property name="margin_end">15</property>
                                                         <property name="orientation">vertical</property>
@@ -776,6 +978,7 @@
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
+                                                <property name="margin_left">20</property>
                                                 <property name="margin_start">20</property>
                                                 <property name="label" translatable="yes">Playlist</property>
                                                 <property name="xalign">0</property>
@@ -810,6 +1013,8 @@
                                                         <property name="can_focus">False</property>
                                                         <property name="halign">start</property>
                                                         <property name="valign">center</property>
+                                                        <property name="margin_left">15</property>
+                                                        <property name="margin_right">15</property>
                                                         <property name="margin_start">15</property>
                                                         <property name="margin_end">15</property>
                                                         <property name="orientation">vertical</property>
@@ -855,350 +1060,9 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="name">search_page</property>
-                        <property name="title" translatable="yes">Search</property>
-                        <property name="icon_name">folder-saved-search-symbolic</property>
+                        <property name="name">page1</property>
+                        <property name="title" translatable="yes">page1</property>
                         <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="HdyLeaflet" id="fav_leaflet">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="can_swipe_back">True</property>
-                        <child>
-                          <object class="GtkListBox" id="fav_listbox">
-                            <property name="width_request">200</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">False</property>
-                            <child>
-                              <object class="GtkListBoxRow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="action_name">app.fav_albums</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="border_width">12</property>
-                                    <property name="spacing">12</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">media-optical-bd-symbolic</property>
-                                        <style>
-                                          <class name="sidebar-icon"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Albums</property>
-                                        <property name="xalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkListBoxRow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="action_name">app.fav_artists</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="border_width">12</property>
-                                    <property name="spacing">12</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">avatar-default-symbolic</property>
-                                        <style>
-                                          <class name="sidebar-icon"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Artists</property>
-                                        <property name="xalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkListBoxRow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="action_name">app.fav_tracks</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="border_width">12</property>
-                                    <property name="spacing">12</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">folder-music-symbolic</property>
-                                        <style>
-                                          <class name="sidebar-icon"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Tracks</property>
-                                        <property name="xalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkListBoxRow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="action_name">app.fav_playlists</property>
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="border_width">12</property>
-                                    <property name="spacing">12</property>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">library-music-symbolic</property>
-                                        <style>
-                                          <class name="sidebar-icon"/>
-                                        </style>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">Playlists</property>
-                                        <property name="xalign">0</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkSeparator">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                          </object>
-                        </child>
-                        <child>
-                          <object class="GtkStack" id="fav_stack">
-                            <property name="width_request">428</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="hexpand">True</property>
-                            <property name="transition_type">crossfade</property>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkFlowBox" id="fav_albums_flowbox">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="valign">start</property>
-                                        <property name="border_width">15</property>
-                                        <property name="homogeneous">True</property>
-                                        <property name="column_spacing">5</property>
-                                        <property name="row_spacing">5</property>
-                                        <property name="max_children_per_line">10</property>
-                                        <property name="selection_mode">none</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">fav_albums_page</property>
-                                <property name="title" translatable="yes">page0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkFlowBox" id="fav_artists_flowbox">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="valign">start</property>
-                                        <property name="border_width">15</property>
-                                        <property name="homogeneous">True</property>
-                                        <property name="column_spacing">5</property>
-                                        <property name="row_spacing">5</property>
-                                        <property name="max_children_per_line">10</property>
-                                        <property name="selection_mode">none</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">fav_artists_page</property>
-                                <property name="title" translatable="yes">page0</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkBox">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="border_width">15</property>
-                                        <property name="orientation">vertical</property>
-                                        <child>
-                                          <object class="GtkListBox" id="fav_tracks_listbox">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="valign">start</property>
-                                            <property name="selection_mode">none</property>
-                                          </object>
-                                          <packing>
-                                            <property name="expand">False</property>
-                                            <property name="fill">True</property>
-                                            <property name="position">0</property>
-                                          </packing>
-                                        </child>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">fav_tracks_page</property>
-                                <property name="title" translatable="yes">page1</property>
-                                <property name="position">2</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <child>
-                                  <object class="GtkViewport">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <child>
-                                      <object class="GtkFlowBox" id="fav_playlists_flowbox">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="valign">start</property>
-                                        <property name="border_width">15</property>
-                                        <property name="homogeneous">True</property>
-                                        <property name="column_spacing">5</property>
-                                        <property name="row_spacing">5</property>
-                                        <property name="max_children_per_line">10</property>
-                                        <property name="selection_mode">none</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="name">fav_playlists_page</property>
-                                <property name="title" translatable="yes">page2</property>
-                                <property name="position">3</property>
-                              </packing>
-                            </child>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="name">favorites_page</property>
-                        <property name="title" translatable="yes">Favorites</property>
-                        <property name="icon_name">library-music-symbolic</property>
-                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>

@@ -3,7 +3,8 @@
   <gresource prefix="/com/github/Aurnytoraink/TidalGTK">
     <file>ui/window.ui</file>
     <file>css/style.css</file>
-    <file preprocess="xml-stripblanks">icons/library-music-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/music-note-single-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/playlist-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/heart-filled-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/heart-outline-thin-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/add-toplaylist-symbolic.svg</file>
