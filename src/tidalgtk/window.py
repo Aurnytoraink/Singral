@@ -15,11 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import threading
 from gi.repository import Gtk, Handy, GObject, GLib, Gdk
+
 from tidalgtk.player import Player
-from tidalgtk.search import Search
 from tidalgtk.api.session import Session
+from tidalgtk.help_task import TaskHelper
+from tidalgtk.art_album import AlbumWidget
+from tidalgtk.art_track import TrackListBox, TrackRow
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -41,8 +43,14 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     create_account_btn = Gtk.Template.Child()
     forget_pwd_btn = Gtk.Template.Child()
 
-    #Discover Page
+    #Home Page
     welcome_label = Gtk.Template.Child()
+
+    #Album Page
+    albums_flowbox = Gtk.Template.Child()
+
+    #Songs Page
+    songs_viewport = Gtk.Template.Child()
 
     #Search Page
     search_stack = Gtk.Template.Child()
@@ -103,11 +111,15 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.connect("check-resize",self.update_scale_interface)
         self.enlarge_player_button.connect("clicked",self.display_player)
         self.close_player_button.connect("clicked",self.display_player)
+        self.switchbar_bottom.connect("button-release-event",self.get_page)
+        self.header_switch.connect("button-release-event",self.get_page)
+
         self.log_button.connect("clicked",self.login_username)
         self.log_username.connect("changed",self.update_login_page)
         self.log_password.connect("changed",self.update_login_page)
         self.create_account_btn.connect("clicked",self.create_account)
         self.forget_pwd_btn.connect("clicked",self.forget_pwd)
+
         # TEST ONLY
         self.test_button.connect("clicked",self.logoff)
 
@@ -115,8 +127,12 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         Player(self)
 
         #Init API
-        Search(self)
-        self.session = Session(self)
+        self.session = Session()
+
+        # Init interface
+        # self.songs_listbox = TrackListBox(self.player)
+        self.songs_listbox = TrackListBox()
+        self.songs_viewport.add(self.songs_listbox)
 
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
@@ -138,29 +154,31 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_error_reveal.set_reveal_child(False)
         self.log_button.set_sensitive(False)
         self.log_button_stack.set_visible_child_name("try")
-        threading.Thread(target=self.session.login,args=(self.log_username.get_text(), self.log_password.get_text(),)).start()
+        TaskHelper().run(self.session.login,self.log_username.get_text(), self.log_password.get_text(),callback=(self.on_login,))
 
-    def on_login_sucess(self):
-        self.welcome_label.set_text(f"Welcome, {self.session.username}")
-        self.main_stack.set_visible_child_name("app_page")
-        self.log_username.set_text("")
-        self.log_password.set_text("")
-        self.log_button.set_sensitive(True)
-        self.log_button_stack.set_visible_child_name("icon")
+    def on_login(self,*args):
+        def on_login_sucess():
+            self.welcome_label.set_text(f"Welcome, {self.session.username}")
+            self.main_stack.set_visible_child_name("app_page")
+            self.log_username.set_text("")
+            self.log_password.set_text("")
+            self.log_button.set_sensitive(True)
+            self.log_button_stack.set_visible_child_name("icon")
 
-    def on_login_unsucess(self,*_):
-        self.log_button.set_sensitive(True)
-        self.log_button_stack.set_visible_child_name("icon")
-        self.log_error_label.set_text("Wrong email/password")
-        self.forget_pwd_btn.set_visible(True)
-        self.log_error_reveal.set_reveal_child(True)
+        def on_login_unsucess(error,show):
+            self.log_button.set_sensitive(True)
+            self.log_button_stack.set_visible_child_name("icon")
+            self.log_error_label.set_text(error)
+            self.forget_pwd_btn.set_visible(show)
+            self.log_error_reveal.set_reveal_child(True)
 
-    def on_login_error(self,*_):
-        self.log_button.set_sensitive(True)
-        self.log_button_stack.set_visible_child_name("icon")
-        self.log_error_label.set_text("A internal error occured")
-        self.forget_pwd_btn.set_visible(False)
-        self.log_error_reveal.set_reveal_child(True)
+        if args[0]:
+            on_login_sucess()
+        else:
+            if args[0][1]:
+                on_login_unsucess("Wrong email/password",True)
+            else:
+                on_login_unsucess("A internal error occured",False)
 
     def update_login_page(self,*_):
         self.log_error_reveal.set_reveal_child(False)
@@ -174,3 +192,46 @@ class TidalgtkWindow(Handy.ApplicationWindow):
 
     def forget_pwd(self,*_):
         Gtk.show_uri_on_window(self,"https://www.qobuz.com/reset-password",Gdk.CURRENT_TIME)
+
+
+    # Interface
+    
+    def clear_all(self,*args):
+        for child in self.albums_flowbox.get_children(): child.destroy()
+        for child in self.songs_listbox.get_children(): child.destroy()
+        self.songs_listbox.queue = []
+
+    def get_page(self,switcher,*arg):
+        page = switcher.get_stack().get_visible_child_name()
+        if page == "album_page":
+            self.get_albums()
+        elif page == "artist_page":
+            pass
+        elif page == "song_page":
+            self.get_songs()
+        elif page == "playlist_page":
+            pass
+
+    # Albums
+    def get_albums(self,*args):
+        TaskHelper().run(self.session.get_userfav_albums,callback=(self.display_albums,))
+    
+    def display_albums(self,albums):
+        self.clear_all()
+        for album in albums:
+            self.albums_flowbox.add(AlbumWidget(album))
+
+
+    # Songs
+    def get_songs(self,*args):
+
+        TaskHelper().run(self.session.get_userfav_tracks,callback=(self.display_songs,))
+    
+    def display_songs(self,songs):
+        self.clear_all()
+        self.songs_listbox.queue = songs
+        for song in songs:
+            # self.player.queue.append(song)
+            row = TrackRow(song)
+            self.songs_listbox.add(row)
+            # TaskHelper().run(row.track.parse,self.session,callback=(row.update_duration,))

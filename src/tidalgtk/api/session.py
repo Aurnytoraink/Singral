@@ -15,16 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# import gi
-# gi.require_version('Secret', '1')
-from gi.repository import GLib
-import json
 import time
 import hashlib
 import tidalgtk.api.spoofbuz as spoofbuz
 from tidalgtk.api.request import Requests
 from tidalgtk.api.models import *
-from tidalgtk.favs import Favs
 
 # FOR DEBUGING ONLY
 # from request import Requests
@@ -35,9 +30,7 @@ from tidalgtk.favs import Favs
 # from dotenv import load_dotenv
 
 class Session():
-    def __init__(self, app):
-        self.app = app
-        self.favs = Favs(self.app)
+    def __init__(self):
         self.id = 0
 
     def login(self,email=None,pwd=None,token=None):
@@ -52,11 +45,9 @@ class Session():
 
         r = self.request.get("user/login",'post',params=params)
         if r.status_code == 401:
-            GLib.idle_add(function=self.app.on_login_unsucess())
-            return
+            return False, True
         elif r.status_code == 400:
-            GLib.idle_add(function=self.app.on_login_error())
-            return
+            return False, False
         result = r.json()
         self.uat = result["user_auth_token"]
         self.offer = result["user"]["subscription"]["offer"]
@@ -82,7 +73,7 @@ class Session():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
-        GLib.idle_add(self.app.on_login_sucess())
+        return True
 
     def logoff(self):
         """ Log off:
@@ -148,8 +139,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        result = list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
-        GLib.idle_add(self.favs.show_albums,result)
+        return list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
 
     def get_userfav_artists(self,limit=1000):
         params = {
@@ -158,8 +148,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        result = list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
-        GLib.idle_add(self.favs.show_artists,result)
+        return list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
 
     def get_userfav_tracks(self,limit=1000):
         params = {
@@ -168,8 +157,7 @@ class Session():
             "user_id": self.user_id
         }
         r = self.request.get("favorite/getUserFavorites",params=params)
-        self.result = list(map(lambda x: Track(x).parse(),r.json()["tracks"]["items"]))
-        GLib.idle_add(self.favs.show_tracks,self.result)
+        return list(map(lambda x: Track(x).parse(),r.json()["tracks"]["items"]))
 
     def get_userfav_playlists(self,limit=1000):
         params = {

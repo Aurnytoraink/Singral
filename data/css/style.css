@@ -6,3 +6,5 @@
 .pause_button {border-right-width: 1px; border-style: solid; border-radius: 5px; padding-left: 5px; padding-right: 5px;}
 .next_button {border-left-width: 0px;}
 /* TODO: Remove the over effect on the top button of the enlarge player */
+
+.activatable > * {margin-top: 15px; margin-bottom: 15px; margin-left: 30px; margin-right: 30px;}

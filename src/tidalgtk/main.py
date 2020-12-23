@@ -71,23 +71,6 @@ class Application(Gtk.Application):
         else:
             self.win.main_stack.set_visible_child_name("login_page")
 
-        # Actions that are used in the favs page
-        action = Gio.SimpleAction.new("fav_albums", None)
-        action.connect("activate", self.win.get_fav_albums)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("fav_artists", None)
-        action.connect("activate", self.win.get_fav_artists)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("fav_tracks", None)
-        action.connect("activate", self.win.get_fav_tracks)
-        self.add_action(action)
-
-        action = Gio.SimpleAction.new("fav_playlists", None)
-        action.connect("activate", self.win.get_fav_playlists)
-        self.add_action(action)
-
     def do_quit(self,*_):
         self.quit()
 
