@@ -1,3 +1,7 @@
+/* Login page */
+.close_btn {border-radius: 500px;}
+
+/* Player */
 .enlarge_button {padding: 4px;}
 .pause_button {border-right-width: 1px; border-style: solid; border-radius: 5px; padding-left: 5px; padding-right: 5px;}
 .next_button {border-left-width: 0px;}

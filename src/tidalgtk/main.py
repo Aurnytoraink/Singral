@@ -43,11 +43,27 @@ class Application(Gtk.Application):
         Gtk.Application.do_startup(self)
         Handy.init()
 
+        action = Gio.SimpleAction.new("quit", None)
+        action.connect("activate", self.do_quit)
+        self.add_action(action)
+
+        self.set_accels_for_action("app.quit", ["<Ctl>q"])
+
     def do_activate(self):
         self.win = self.props.active_window
         if not self.win:
             self.win = TidalgtkWindow(application=self)
         self.win.present()
+
+        #Setup CSS
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_resource('/com/github/Aurnytoraink/TidalGTK/css/style.css')
+        Gtk.StyleContext.add_provider_for_screen(
+            self.win.get_screen(), css_provider,
+            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        self.win.playerE_play_button.get_style_context().add_class("pause_button")
+        self.win.playerE_next_button.get_style_context().add_class("next_button")
+        self.win.enlarge_player_button.get_style_context().add_class("enlarge_button")
 
         # Check if or not the user has already logged in
         if self.logged:
@@ -72,6 +88,8 @@ class Application(Gtk.Application):
         action.connect("activate", self.win.get_fav_playlists)
         self.add_action(action)
 
+    def do_quit(self,*_):
+        self.quit()
 
 def main(version):
     app = Application()

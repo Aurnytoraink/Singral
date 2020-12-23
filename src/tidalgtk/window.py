@@ -39,7 +39,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     log_error_label = Gtk.Template.Child()
     log_button_stack = Gtk.Template.Child()
     create_account_btn = Gtk.Template.Child()
-    log_forget_reveal = Gtk.Template.Child()
     forget_pwd_btn = Gtk.Template.Child()
 
     #Discover Page
@@ -126,16 +125,6 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         Search(self)
         self.session = Session(self)
 
-        #Setup CSS
-        css_provider = Gtk.CssProvider()
-        css_provider.load_from_resource('/com/github/Aurnytoraink/TidalGTK/css/style.css')
-        Gtk.StyleContext.add_provider_for_screen(
-            self.get_screen(), css_provider,
-            Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
-        self.playerE_play_button.get_style_context().add_class("pause_button")
-        self.playerE_next_button.get_style_context().add_class("next_button")
-        self.enlarge_player_button.get_style_context().add_class("enlarge_button")
-
     def update_scale_interface(self, *_):
         if self.header_switch.get_title_visible():
             self.switchbar_bottom.set_reveal(True)
@@ -170,18 +159,18 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         self.log_button.set_sensitive(True)
         self.log_button_stack.set_visible_child_name("icon")
         self.log_error_label.set_text("Wrong email/password")
+        self.forget_pwd_btn.set_visible(True)
         self.log_error_reveal.set_reveal_child(True)
-        self.log_forget_reveal.set_reveal_child(True)
 
     def on_login_error(self,*_):
         self.log_button.set_sensitive(True)
         self.log_button_stack.set_visible_child_name("icon")
         self.log_error_label.set_text("A internal error occured")
+        self.forget_pwd_btn.set_visible(False)
         self.log_error_reveal.set_reveal_child(True)
 
     def update_login_page(self,*_):
         self.log_error_reveal.set_reveal_child(False)
-        self.log_forget_reveal.set_reveal_child(False)
 
     def logoff(self,*_):
         self.session.logoff()
