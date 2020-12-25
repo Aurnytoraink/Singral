@@ -1,6 +1,3 @@
-import time
-import hashlib
-
 class Album():
     def __init__(self,item):
         self.id = item["id"]
@@ -15,10 +12,6 @@ class Album():
         self.explicit = item["parental_warning"]
         if "tracks" in item:
             self.tracks = list(map(lambda x: Track("",x).parse(),item["tracks"]["items"]))
-
-    def parse(self):
-        return self
-
 
 class Track():
     def __init__(self,item):
@@ -35,9 +28,6 @@ class Track():
         self.replaygain_gain = item["audio_info"]["replaygain_track_gain"]
         self.replaygain_peak = item["audio_info"]["replaygain_track_peak"]
 
-    def parse(self):
-        return self
-
 
 class Artist():
     def __init__(self, item):
@@ -52,9 +42,6 @@ class Artist():
             self.cover = item["image"]["large"]
         self.name = item["name"]
 
-    def parse(self):
-        return self
-
 class Playlist():
     def __init__(self, item):
         self.id = item["id"]
@@ -64,6 +51,3 @@ class Playlist():
             self.cover = item["image_rectangle"][0] #Qobuz playlists
         else:
             self.cover = item["images300"] #User playlists
-
-    def parse(self):
-        return self
