@@ -1,6 +1,4 @@
-#!@PYTHON@
-
-# com.github.Aurnytoraink.tidalgtk.in
+# help_artwork.py
 #
 # Copyright 2020 Aurnytoraink
 #
@@ -18,24 +16,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
-import signal
-import gettext
 
-VERSION = '@VERSION@'
-pkgdatadir = '@pkgdatadir@'
-localedir = '@localedir@'
+from singral.api.models import Track
 
-sys.path.insert(1, pkgdatadir)
-signal.signal(signal.SIGINT, signal.SIG_DFL)
-gettext.install('tidalgtk', localedir)
-
-if __name__ == '__main__':
-    import gi
-
-    from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'tidalgtk.gresource'))
-    resource._register()
-
-    from tidalgtk import main
-    sys.exit(main.main(VERSION))
+def get_cover_from_album(item,session):
+    if type(item) == Track:
+        id = item.album.id
+    else:
+        id = item.id
+    if os.path.isfile(f'/var/cache/files/covers/album_{id}.jpg') is False:
+        data = session.get_cover_data(item.cover)
+        open(f'/var/cache/files/covers/album_{id}.jpg','xb').write(data)
+    else:
+        data = open(f'/var/cache/files/covers/album_{id}.jpg','rb').read()
+    return data

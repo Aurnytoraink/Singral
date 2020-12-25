@@ -22,7 +22,8 @@ from gi.repository import Gst, GObject
 class GstPlayer(GObject.GObject):
     __gsignals__ = {
         "clock-tick": (GObject.SignalFlags.RUN_FIRST, None, (int, )),
-        "stream-finished": (GObject.SignalFlags.RUN_FIRST, None, ())
+        "stream-finished": (GObject.SignalFlags.RUN_FIRST, None, ()),
+        "on_about_to_finish": (GObject.SignalFlags.RUN_FIRST, None, ())
     }
 
     def __init__(self):
@@ -38,7 +39,7 @@ class GstPlayer(GObject.GObject):
         self.bus.connect("message::error", self.on_bus_error)
         self.bus.connect("message::new-clock", self.new_clock)
 
-        #self.player.connect("about-to-finish", self.on_about_to_finish)
+        self.player.connect("about-to-finish", self.on_about_to_finish)
 
         self._state = 0
         self._tick = 0
@@ -78,9 +79,8 @@ class GstPlayer(GObject.GObject):
             self._state = 3
 
     def on_about_to_finish(self, *_):
-        return
-        #Envoie un signal
-        #Permet de précharger le prochain titre si existe
+        """Send a signal to preload the next song when the current one is about to finish """
+        self.emit("on_about_to_finish")
 
     def _get_duration(self,*_):
         return int(self.player.query_position(Gst.Format.TIME)[1] / 1000000000)

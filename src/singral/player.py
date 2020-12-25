@@ -15,18 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
-from tidalgtk.gst import GstPlayer
-from tidalgtk.models import Track
 import random
 
+from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
+
+from singral.gst import GstPlayer
+from singral.help_task import TaskHelper
+from singral.help_artwork import get_cover_from_album
+
 class Player(Handy.ApplicationWindow):
-    def __init__(self, application):
+    def __init__(self, application, session):
         super().__init__()
 
         # Init GstPlayer
-        self.player = GstPlayer()
-        self.player.state = 0
+        self.gst = GstPlayer()
+        self.gst.state = 0
+
+        self.session = session
 
         self.app = application
         self.app.connect("delete-event",self.close_win)
@@ -37,16 +42,15 @@ class Player(Handy.ApplicationWindow):
         self.app.playerE_prev_button.connect("clicked",self.prev)
         self.app.player_next_button.connect("clicked",self.next)
         self.app.playerE_next_button.connect("clicked",self.next)
-        self.app.player_duration_scale.connect("change-value",self.set_seek)
-        self.app.playerE_duration_scale.connect("change-value",self.set_seek)
+        self.app.player_duration_scale.connect("button-release-event",self.set_seek)
+        self.app.playerE_duration_scale.connect("button-release-event",self.set_seek)
         self.app.like_button.connect("clicked",self.update_like)
         self.app.playerE_repeat_button.connect("clicked",self.update_repeat)
         self.app.playerE_shuffle_button.connect("clicked",self.update_shuffle)
 
-        self.app.test_player_button.connect("clicked",self.test)
-
-        self.player.connect("clock-tick",self.update_duration)
-        self.player.connect("stream-finished",self.next)
+        self.gst.connect("clock-tick",self.update_duration)
+        self.gst.connect("stream-finished",self.next)
+        self.gst.connect("on_about_to_finish",self.preload)
 
         #Repeat(0: Disabled, 1:Playlist, 2:Current song)
         self.repeat_state = 0
@@ -57,43 +61,49 @@ class Player(Handy.ApplicationWindow):
         self.saved_queue = []
         self.current_song = 0
 
-        #THIS IS FOR TEST ONLY
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/N%20U%20I%20T/Enjoy%20the%20Night/02%20I%20Feel%20Love.flac", "I Feel Love","N U I T",240,"/home/aurnytoraink/Musique/N U I T/Enjoy the Night/Enjoy the Night.jpg",True))
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/L.E.J/Pas%20Peur/16%20Pas%20Peur.flac", "Pas peur","L.E.J",196,"/home/aurnytoraink/Musique/L.E.J/Pas Peur/Pas Peur.jpg",True))
-        self.queue.append(Track("file:///home/aurnytoraink/Musique/Eddy%20de%20Pretto/Culte/02%20Random.flac", "Random","Eddy de Pretto",250,"/home/aurnytoraink/Musique/Eddy de Pretto/Culte/Culte.jpg"))
+    def preload(self,*_):
+        TaskHelper().run(self.session.get_streamable_url,self.queue[self.current_song+1])
 
-    def play_pause(self,*_):
-        if self.player._state == 3:
-            self.player.state = 2
-            self.app.player_play_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
-            self.app.playerE_play_image.set_from_icon_name("media-playback-start-symbolic",-1)
-        elif self.player._state == 2:
-            self.player.state = 3
-            self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
-            self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
-        elif self.player._state == 0:
-            self.player.state = 3
-            self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
-            self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
+    def load(self,queue,position):
+        self.queue = queue
+        self.current_song = position
+        TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
 
     def play(self, track):
-        self.player.state = 0
-        self.player.change_track(track.uri)
-        self.player.state = 3
+        self.gst.state = 0
+        self.url = self.session.get_streamable_url(track)
+        self.gst.change_track(self.url)
+        self.gst.state = 3
+        return track
+
+    def update_interface(self,track):
+        def display_cover(data,self):
+            try:
+                loader = GdkPixbuf.PixbufLoader.new()
+                loader.write(data)
+                loader.close()
+                loader = loader.get_pixbuf()
+                cover_btn = loader.scale_simple(32,32,GdkPixbuf.InterpType.BILINEAR)
+                cover_enlarge_player = loader.scale_simple(316,316,GdkPixbuf.InterpType.BILINEAR)
+                self.app.player_cover.set_from_pixbuf(cover_btn)
+                self.app.playerE_cover.set_from_pixbuf(cover_enlarge_player)
+            except:
+                self.app.player_cover.set_from_icon_name("folder-music-symbolic",32)
+                self.app.playerE_cover.set_from_icon_name("folder-music-symbolic",316)
 
         #Display songs info
         self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
         self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
         self.app.player_title.set_text(track.title)
         self.app.playerE_title.set_text(track.title)
-        self.app.player_artist.set_text(track.artist)
-        self.app.playerE_artist.set_text(track.artist)
-        minutes = int(track.duration/60)
-        secondes = track.duration % 60
-        if secondes < 10:
-            secondes = "0" + str(secondes)
-        self.app.player_total_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.playerE_total_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
+        self.app.player_artist.set_text(track.artist.name)
+        self.app.playerE_artist.set_text(track.artist.name)
+        min = int(track.duration/60)
+        sec = track.duration % 60
+        if sec < 10:
+            sec = "0" + str(sec)
+        self.app.player_total_duration.set_text(f"{min}:{sec}")
+        self.app.playerE_total_duration.set_text(f"{min}:{sec}")
 
         #Set duration scale
         self.app.duration_scale.set_upper(float(track.duration))
@@ -101,21 +111,33 @@ class Player(Handy.ApplicationWindow):
 
         #Display cover (if avaible)
         if track.cover is not None:
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(track.cover,32,32,True)
-            self.app.player_cover.set_from_pixbuf(pixbuf)
-            pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(track.cover,316,316,True)
-            self.app.playerE_cover.set_from_pixbuf(pixbuf)
+            TaskHelper().run(get_cover_from_album,track,self.session,callback=(display_cover,self))
         else:
             self.app.player_cover.set_from_icon_name("folder-music-symbolic",32)
             self.app.playerE_cover.set_from_icon_name("folder-music-symbolic",316)
 
         #Display like statue:
-        if track.like:
-            self.app.like_button_img.set_from_icon_name("heart-filled-symbolic",Gtk.IconSize.BUTTON)
-        else:
-            self.app.like_button_img.set_from_icon_name("heart-outline-thin-symbolic",Gtk.IconSize.BUTTON)
+        # if track.like:
+        #     self.app.like_button_img.set_from_icon_name("heart-filled-symbolic",Gtk.IconSize.BUTTON)
+        # else:
+        #     self.app.like_button_img.set_from_icon_name("heart-outline-thin-symbolic",Gtk.IconSize.BUTTON)
 
+        self.app.player_reveal.set_reveal_child(True)
         self.update_queue()
+
+    def play_pause(self,*_):
+        if self.gst._state == 3:
+            self.gst.state = 2
+            self.app.player_play_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
+            self.app.playerE_play_image.set_from_icon_name("media-playback-start-symbolic",-1)
+        elif self.gst._state == 2:
+            self.gst.state = 3
+            self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
+            self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
+        elif self.gst._state == 0:
+            self.gst.state = 3
+            self.app.player_play_image.set_from_icon_name("media-playback-pause-symbolic",Gtk.IconSize.BUTTON)
+            self.app.playerE_play_image.set_from_icon_name("media-playback-pause-symbolic",-1)
 
     def stop(self):
         self.app.player_play_image.set_from_icon_name("media-playback-start-symbolic",Gtk.IconSize.BUTTON)
@@ -128,40 +150,40 @@ class Player(Handy.ApplicationWindow):
 
     def next(self,*_):
         if self.repeat_state == 2:
-            self.play(self.queue[self.current_song])
+            TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
             return
 
         if self.has_next():
             self.current_song += 1
-            self.play(self.queue[self.current_song])
+            TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
         else:
             if self.repeat_state == 1:
                 self.current_song = 0
-                self.play(self.queue[self.current_song])
+                TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
             else:
                 self.stop()
 
     def prev(self,*_):
-        if self.repeat_state == 2 or self.current_song == 0 or self.player._get_duration() > 3:
-            self.play(self.queue[self.current_song])
+        if self.repeat_state == 2 or self.current_song == 0 or self.gst._get_duration() > 3:
+            TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
             return
 
         self.current_song -= 1
-        self.play(self.queue[self.current_song])
+        TaskHelper().run(self.play,self.queue[self.current_song],callback=(self.update_interface,))
 
     #Stop music when user closes window
     def close_win(self,*_):
-        self.player.state = 0
+        self.gst.state = 0
 
     def update_duration(self,*_):
-        duration = self.player._get_duration()
+        duration = self.gst._get_duration()
         minutes = int(duration/60)
         secondes = duration % 60
         if secondes < 10:
             secondes = "0" + str(secondes)
         self.app.player_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
         self.app.playerE_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.duration_scale.set_value(self.player._get_duration())
+        self.app.duration_scale.set_value(self.gst._get_duration())
 
     def update_queue(self,*_):
         if self.current_song >= (len(self.queue) - 1) and self.repeat_state == 0:
@@ -216,30 +238,5 @@ class Player(Handy.ApplicationWindow):
     #When user change the current duration
     def set_seek(self, *args):
         value = int(self.app.duration_scale.get_value())
-        if self.player.seek(value):
-            self.app.duration_scale.set_value(self.player._get_duration())
-
-
-
-
-
-    # Only here for tests
-    def test(self,*_):
-        filechooser = Gtk.FileChooserDialog("Open File",
-                                           self.app,
-                                           Gtk.FileChooserAction.OPEN,
-                                           ("_Cancel", Gtk.ResponseType.CANCEL,
-                                            "_Open", Gtk.ResponseType.OK)
-                                           )
-        response = filechooser.run()
-        if response == Gtk.ResponseType.OK:
-            filename = filechooser.get_uri()
-            self.queue.append(Track(filename, "I Feel Love","N U I T",240,"/home/aurnytoraink/Musique/N U I T/Enjoy the Night/Enjoy the Night.jpg"))
-            if self.player._state == 0:
-                print(self.current_song)
-                self.play(self.queue[self.current_song])
-            self.app.player_reveal.set_reveal_child(True)
-        filechooser.destroy()
-        self.update_queue()
-        
-    
+        if self.gst.seek(value):
+            self.app.duration_scale.set_value(self.gst._get_duration())
