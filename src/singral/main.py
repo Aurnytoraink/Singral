@@ -23,12 +23,12 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Handy', '1')
 from gi.repository import Gtk, Gio, Handy
 
-from .window import TidalgtkWindow
+from .window import SingralWindow
 
 
 class Application(Gtk.Application):
     def __init__(self):
-        super().__init__(application_id='com.github.Aurnytoraink.TidalGTK',
+        super().__init__(application_id='com.github.Aurnytoraink.Singral',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
         # This is for test
         # In the futur, the app will check on startup if a user as already login or not
@@ -52,12 +52,12 @@ class Application(Gtk.Application):
     def do_activate(self):
         self.win = self.props.active_window
         if not self.win:
-            self.win = TidalgtkWindow(application=self)
+            self.win = SingralWindow(application=self)
         self.win.present()
 
         #Setup CSS
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_resource('/com/github/Aurnytoraink/TidalGTK/css/style.css')
+        css_provider.load_from_resource('/com/github/Aurnytoraink/Singral/css/style.css')
         Gtk.StyleContext.add_provider_for_screen(
             self.win.get_screen(), css_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)

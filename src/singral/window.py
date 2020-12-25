@@ -17,16 +17,16 @@
 
 from gi.repository import Gtk, Handy, GObject, GLib, Gdk
 
-from tidalgtk.player import Player
-from tidalgtk.api.session import Session
-from tidalgtk.help_task import TaskHelper
-from tidalgtk.art_album import AlbumWidget
-from tidalgtk.art_track import TrackListBox, TrackRow
-from tidalgtk.help_artwork import get_cover_from_album
+from singral.player import Player
+from singral.api.session import Session
+from singral.help_task import TaskHelper
+from singral.art_album import AlbumWidget
+from singral.art_track import TrackListBox, TrackRow
+from singral.help_artwork import get_cover_from_album
 
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
-class TidalgtkWindow(Handy.ApplicationWindow):
-    __gtype_name__ = 'TidalgtkWindow'
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/window.ui')
+class SingralWindow(Handy.ApplicationWindow):
+    __gtype_name__ = 'SingralWindow'
 
     main_stack = Gtk.Template.Child()
     app_stack = Gtk.Template.Child()

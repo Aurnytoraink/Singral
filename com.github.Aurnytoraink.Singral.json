@@ -1,9 +1,9 @@
 {
-    "app-id" : "com.github.Aurnytoraink.TidalGTK",
+    "app-id" : "com.github.Aurnytoraink.Singral",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "3.38",
     "sdk" : "org.gnome.Sdk",
-    "command" : "tidalgtk",
+    "command" : "singral",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
@@ -101,13 +101,13 @@
             ]
         },
         {
-            "name" : "tidalgtk",
+            "name" : "singral",
             "builddir" : true,
             "buildsystem" : "meson",
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/aurnytoraink/Projets/Applications/TidalGTK"
+                    "url" : "file:///home/aurnytoraink/Projets/Applications/Singral"
                 }
             ]
         }

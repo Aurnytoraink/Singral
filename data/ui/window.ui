@@ -8,7 +8,7 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <template class="TidalgtkWindow" parent="HdyApplicationWindow">
+  <template class="SingralWindow" parent="HdyApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Tidal</property>
     <child>

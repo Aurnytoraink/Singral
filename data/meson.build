@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'com.github.Aurnytoraink.TidalGTK.desktop.in',
-  output: 'com.github.Aurnytoraink.TidalGTK.desktop',
+  input: 'com.github.Aurnytoraink.Singral.desktop.in',
+  output: 'com.github.Aurnytoraink.Singral.desktop',
   type: 'desktop',
   po_dir: '../po',
   install: true,
@@ -15,8 +15,8 @@ if desktop_utils.found()
 endif
 
 appstream_file = i18n.merge_file(
-  input: 'com.github.Aurnytoraink.TidalGTK.appdata.xml.in',
-  output: 'com.github.Aurnytoraink.TidalGTK.appdata.xml',
+  input: 'com.github.Aurnytoraink.Singral.appdata.xml.in',
+  output: 'com.github.Aurnytoraink.Singral.appdata.xml',
   po_dir: '../po',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'appdata')
@@ -29,7 +29,7 @@ if appstream_util.found()
   )
 endif
 
-install_data('com.github.Aurnytoraink.TidalGTK.gschema.xml',
+install_data('com.github.Aurnytoraink.Singral.gschema.xml',
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
 
@@ -41,11 +41,11 @@ if compile_schemas.found()
 endif
 
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'tidalgtk')
+moduledir = join_paths(pkgdatadir, 'singral')
 gnome = import('gnome')
 
-gnome.compile_resources('tidalgtk',
-  'com.github.Aurnytoraink.tidalgtk.gresource.xml',
+gnome.compile_resources('singral',
+  'com.github.Aurnytoraink.singral.gresource.xml',
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,

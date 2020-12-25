@@ -1,6 +1,6 @@
-data/com.github.Aurnytoraink.TidalGTK.desktop.in
-data/com.github.Aurnytoraink.TidalGTK.appdata.xml.in
-data/com.github.Aurnytoraink.TidalGTK.gschema.xml
+data/com.github.Aurnytoraink.Singral.desktop.in
+data/com.github.Aurnytoraink.Singral.appdata.xml.in
+data/com.github.Aurnytoraink.Singral.gschema.xml
 src/window.ui
 src/main.py
 src/window.py

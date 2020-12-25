@@ -17,9 +17,9 @@
 
 import time
 import hashlib
-import tidalgtk.api.spoofbuz as spoofbuz
-from tidalgtk.api.request import Requests
-from tidalgtk.api.models import Album, Artist, Track, Playlist
+import singral.api.spoofbuz as spoofbuz
+from singral.api.request import Requests
+from singral.api.models import Album, Artist, Track, Playlist
 
 # FOR DEBUGING ONLY
 # from request import Requests

@@ -9,11 +9,11 @@ conf.set('pkgdatadir', pkgdatadir)
 conf.set('pythondir', join_paths(get_option('prefix'), python3.sysconfig_path('purelib')))
 
 configure_file(
-  input: 'com.github.Aurnytoraink.tidalgtk.in',
-  output: 'tidalgtk',
+  input: 'com.github.Aurnytoraink.singral.in',
+  output: 'singral',
   configuration: conf,
   install: true,
   install_dir: get_option('bindir')
 )
 
-install_subdir('tidalgtk', install_dir: join_paths(get_option('prefix'), python3.sysconfig_path('purelib')))
+install_subdir('singral', install_dir: join_paths(get_option('prefix'), python3.sysconfig_path('purelib')))

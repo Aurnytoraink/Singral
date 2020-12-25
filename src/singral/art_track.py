@@ -17,7 +17,7 @@
 
 from gi.repository import Gtk, Pango, GdkPixbuf
 
-from tidalgtk.help_task import TaskHelper
+from singral.help_task import TaskHelper
 
 class TrackRow(Gtk.ListBoxRow):
     def __init__(self,track):

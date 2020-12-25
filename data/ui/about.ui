@@ -6,7 +6,7 @@
     <property name="can_focus">False</property>
     <property name="modal">True</property>
     <property name="type_hint">dialog</property>
-    <property name="program_name">TidalGTK</property>
+    <property name="program_name">Singral</property>
     <property name="copyright" translatable="yes">TIDAL</property>
     <property name="comments" translatable="yes">Steam your favorites songs in high quality</property>
     <property name="authors">Aurnytoraink</property>

@@ -1,1 +1,1 @@
-i18n.gettext('tidalgtk', preset: 'glib')
+i18n.gettext('singral', preset: 'glib')

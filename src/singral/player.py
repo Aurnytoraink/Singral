@@ -19,9 +19,9 @@ import random
 
 from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
 
-from tidalgtk.gst import GstPlayer
-from tidalgtk.help_task import TaskHelper
-from tidalgtk.help_artwork import get_cover_from_album
+from singral.gst import GstPlayer
+from singral.help_task import TaskHelper
+from singral.help_artwork import get_cover_from_album
 
 class Player(Handy.ApplicationWindow):
     def __init__(self, application, session):
