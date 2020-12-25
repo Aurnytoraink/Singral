@@ -500,8 +500,8 @@
                                     <property name="valign">start</property>
                                     <property name="border_width">15</property>
                                     <property name="homogeneous">True</property>
-                                    <property name="column_spacing">5</property>
-                                    <property name="row_spacing">5</property>
+                                    <property name="column_spacing">10</property>
+                                    <property name="row_spacing">10</property>
                                     <property name="max_children_per_line">10</property>
                                     <property name="selection_mode">none</property>
                                   </object>

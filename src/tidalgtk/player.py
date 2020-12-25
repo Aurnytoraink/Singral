@@ -21,6 +21,7 @@ from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
 
 from tidalgtk.gst import GstPlayer
 from tidalgtk.help_task import TaskHelper
+from tidalgtk.help_artwork import get_cover_from_album
 
 class Player(Handy.ApplicationWindow):
     def __init__(self, application, session):
@@ -110,7 +111,7 @@ class Player(Handy.ApplicationWindow):
 
         #Display cover (if avaible)
         if track.cover is not None:
-            TaskHelper().run(self.session.get_cover_data,track.cover,callback=(display_cover,self))
+            TaskHelper().run(get_cover_from_album,track,self.session,callback=(display_cover,self))
         else:
             self.app.player_cover.set_from_icon_name("folder-music-symbolic",32)
             self.app.playerE_cover.set_from_icon_name("folder-music-symbolic",316)

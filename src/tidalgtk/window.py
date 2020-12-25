@@ -22,6 +22,7 @@ from tidalgtk.api.session import Session
 from tidalgtk.help_task import TaskHelper
 from tidalgtk.art_album import AlbumWidget
 from tidalgtk.art_track import TrackListBox, TrackRow
+from tidalgtk.help_artwork import get_cover_from_album
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/TidalGTK/ui/window.ui')
 class TidalgtkWindow(Handy.ApplicationWindow):
@@ -211,6 +212,7 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         elif page == "playlist_page":
             pass
 
+
     # Albums
     def get_albums(self,*args):
         TaskHelper().run(self.session.get_userfav_albums,callback=(self.display_albums,))
@@ -218,19 +220,18 @@ class TidalgtkWindow(Handy.ApplicationWindow):
     def display_albums(self,albums):
         self.clear_all()
         for album in albums:
-            self.albums_flowbox.add(AlbumWidget(album))
-
+            row = AlbumWidget(album)
+            self.albums_flowbox.add(row)
+            TaskHelper().run(get_cover_from_album,row.album,self.session,callback=(row.display_cover,))
 
     # Songs
     def get_songs(self,*args):
-
         TaskHelper().run(self.session.get_userfav_tracks,callback=(self.display_songs,))
     
     def display_songs(self,songs):
         self.clear_all()
         self.songs_listbox.queue = songs
         for song in songs:
-            # self.player.queue.append(song)
             row = TrackRow(song)
             self.songs_listbox.add(row)
-            # TaskHelper().run(row.track.parse,self.session,callback=(row.update_duration,))
+            TaskHelper().run(get_cover_from_album,row.track,self.session,callback=(row.display_cover,))

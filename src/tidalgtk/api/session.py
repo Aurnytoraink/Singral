@@ -31,6 +31,7 @@ from tidalgtk.api.models import Album, Artist, Track, Playlist
 class Session():
     def __init__(self):
         self.id = 0
+        self.base_url = "https://www.qobuz.com/api.json/0.2/"
 
     def login(self,email=None,pwd=None,token=None):
         spoofer = spoofbuz.Spoofer()
@@ -42,7 +43,7 @@ class Session():
                 "user_auth_token":token,
         }
 
-        r = self.request.get("user/login",'post',params=params)
+        r = self.request.get(self.base_url+"user/login",'post',params=params)
         if r.status_code == 401:
             return False, True
         elif r.status_code == 400:
@@ -89,7 +90,7 @@ class Session():
             "user_auth_token": self.uat,
             "request_ts": unix,
             "request_sig": r_sig_hashed}
-        r = self.request.get('userLibrary/getAlbumsList?',params=params)
+        r = self.request.get(self.base_url+'userLibrary/getAlbumsList?',params=params)
         return r.ok
 
     def search(self,query,limit=10):
@@ -97,7 +98,7 @@ class Session():
             "query": query,
             "limit": limit
         }
-        r = self.request.get("catalog/search",params=params)
+        r = self.request.get(self.base_url+"catalog/search",params=params)
         results = r.json()
         albums = results["albums"]["items"]
         tracks = results["tracks"]["items"]
@@ -111,7 +112,7 @@ class Session():
             "limit": limit,
             "extra": extra
         }
-        r = self.request.get("album/get",params=params)
+        r = self.request.get(self.base_url+"album/get",params=params)
         return Album(r.json())
 
     def get_track(self,id,limit=100,extra=None):
@@ -120,7 +121,7 @@ class Session():
             "limit": limit,
             "extra": extra
         }
-        r = self.request.get("track/get",params=params)
+        r = self.request.get(self.base_url+"track/get",params=params)
         return Track(r.json())
 
     def get_artist(self,id,extra=None):
@@ -128,7 +129,7 @@ class Session():
             "artist_id": id,
             "extra": extra
         }
-        r = self.request.get("artist/get",params=params)
+        r = self.request.get(self.base_url+"artist/get",params=params)
         return Artist(r.json())
         
     def get_userfav_albums(self,limit=1000):
@@ -137,7 +138,7 @@ class Session():
             "type" : "albums",
             "user_id": self.user_id
         }
-        r = self.request.get("favorite/getUserFavorites",params=params)
+        r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Album(x).parse(),r.json()["albums"]["items"]))
 
     def get_userfav_artists(self,limit=1000):
@@ -146,7 +147,7 @@ class Session():
             "type" : "artists",
             "user_id": self.user_id
         }
-        r = self.request.get("favorite/getUserFavorites",params=params)
+        r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Artist(x).parse(),r.json()["artists"]["items"]))
 
     def get_userfav_tracks(self,limit=1000):
@@ -155,7 +156,7 @@ class Session():
             "type" : "tracks",
             "user_id": self.user_id
         }
-        r = self.request.get("favorite/getUserFavorites",params=params)
+        r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Track(x).parse(),r.json()["tracks"]["items"]))
 
     def get_userfav_playlists(self,limit=1000):
@@ -163,7 +164,7 @@ class Session():
             "limit" : limit,
             "user_id": self.user_id
         }
-        r = self.request.get("playlist/getUserPlaylists",params=params)
+        r = self.request.get(self.base_url+"playlist/getUserPlaylists",params=params)
         return list(map(lambda x: Playlist(x).parse(),r.json()["playlists"]["items"]))
 
     def get_streamable_url(self,track):
@@ -183,10 +184,10 @@ class Session():
             "format_id": self.quality,
             "intent": 'stream'}
 
-        return self.request.get("track/getFileUrl?",params=params).json()["url"]
+        return self.request.get(self.base_url+"track/getFileUrl?",params=params).json()["url"]
 
-    # def get_cover_data(self,item):
-    #     return
+    def get_cover_data(self,url):
+        return self.request.get(url).content
 
 
 
@@ -194,7 +195,7 @@ class Session():
 # load_dotenv()
 # session = Session()
 # session.login(token=os.getenv('token'))
-# # session.login(os.getenv('email'),os.getenv('pwd'))
+# session.login(os.getenv('email'),os.getenv('pwd'))
 
 
 # query = str(input("Search: "))
@@ -226,3 +227,8 @@ class Session():
 # track = session.get_track(result[1][0]["id"])
 # print(f"⏯Playing: {track.title} from {track.artist.name}")
 # print(track.get_url(27))
+
+# track = session.get_userfav_tracks()[0]
+# print(session.get_streamable_url(track))
+# data = session.get_cover_data(track.cover)
+# open('test.jpg','xb').write(data)

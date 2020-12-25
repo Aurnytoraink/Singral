@@ -35,5 +35,3 @@ class TaskHelper:
                     GLib.idle_add(callback, result, *callback_args)
         except Exception as e:
             print(f"\nError: {e}")
-
-

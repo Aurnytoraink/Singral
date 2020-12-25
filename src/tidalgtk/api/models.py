@@ -26,8 +26,7 @@ class Track():
         self.title = item["title"]
         self.duration = item["duration"]
         self.album = Album(item["album"])
-        # self.cover = self.album.cover
-        self.cover = None
+        self.cover = self.album.cover
         self.artist = self.album.artist
         if "composer" in item["album"]:
             self.composer = Artist(item["album"]["composer"])
