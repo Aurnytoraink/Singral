@@ -82,18 +82,17 @@ class TrackRow(Gtk.ListBoxRow):
 
 
 class TrackListBox(Gtk.ListBox):
-    # def __init__(self,player):
-    def __init__(self):
+    def __init__(self,player):
         Gtk.ListBox.__init__(self)
-        # self.player = player
+        self.player = player
         self.queue = []
         self.get_style_context().add_class("content")
-        # self.connect("row-activated",self.on_row_clicked)
+        self.connect("row-activated",self.on_row_clicked)
 
         self.set_activate_on_single_click(True)
         self.set_selection_mode(Gtk.SelectionMode.NONE)
         self.show()
 
-    # def on_row_clicked(self,list,row):
-    #     position = row.get_index()
-    #     TaskHelper().run(self.player.load,self.queue,position)
+    def on_row_clicked(self,list,row):
+        position = row.get_index()
+        TaskHelper().run(self.player.load,self.queue,position)

@@ -26,7 +26,8 @@ class Track():
         self.title = item["title"]
         self.duration = item["duration"]
         self.album = Album(item["album"])
-        self.cover = self.album.cover
+        # self.cover = self.album.cover
+        self.cover = None
         self.artist = self.album.artist
         if "composer" in item["album"]:
             self.composer = Artist(item["album"]["composer"])
@@ -37,25 +38,6 @@ class Track():
 
     def parse(self):
         return self
-
-    def get_url(self,request,quality):
-        """Quality:
-            MP3: 5
-            CD 16 bits/44.1kHz: 6
-            HiRes 24 bits/96kHz: 7
-            HiRes 24 bits/192kHz: 27
-        """
-        unix = time.time()
-        r_sig = f"trackgetFileUrlformat_id{quality}intentstreamtrack_id{self.id}{unix}{request.key}"
-        r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
-        params={
-            "request_ts": unix,
-            "request_sig": r_sig_hashed,
-            "track_id": self.id,
-            "format_id": quality,
-            "intent": 'stream'}
-
-        return request.get("track/getFileUrl?",params=params).json()["url"]
 
 
 class Artist():

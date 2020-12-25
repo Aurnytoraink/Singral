@@ -123,15 +123,14 @@ class TidalgtkWindow(Handy.ApplicationWindow):
         # TEST ONLY
         self.test_button.connect("clicked",self.logoff)
 
-        # Init player
-        Player(self)
-
         #Init API
         self.session = Session()
 
+        # Init player
+        self.player = Player(self,self.session)
+
         # Init interface
-        # self.songs_listbox = TrackListBox(self.player)
-        self.songs_listbox = TrackListBox()
+        self.songs_listbox = TrackListBox(self.player)
         self.songs_viewport.add(self.songs_listbox)
 
     def update_scale_interface(self, *_):

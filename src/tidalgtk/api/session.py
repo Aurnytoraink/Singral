@@ -19,13 +19,12 @@ import time
 import hashlib
 import tidalgtk.api.spoofbuz as spoofbuz
 from tidalgtk.api.request import Requests
-from tidalgtk.api.models import *
+from tidalgtk.api.models import Album, Artist, Track, Playlist
 
 # FOR DEBUGING ONLY
 # from request import Requests
 # import spoofbuz
 # from models import *
-# from exceptions import *
 # import os
 # from dotenv import load_dotenv
 
@@ -167,15 +166,35 @@ class Session():
         r = self.request.get("playlist/getUserPlaylists",params=params)
         return list(map(lambda x: Playlist(x).parse(),r.json()["playlists"]["items"]))
 
+    def get_streamable_url(self,track):
+        """Quality:
+            MP3: 5
+            CD 16 bits/44.1kHz: 6
+            HiRes 24 bits/96kHz: 7
+            HiRes 24 bits/192kHz: 27
+        """
+        unix = time.time()
+        r_sig = f"trackgetFileUrlformat_id{self.quality}intentstreamtrack_id{track.id}{unix}{self.request.key}"
+        r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
+        params={
+            "request_ts": unix,
+            "request_sig": r_sig_hashed,
+            "track_id": track.id,
+            "format_id": self.quality,
+            "intent": 'stream'}
+
+        return self.request.get("track/getFileUrl?",params=params).json()["url"]
+
+    # def get_cover_data(self,item):
+    #     return
 
 
 
-
-# FOR DEBUGING ONLY
+# # FOR DEBUGING ONLY
 # load_dotenv()
-# session = Session("")
+# session = Session()
 # session.login(token=os.getenv('token'))
-# session.login(os.getenv('email'),os.getenv('pwd'))
+# # session.login(os.getenv('email'),os.getenv('pwd'))
 
 
 # query = str(input("Search: "))
@@ -186,14 +205,14 @@ class Session():
 # result = session.get_album("me0u2on4vwh8a")
 # print(result.tracks)
 
-""" Get a track URL"""
+# """ Get a track URL"""
 # track = session.get_track(62776106)
 # track = session.get_track(102280007)
 # result = track.get_url(27)
 # print(f"⏯Playing: {track.title} from {track.artist.name}")
 # print(result)
 
-""" Stream a track from a search"""
+# """ Stream a track from a search"""
 # query = str(input("Search: "))
 # result = session.search(query,1)
 # track = session.get_track(result[1][0]["id"])
