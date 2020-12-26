@@ -47,7 +47,7 @@ class ArtistRow(Gtk.ListBoxRow):
         loader.close()
         loader = loader.get_pixbuf()
         loader = loader.scale_simple(size,size,GdkPixbuf.InterpType.BILINEAR)
-        self.set_image_load_func(HdyAvatarImageLoadFunc(size,loader))
+        self.cover.set_image_load_func(Handy.AvatarImageLoadFunc(size,loader))
 
 class ArtistListBox(Gtk.ListBox):
     def __init__(self):
