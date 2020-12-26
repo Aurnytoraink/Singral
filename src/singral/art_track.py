@@ -52,7 +52,7 @@ class TrackRow(Gtk.ListBoxRow):
         self.duration.show()
 
         self.cover = Gtk.Image.new()
-        self.cover.set_from_icon_name("folder-music-symbolic",32)
+        self.cover.set_from_icon_name("folder-music-symbolic",35)
         self.cover.show()
 
         box_name = Gtk.Box.new(Gtk.Orientation(0),0)

@@ -30,3 +30,11 @@ def get_cover_from_album(item,session):
     else:
         data = open(f'/var/cache/files/covers/album_{id}.jpg','rb').read()
     return data
+
+def get_cover_from_artist(item,session):
+    if os.path.isfile(f'/var/cache/files/covers/artist_{item.id}.jpg') is False:
+        data = session.get_cover_data(item.cover)
+        open(f'/var/cache/files/covers/artist_{item.id}.jpg','xb').write(data)
+    else:
+        data = open(f'/var/cache/files/covers/artist_{item.id}.jpg','rb').read()
+    return data

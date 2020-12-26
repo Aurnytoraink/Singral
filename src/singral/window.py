@@ -22,7 +22,8 @@ from singral.api.session import Session
 from singral.help_task import TaskHelper
 from singral.art_album import AlbumWidget
 from singral.art_track import TrackListBox, TrackRow
-from singral.help_artwork import get_cover_from_album
+from singral.art_artist import ArtistListBox, ArtistRow
+from singral.help_artwork import get_cover_from_album, get_cover_from_artist
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/window.ui')
 class SingralWindow(Handy.ApplicationWindow):
@@ -49,6 +50,9 @@ class SingralWindow(Handy.ApplicationWindow):
 
     #Album Page
     albums_flowbox = Gtk.Template.Child()
+
+    #Artist Page
+    artist_viewport = Gtk.Template.Child()
 
     #Songs Page
     songs_viewport = Gtk.Template.Child()
@@ -131,6 +135,8 @@ class SingralWindow(Handy.ApplicationWindow):
         self.player = Player(self,self.session)
 
         # Init interface
+        self.artists_listbox = ArtistListBox()
+        self.artist_viewport.add(self.artists_listbox)
         self.songs_listbox = TrackListBox(self.player)
         self.songs_viewport.add(self.songs_listbox)
 
@@ -199,6 +205,7 @@ class SingralWindow(Handy.ApplicationWindow):
     def clear_all(self,*args):
         for child in self.albums_flowbox.get_children(): child.destroy()
         for child in self.songs_listbox.get_children(): child.destroy()
+        for child in self.artists_listbox.get_children(): child.destroy()
         self.songs_listbox.queue = []
 
     def get_page(self,switcher,*arg):
@@ -206,7 +213,7 @@ class SingralWindow(Handy.ApplicationWindow):
         if page == "album_page":
             self.get_albums()
         elif page == "artist_page":
-            pass
+            self.get_artists()
         elif page == "song_page":
             self.get_songs()
         elif page == "playlist_page":
@@ -214,7 +221,7 @@ class SingralWindow(Handy.ApplicationWindow):
 
 
     # Albums
-    def get_albums(self,*args):
+    def get_albums(self):
         TaskHelper().run(self.session.get_userfav_albums,callback=(self.display_albums,))
     
     def display_albums(self,albums):
@@ -225,7 +232,7 @@ class SingralWindow(Handy.ApplicationWindow):
             TaskHelper().run(get_cover_from_album,row.album,self.session,callback=(row.display_cover,))
 
     # Songs
-    def get_songs(self,*args):
+    def get_songs(self):
         TaskHelper().run(self.session.get_userfav_tracks,callback=(self.display_songs,))
     
     def display_songs(self,songs):
@@ -235,3 +242,15 @@ class SingralWindow(Handy.ApplicationWindow):
             row = TrackRow(song)
             self.songs_listbox.add(row)
             TaskHelper().run(get_cover_from_album,row.track,self.session,callback=(row.display_cover,))
+
+    # Artists
+    def get_artists(self):
+        TaskHelper().run(self.session.get_userfav_artists,callback=(self.display_artists,))
+    
+    def display_artists(self,artists):
+        self.clear_all()
+        self.songs_listbox.queue = artists
+        for artist in artists:
+            row = ArtistRow(artist)
+            self.artists_listbox.add(row)
+            TaskHelper().run(get_cover_from_artist,row.artist,self.session,callback=(row.display_cover,))
