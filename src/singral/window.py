@@ -162,7 +162,7 @@ class SingralWindow(Handy.ApplicationWindow):
         self.log_button_stack.set_visible_child_name("try")
         TaskHelper().run(self.session.login,self.log_username.get_text(), self.log_password.get_text(),callback=(self.on_login,))
 
-    def on_login(self,*args):
+    def on_login(self,state):
         def on_login_sucess():
             self.welcome_label.set_text(f"Welcome, {self.session.username}")
             self.main_stack.set_visible_child_name("app_page")
@@ -178,10 +178,10 @@ class SingralWindow(Handy.ApplicationWindow):
             self.forget_pwd_btn.set_visible(show)
             self.log_error_reveal.set_reveal_child(True)
 
-        if args[0]:
+        if type(state) == bool:
             on_login_sucess()
         else:
-            if args[0][1]:
+            if state[1]:
                 on_login_unsucess("Wrong email/password",True)
             else:
                 on_login_unsucess("A internal error occured",False)
