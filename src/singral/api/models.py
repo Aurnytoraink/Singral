@@ -49,6 +49,7 @@ class Track():
 class Artist():
     def __init__(self, item):
         self.id = item["id"]
+        self.name = item["name"]
         if item["image"] is None:
             self.cover = None
         elif "mega" in item["image"]:
@@ -57,7 +58,8 @@ class Artist():
             self.cover = item["image"]["extralarge"]
         elif "large" in item["image"]:
             self.cover = item["image"]["large"]
-        self.name = item["name"]
+        if "biography" in item:
+            self.bio = item["biography"]["content"]
 
 class Playlist():
     def __init__(self, item):

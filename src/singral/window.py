@@ -53,6 +53,7 @@ class SingralWindow(Handy.ApplicationWindow):
 
     #Artist Page
     artist_viewport = Gtk.Template.Child()
+    artist_viewpage = Gtk.Template.Child()
 
     #Songs Page
     songs_viewport = Gtk.Template.Child()
@@ -135,7 +136,7 @@ class SingralWindow(Handy.ApplicationWindow):
         self.player = Player(self,self.session)
 
         # Init interface
-        self.artists_listbox = ArtistListBox()
+        self.artists_listbox = ArtistListBox(self)
         self.artist_viewport.add(self.artists_listbox)
         self.songs_listbox = TrackListBox(self.player)
         self.songs_viewport.add(self.songs_listbox)
@@ -253,4 +254,4 @@ class SingralWindow(Handy.ApplicationWindow):
         for artist in artists:
             row = ArtistRow(artist)
             self.artists_listbox.add(row)
-            TaskHelper().run(get_cover_from_artist,row.artist,self.session,callback=(row.display_cover,))
+            # TaskHelper().run(get_cover_from_artist,row.artist,self.session,callback=(row.display_cover,))

@@ -538,7 +538,16 @@
                               </object>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="HdyClamp" id="artist_viewpage">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="border_width">15</property>
+                                <property name="maximum_size">1000</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
                             </child>
                           </object>
                           <packing>
