@@ -120,7 +120,7 @@ class SingralWindow(Handy.ApplicationWindow):
         self.switchbar_bottom.connect("button-release-event",self.get_page)
         self.header_switch.connect("button-release-event",self.get_page)
 
-        self.log_button.connect("clicked",self.login_username)
+        self.log_button.connect("clicked",self.login)
         self.log_username.connect("changed",self.update_login_page)
         self.log_password.connect("changed",self.update_login_page)
         self.create_account_btn.connect("clicked",self.create_account)
@@ -157,9 +157,11 @@ class SingralWindow(Handy.ApplicationWindow):
         elif self.deck_app.get_visible_child_name() == "player_page":
             self.deck_app.set_visible_child_name("app_page")
 
-    def login_username(self,*_):
+    def login(self,*_):
         self.log_error_reveal.set_reveal_child(False)
         self.log_button.set_sensitive(False)
+        self.log_username.set_sensitive(False)
+        self.log_password.set_sensitive(False)
         self.log_button_stack.set_visible_child_name("try")
         TaskHelper().run(self.session.login,self.log_username.get_text(), self.log_password.get_text(),callback=(self.on_login,))
 
@@ -169,15 +171,17 @@ class SingralWindow(Handy.ApplicationWindow):
             self.main_stack.set_visible_child_name("app_page")
             self.log_username.set_text("")
             self.log_password.set_text("")
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
 
         def on_login_unsucess(error,show):
-            self.log_button.set_sensitive(True)
-            self.log_button_stack.set_visible_child_name("icon")
             self.log_error_label.set_text(error)
             self.forget_pwd_btn.set_visible(show)
             self.log_error_reveal.set_reveal_child(True)
+
+        #Reset interface
+        self.log_username.set_sensitive(True)
+        self.log_password.set_sensitive(True)
+        self.log_button.set_sensitive(True)
+        self.log_button_stack.set_visible_child_name("icon")
 
         if type(state) == bool:
             on_login_sucess()
@@ -189,6 +193,10 @@ class SingralWindow(Handy.ApplicationWindow):
 
     def update_login_page(self,*_):
         self.log_error_reveal.set_reveal_child(False)
+        if self.log_username.get_text() == "" or self.log_password.get_text() == "":
+            self.log_button.set_sensitive(False)
+        else:
+            self.log_button.set_sensitive(True)
 
     def logoff(self,*_):
         self.session.logoff()
