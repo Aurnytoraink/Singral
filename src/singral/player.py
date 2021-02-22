@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random
+from random import shuffle
 
-from gi.repository import Gtk, Handy, GdkPixbuf, Gdk, GLib
+from gi.repository import Gtk, Handy, GdkPixbuf
 
 from singral.gst import GstPlayer
 from singral.help_task import TaskHelper
@@ -42,8 +42,12 @@ class Player(Handy.ApplicationWindow):
         self.app.playerE_prev_button.connect("clicked",self.prev)
         self.app.player_next_button.connect("clicked",self.next)
         self.app.playerE_next_button.connect("clicked",self.next)
+        self.app.player_duration_scale.connect("button-press-event",self.suspend_count)
+        self.app.playerE_duration_scale.connect("button-press-event",self.suspend_count)
         self.app.player_duration_scale.connect("button-release-event",self.set_seek)
         self.app.playerE_duration_scale.connect("button-release-event",self.set_seek)
+        self.app.player_duration_scale.connect("value_changed",self.update_display_duration)
+        self.app.playerE_duration_scale.connect("value_changed",self.update_display_duration)
         self.app.like_button.connect("clicked",self.update_like)
         self.app.playerE_repeat_button.connect("clicked",self.update_repeat)
         self.app.playerE_shuffle_button.connect("clicked",self.update_shuffle)
@@ -55,6 +59,9 @@ class Player(Handy.ApplicationWindow):
         #Repeat(0: Disabled, 1:Playlist, 2:Current song)
         self.repeat_state = 0
         self.shuffle_state = False
+
+        #When the user wants to change the position, we don't want to update the duration
+        self._update_duration = True
 
         self.queue = []
         #The saved queue is used when you user want to disable shuffle and returns to the original queues
@@ -176,14 +183,15 @@ class Player(Handy.ApplicationWindow):
         self.gst.state = 0
 
     def update_duration(self,*_):
-        duration = self.gst._get_duration()
-        minutes = int(duration/60)
-        secondes = duration % 60
-        if secondes < 10:
-            secondes = "0" + str(secondes)
-        self.app.player_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.playerE_actual_duration.set_text("{0}:{1}".format(str(minutes),str(secondes)))
-        self.app.duration_scale.set_value(self.gst._get_duration())
+        if self._update_duration:
+            duration = self.gst._get_duration()
+            minutes = int(duration/60)
+            secondes = duration % 60
+            if secondes < 10:
+                secondes = "0" + str(secondes)
+            self.app.player_actual_duration.set_text(f"{str(minutes)}:{str(secondes)}")
+            self.app.playerE_actual_duration.set_text(f"{str(minutes)}:{str(secondes)}")
+            self.app.duration_scale.set_value(self.gst._get_duration())
 
     def update_queue(self,*_):
         if self.current_song >= (len(self.queue) - 1) and self.repeat_state == 0:
@@ -221,7 +229,7 @@ class Player(Handy.ApplicationWindow):
             self.shuffle_state = True
             current_song = self.queue[self.current_song]
             self.saved_queue = self.queue.copy()
-            random.shuffle(self.queue)
+            shuffle(self.queue)
             self.queue.remove(current_song)
             self.queue.insert(0,current_song)
             self.current_song = 0
@@ -240,3 +248,16 @@ class Player(Handy.ApplicationWindow):
         value = int(self.app.duration_scale.get_value())
         if self.gst.seek(value):
             self.app.duration_scale.set_value(self.gst._get_duration())
+        self._update_duration = True
+
+    def suspend_count(self,*_):
+        self._update_duration = False
+
+    def update_display_duration(self,*_):
+        duration = int(self.app.duration_scale.get_value())
+        minutes = int(duration/60)
+        secondes = duration % 60
+        if secondes < 10:
+            secondes = "0" + str(secondes)
+        self.app.player_actual_duration.set_text(f"{str(minutes)}:{str(secondes)}")
+        self.app.playerE_actual_duration.set_text(f"{str(minutes)}:{str(secondes)}")
