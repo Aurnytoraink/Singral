@@ -24,6 +24,7 @@ from singral.art_album import AlbumWidget
 from singral.art_track import TrackListBox, TrackRow
 from singral.art_artist import ArtistListBox, ArtistRow
 from singral.help_artwork import get_cover_from_album, get_cover_from_artist
+from singral.log_background import LogBackground
 
 @Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/window.ui')
 class SingralWindow(Handy.ApplicationWindow):
@@ -44,6 +45,7 @@ class SingralWindow(Handy.ApplicationWindow):
     log_button_stack = Gtk.Template.Child()
     create_account_btn = Gtk.Template.Child()
     forget_pwd_btn = Gtk.Template.Child()
+    log_overlay_background = Gtk.Template.Child()
 
     #Home Page
     welcome_label = Gtk.Template.Child()
@@ -136,6 +138,11 @@ class SingralWindow(Handy.ApplicationWindow):
         self.player = Player(self,self.session)
 
         # Init interface
+        self.log_background = LogBackground("/com/github/Aurnytoraink/Singral/img/log_background.jpg")
+        self.log_overlay_background.add_overlay(self.log_background)
+        self.log_overlay_background.set_overlay_pass_through(self.log_background,True)
+        self.log_overlay_background.reorder_overlay(self.log_background,0)
+        self.log_overlay_background.show_all()
         self.artists_listbox = ArtistListBox(self)
         self.artist_viewport.add(self.artists_listbox)
         self.songs_listbox = TrackListBox(self.player)

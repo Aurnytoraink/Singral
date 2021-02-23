@@ -11,5 +11,6 @@
     <file preprocess="xml-stripblanks">icons/step-in-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/media-playlist-norepeat-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/media-playlist-noshuffle-symbolic.svg</file>
+    <file>img/log_background.jpg</file>
   </gresource>
 </gresources>
