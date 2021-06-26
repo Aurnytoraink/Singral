@@ -1,25 +1,47 @@
-# WIP: Singral
+<h1 align="center">
+  <img src="data/icons/logo/com.github.Aurnytoraink.Singral.svg" alt="Singral" width="192" height="192"/><br>
+  <p style="font-size: small;">(I need a icon)</p>
+  Singral
+</h1>
 
-A **WIP** Qobuz client for Gnome
+<p align="center"><strong>Qobuz client for GNOME</strong></p>
+
+<br>
 
 
-## Screenshots
-<span>Photo by <a href="https://unsplash.com/@ekrull?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Eric Krull</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+<p align="center">
+  <img src="screenshots/album.png" height="480" alt="Album"/>
+  <img src="screenshots/songs.png" height="480" alt="Music"/>
+</p>
 
-### Login Page
-![](assets/screenshots/login.png)
+<h2 align="center">⚠️ THIS IS A STILL AT ALPHA STAGE ⚠️</h2>
 
-### Album Page
-![](assets/screenshots/album.png)
+<br>
 
-### Artist Page (Not working)
-![](assets/screenshots/artist.png)
+## 🎵 Why Singral?
+A twist of the word : "Saint-Graal", which
 
-### Song Page
-![](assets/screenshots/songs.png)
+In this case, the the goal is the HiRes music that Qobuz is offering
 
-### On larger screen
-![](assets/screenshots/larger-screen.png)
+## 🧪 Features
 
-### Extended player (design may vary in the future)
-![](assets/screenshots/extended-player.png)
+I should create those
+
+## 🏗️ Building from source
+
+### GNOME Builder
+GNOME Builder is the environment used for developing this application. 
+It can use Flatpak manifests to create a consistent building and running 
+environment cross-distro. Thus, it is highly recommended you use it.
+
+1. Download [GNOME Builder](https://flathub.org/apps/details/org.gnome.Builder).
+2. In Builder, click the "Clone Repository" button at the bottom, using `https://github.com/Aurnytoraink/Singral.git` as the URL.
+3. Click the build button at the top once the project is loaded.
+
+### Meson
+```
+git clone https://github.com/Aurnytoraink/Singral.git
+cd Singral
+meson builddir --prefix=/usr/local
+ninja -C builddir install
+```
