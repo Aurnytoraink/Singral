@@ -1,3 +1,6 @@
+<h2 align="center">⚠️ THIS IS A STILL AT ALPHA STAGE ⚠️</h2>
+<h2 align="center">There is few chance it works for now</h2>
+
 <h1 align="center">
   <img src="data/icons/logo/com.github.Aurnytoraink.Singral.svg" alt="Singral" width="192" height="192"/><br>
   <p style="font-size: small;">(I need a icon)</p>
@@ -14,11 +17,9 @@
   <img src="screenshots/songs.png" height="480" alt="Music"/>
 </p>
 
-<h2 align="center">⚠️ THIS IS A STILL AT ALPHA STAGE ⚠️</h2>
-
 <br>
 
-## 🎵 Why Singral?
+## 🎵 Why Singral? TODO
 A twist of the word : "Saint-Graal", which
 
 In this case, the the goal is the HiRes music that Qobuz is offering
