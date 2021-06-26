@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 -->
 <interface>
-  <requires lib="gtk+" version="3.24"/>
-  <requires lib="libhandy" version="1.0"/>
+  <requires lib="gtk+" version="4.0"/>
   <object class="GtkAdjustment" id="duration_scale">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
-  <template class="SingralWindow" parent="HdyApplicationWindow">
+  <template class="SingralWindow" parent="AdwApplicationWindow">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Tidal</property>
     <child>
@@ -17,7 +15,7 @@
         <property name="can_focus">False</property>
         <property name="transition_type">crossfade</property>
         <child>
-          <object class="HdyWindowHandle">
+          <object class="AdwWindowHandle">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -327,7 +325,7 @@
           </packing>
         </child>
         <child>
-          <object class="HdyDeck" id="deck_app">
+          <object class="AdwDeck" id="deck_app">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="orientation">vertical</property>
@@ -341,7 +339,7 @@
                 <property name="can_focus">False</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="HdyHeaderBar">
+                  <object class="AdwHeaderBar">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="title" translatable="yes">Tidal</property>
@@ -354,7 +352,7 @@
                         <property name="can_focus">False</property>
                         <property name="transition_type">crossfade</property>
                         <child>
-                          <object class="HdyViewSwitcherTitle" id="header_switch">
+                          <object class="AdwViewSwitcherTitle" id="header_switch">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="policy">wide</property>
@@ -541,7 +539,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="HdyLeaflet" id="artist_page">
+                          <object class="AdwLeaflet" id="artist_page">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
@@ -562,7 +560,7 @@
                               </object>
                             </child>
                             <child>
-                              <object class="HdyClamp" id="artist_viewpage">
+                              <object class="AdwClamp" id="artist_viewpage">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="hexpand">True</property>
@@ -590,7 +588,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <child>
-                                  <object class="HdyClamp" id="songs_viewport">
+                                  <object class="AdwClamp" id="songs_viewport">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="border_width">15</property>
@@ -643,7 +641,7 @@
                         <property name="can_focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="HdySearchBar" id="popup_searchbar">
+                          <object class="AdwSearchBar" id="popup_searchbar">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="search_mode_enabled">True</property>
@@ -1350,7 +1348,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="HdyViewSwitcherBar" id="switchbar_bottom">
+                  <object class="AdwViewSwitcherBar" id="switchbar_bottom">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="stack">app_stack</property>

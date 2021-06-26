@@ -1,3 +1,5 @@
+subdir('icons/logo')
+
 desktop_file = i18n.merge_file(
   input: 'com.github.Aurnytoraink.Singral.desktop.in',
   output: 'com.github.Aurnytoraink.Singral.desktop',
@@ -5,6 +7,16 @@ desktop_file = i18n.merge_file(
   po_dir: '../po',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'applications')
+)
+
+pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+gnome = import('gnome')
+
+gnome.compile_resources('singral',
+  'singral.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
 )
 
 desktop_utils = find_program('desktop-file-validate', required: false)
@@ -25,7 +37,7 @@ appstream_file = i18n.merge_file(
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validate appstream file', appstream_util,
-    args: ['validate', appstream_file]
+    args: ['validate-relax', appstream_file]
   )
 endif
 
@@ -39,14 +51,3 @@ if compile_schemas.found()
     args: ['--strict', '--dry-run', meson.current_source_dir()]
   )
 endif
-
-pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'singral')
-gnome = import('gnome')
-
-gnome.compile_resources('singral',
-  'com.github.Aurnytoraink.singral.gresource.xml',
-  gresource_bundle: true,
-  install: true,
-  install_dir: pkgdatadir,
-)

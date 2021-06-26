@@ -5,6 +5,11 @@ project('singral',
                    ],
 )
 
+pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
+moduledir = join_paths(pkgdatadir, 'singral')
+
+config_data = configuration_data()
+
 i18n = import('i18n')
 
 
