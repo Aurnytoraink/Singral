@@ -17,22 +17,25 @@
 
 import sys
 import gi
-import os
-import os.path
+
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib, Gdk
 
-from .window import SingralWindow
+#from singral.windows.main_window import MainWindow
+from singral.windows.login_window import LoginWindow
+from singral.windows.preferences_window import PreferencesWindow
 
 
 class Application(Gtk.Application):
-    def __init__(self):
+    def __init__(self, version):
         super().__init__(application_id='com.github.Aurnytoraink.Singral',
                          flags=Gio.ApplicationFlags.FLAGS_NONE)
-        # This is for test
-        # In the futur, the app will check on startup if a user as already login or not
-        self.logged = False
+
+        self.version = version
+
+        GLib.set_application_name("Singral")
+        GLib.set_prgname("com.github.Aurnytoraink.Singral")
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
@@ -66,14 +69,8 @@ class Application(Gtk.Application):
     def do_activate(self):
         self.win = self.props.active_window
         if not self.win:
-            self.win = SingralWindow(application=self)
+            self.win = LoginWindow(application=self)
         self.win.present()
-
-        # Check if or not the user has already logged in
-        if self.logged:
-            self.win.main_stack.set_visible_child_name("app_page")
-        else:
-            self.win.main_stack.set_visible_child_name("login_page")
 
     def setup_actions(self):
         simple_actions = [
@@ -90,6 +87,18 @@ class Application(Gtk.Application):
             if accel:
                 self.set_accels_for_action(f'app.{action}', accel)
 
+    def show_preferences_window(self, action, param):
+        preferences = PreferencesWindow()
+        preferences.set_transient_for(self.props.active_window)
+        preferences.show()
+
+    def show_shortcuts_window(self, action, param):
+        builder = Gtk.Builder()
+        builder.add_from_resource(f'{Constants.PATHID}/ui/shortcuts_window.ui')
+        window = builder.get_object('shortcuts')
+        window.set_transient_for(self.props.active_window)
+        window.present()
+
     def show_about_dialog(self, action, param):
         about = Gtk.AboutDialog()
         about.set_transient_for(self.props.active_window)
@@ -105,21 +114,14 @@ class Application(Gtk.Application):
         about.set_comments(_("Qobuz client for GNOME"))
         about.set_wrap_license(True)
         about.set_license_type(Gtk.License.GPL_3_0)
-        # Authors of the background picture in the login window
-        about.set_artists(
-            [
-                "Eric Krull"
-            ]
-        )
-        # Translators: Replace "translator-credits" with your names, one name per line
-        about.set_translator_credits(_("translator-credits"))
+        about.set_copyright(_("Copyright 2021 Mathieu Heurtevin"))
         about.set_website_label(_("GitHub"))
         about.set_website("https://github.com/Aurnytoraink/Singral/")
         about.present()
 
-    def _quit(self,*_):
+    def on_quit(self,*_):
         self.quit()
 
 def main(version):
-    app = Application()
+    app = Application(version)
     return app.run(sys.argv)

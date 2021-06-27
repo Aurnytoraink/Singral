@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/com/github/Aurnytoraink/Singral">
-    <file>ui/window.ui</file>
+    <file>ui/main_window.ui</file>
+    <file>ui/login_window.ui</file>
+    <file>ui/preferences_window.ui</file>
     <file>css/style.css</file>
     <file preprocess="xml-stripblanks">icons/music-note-single-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/playlist-symbolic.svg</file>
@@ -9,8 +11,6 @@
     <file preprocess="xml-stripblanks">icons/heart-outline-thin-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/add-toplaylist-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/step-in-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/media-playlist-norepeat-symbolic.svg</file>
-    <file preprocess="xml-stripblanks">icons/media-playlist-noshuffle-symbolic.svg</file>
     <file>img/log_background.jpg</file>
   </gresource>
 </gresources>

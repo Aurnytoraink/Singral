@@ -1,7 +1,7 @@
 data/com.github.Aurnytoraink.Singral.desktop.in
 data/com.github.Aurnytoraink.Singral.appdata.xml.in
 data/com.github.Aurnytoraink.Singral.gschema.xml
-src/window.ui
+src/main_window.ui
 src/main.py
-src/window.py
+src/windows/main_window.py
 

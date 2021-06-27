@@ -8,3 +8,12 @@
 /* TODO: Remove the over effect on the top button of the enlarge player */
 
 .activatable > * {margin-top: 15px; margin-bottom: 15px; margin-left: 15px; margin-right: 15px;}
+
+.flat {
+    border-radius: 0;
+    border-top: none;
+    border-bottom: none;
+    margin-top: 0;
+    margin-bottom: 0;
+    background: none;
+  }

@@ -1,4 +1,4 @@
-# window.py
+# main_window.py
 #
 # Copyright 2020 Aurnytoraink
 #
@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Handy, GObject, GLib, Gdk
+from gi.repository import Gtk, Adw, GObject, GLib, Gdk
 
 from singral.player import Player
 from singral.api.session import Session
@@ -26,9 +26,9 @@ from singral.art_artist import ArtistListBox, ArtistRow
 from singral.help_artwork import get_cover_from_album, get_cover_from_artist
 from singral.log_background import LogBackground
 
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/window.ui')
-class SingralWindow(Handy.ApplicationWindow):
-    __gtype_name__ = 'SingralWindow'
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/main_window.ui')
+class MainWindow(Handy.ApplicationWindow):
+    __gtype_name__ = 'MainWindow'
 
     main_stack = Gtk.Template.Child()
     app_stack = Gtk.Template.Child()

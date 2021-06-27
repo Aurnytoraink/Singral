@@ -144,7 +144,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/aurnytoraink/Projets/Applications/Singral"
+                    "url" : "."
                 }
             ]
         }
