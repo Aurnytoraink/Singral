@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <requires lib="gtk" version="4.0" />
+    <template class="AlbumWidget" parent="GtkFlowBoxChild">
+        <child>
+            <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <child>
+                    <object class="GtkImage" id="album_cover">
+                        <property name="pixel-size">180</property>
+                        <property name="icon_name">folder-music-symbolic</property>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkLabel" id="album_name">
+                        <property name="justify">center</property>
+                        <style>
+                            <class name="bold-label" />
+                        </style>
+                    </object>
+                </child>
+                <child>
+                    <object class="GtkLabel" id="album_artist">
+                        <property name="justify">center</property>
+                    </object>
+                </child>
+            </object>
+        </child>
+    </template>
+</interface>

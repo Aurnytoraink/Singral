@@ -1,4 +1,4 @@
-# main_window.py
+# home_window.py
 #
 # Copyright 2020 Aurnytoraink
 #
@@ -15,18 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from gi.repository import Gtk, Adw, GObject, GLib, Gdk
 
-from singral.windows.home_window import HomePage
+from gi.repository import Gtk, Adw, Gdk
 
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/main_window.ui')
-class MainWindow(Adw.ApplicationWindow):
-    __gtype_name__ = 'MainWindow'
-
-    main_stack = Gtk.Template.Child()
-    app_stack = Gtk.Template.Child()
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/home_page.ui')
+class HomePage(Gtk.ScrolledWindow):
+    __gtype_name__ = 'HomePage'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        homepage = HomePage()
-        self.app_stack.add_child(homepage)

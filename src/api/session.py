@@ -132,6 +132,8 @@ class Session():
         r = self.request.get(self.base_url+"artist/get",params=params)
         return Artist(r.json())
         
+########## USERFAV ##########
+
     def get_userfav_albums(self,limit=1000):
         params = {
             "limit" : limit,

@@ -40,14 +40,15 @@ class LoginWindow(Adw.Window):
         ]:
             entry.set_text('')
 
-    def wrong_creditentials(self, *_):
+    def wrong_creditentials(self, *arg):
         self.uri = "https://www.qobuz.com/reset-password"
         self.bottom_label.set_label(_("Forget your password ?"))
         self.bottom_button.set_label(_("Reset Password"))
-
+        self.bottom_button.add_css_class("destructive-action")
+        self.bottom_button.remove_css_class("suggested-action")
 
     @Gtk.Template.Callback()
-    def on_login_clicked(self, *_):
+    def on_login_clicked(self, *arg):
         return
 
     @Gtk.Template.Callback()
@@ -59,8 +60,9 @@ class LoginWindow(Adw.Window):
         self.uri = "https://www.qobuz.com/"
         self.bottom_label.set_label(_("Don't have an account yet ?"))
         self.bottom_button.set_label(_("Subscribe now"))
+        self.bottom_button.add_css_class("suggested-action")
+        self.bottom_button.remove_css_class("destructive-action")
 
     @Gtk.Template.Callback()
     def on_subscribe_clicked(self, *_):
         Gtk.show_uri(self,self.uri,Gdk.CURRENT_TIME)
-    

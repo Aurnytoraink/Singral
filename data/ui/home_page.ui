@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="4.0"/>
+  <template class="HomePage" parent="GtkScrolledWindow">
+    <property name="child">
+      <object class="GtkViewport">
+        <property name="child">
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="AdwCaroussel" id="carrousel"/>
+                </child>
+                <child>
+                  <object class="AdwCarouselIndicatorDots" id="carrousel_indicator"/>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+      </object>
+    </property>
+  </template>
+</interface>
+

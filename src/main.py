@@ -22,7 +22,7 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib, Gdk
 
-#from singral.windows.main_window import MainWindow
+from singral.windows.main_window import MainWindow
 from singral.windows.login_window import LoginWindow
 from singral.windows.preferences_window import PreferencesWindow
 
@@ -69,7 +69,7 @@ class Application(Gtk.Application):
     def do_activate(self):
         self.win = self.props.active_window
         if not self.win:
-            self.win = LoginWindow(application=self)
+            self.win = MainWindow(application=self)
         self.win.present()
 
     def setup_actions(self):
@@ -94,7 +94,7 @@ class Application(Gtk.Application):
 
     def show_shortcuts_window(self, action, param):
         builder = Gtk.Builder()
-        builder.add_from_resource(f'{Constants.PATHID}/ui/shortcuts_window.ui')
+        builder.add_from_resource('/com/github/Aurnytoraink/Singral/ui/shortcuts_window.ui')
         window = builder.get_object('shortcuts')
         window.set_transient_for(self.props.active_window)
         window.present()

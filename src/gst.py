@@ -15,9 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Gst, GObject
 import gi
 gi.require_version('Gst', '1.0')
-from gi.repository import Gst, GObject
+
 
 class GstPlayer(GObject.GObject):
     __gsignals__ = {
@@ -44,15 +45,14 @@ class GstPlayer(GObject.GObject):
         self._state = 0
         self._tick = 0
 
-
-    def on_bus_error(self,*_):
+    def on_bus_error(self, *_):
         return
 
     def on_bus_eos(self, bus, message):
         self.emit("stream-finished")
         return
-        #Envoie un signal
-        #Permet de passer à la musique suivante si existe
+        # Envoie un signal
+        # Permet de passer à la musique suivante si existe
 
     def change_track(self, url):
         self.player.set_property('uri', url)
@@ -82,10 +82,10 @@ class GstPlayer(GObject.GObject):
         """Send a signal to preload the next song when the current one is about to finish """
         self.emit("on_about_to_finish")
 
-    def _get_duration(self,*_):
+    def _get_duration(self, *_):
         return int(self.player.query_position(Gst.Format.TIME)[1] / 1000000000)
 
-    #TODO Find a way to stop the clock when the song finished
+    # TODO Find a way to stop the clock when the song finished
     def new_clock(self, bus, message):
         clock = message.parse_new_clock()
         id = clock.new_periodic_id(0, 1 * Gst.SECOND)
@@ -100,9 +100,7 @@ class GstPlayer(GObject.GObject):
             return False
 
         self.player.seek_simple(Gst.Format.TIME,
-                                      Gst.SeekFlags.FLUSH |
-                                      Gst.SeekFlags.KEY_UNIT,
-                                      position * 1000000000)
+                                Gst.SeekFlags.FLUSH |
+                                Gst.SeekFlags.KEY_UNIT,
+                                position * 1000000000)
         return True
-
-        
