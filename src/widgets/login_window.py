@@ -1,6 +1,6 @@
 # login_window.py
 #
-# Copyright 2020 Aurnytoraink
+# Copyright 2021 Aurnytoraink
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

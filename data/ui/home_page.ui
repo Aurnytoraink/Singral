@@ -12,7 +12,7 @@
               <object class="GtkBox">
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="AdwCaroussel" id="carrousel"/>
+                  <object class="AdwCarousel" id="carousel"/>
                 </child>
                 <child>
                   <object class="AdwCarouselIndicatorDots" id="carrousel_indicator"/>

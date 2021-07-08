@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <template class="NoInternetPage" parent="GtkBox">
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="AdwHeaderBar">
+        <property name="title-widget">
+          <object class="AdwWindowTitle">
+            <property name="title" translatable="yes"/>
+          </object>
+        </property>
+        <style>
+          <class name="flat"/>
+        </style>
+      </object>
+    </child>
+    <child>
+      <object class="AdwStatusPage" id="login_page">
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="icon-name">network-offline-symbolic</property>
+        <property name="title" translatable="yes">Oops !</property>
+        <property name="description" translatable="yes">It seems we can't connect to Internet</property>
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+            <property name="halign">center</property>
+            <property name="spacing">5</property>
+            <child>
+              <object class="GtkButton" id="reload_button">
+                <property name="label" translatable="yes">Retry</property>
+                <signal name="clicked" handler="on_reload_clicked" swapped="no"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="go_offline_button">
+                <property name="label" translatable="yes">Go offline</property>
+                <signal name="clicked" handler="on_go_offline_clicked" swapped="no"/>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+

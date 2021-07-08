@@ -22,7 +22,7 @@ class Requests():
         self.key = key
         self.request = requests.Session()
         self.request.headers.update({
-			'User-Agent':'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:80.0) Gecko/20100101 Firefox/80.0',
+			'User-Agent':'Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:89.0) Gecko/20100101 Firefox/89.0',
 			"X-App-Id": id})
         self.debug = False
 

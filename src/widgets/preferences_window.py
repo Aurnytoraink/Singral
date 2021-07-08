@@ -1,6 +1,6 @@
-# home_window.py
+# preferences_window.py
 #
-# Copyright 2020 Aurnytoraink
+# Copyright 2021 Aurnytoraink
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,12 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from gi.repository import Adw, Gtk
 
-from gi.repository import Gtk, Adw, Gdk
-
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/home_page.ui')
-class HomePage(Gtk.ScrolledWindow):
-    __gtype_name__ = 'HomePage'
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/preferences_window.ui')
+class PreferencesWindow(Adw.PreferencesWindow):
+    __gtype_name__ = "PreferencesWindow"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    #TODO Make settings

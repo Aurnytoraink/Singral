@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="4.0" />
+  <requires lib="gtk+" version="4.0"/>
   <template class="MainWindow" parent="AdwApplicationWindow">
     <child>
       <object class="GtkStack" id="main_stack">
@@ -16,12 +16,13 @@
                     <child>
                       <object class="GtkButton" id="search_button">
                         <property name="icon-name">system-search-symbolic</property>
-                        <signal name="clicked" handler="on_search_clicked" swapped="no" />
+                        <signal name="clicked" handler="on_search_clicked" swapped="no"/>
                       </object>
                     </child>
                     <child type="title">
                       <object class="AdwViewSwitcherTitle" id="title_switcher">
                         <property name="stack">app_stack</property>
+                        <property name="policy">ADW_VIEW_SWITCHER_POLICY_WIDE</property>
                       </object>
                     </child>
                     <child type="end">
@@ -33,15 +34,36 @@
                     </child>
                     <child type="end">
                       <object class="GtkButton" id="genre_button">
-                        <property name="icon-name">system-search-symbolic</property>
+                        <property name="icon-name">media-optical-cd-audio-symbolic</property>
                         <property name="sensitive">False</property>
-                        <signal name="clicked" handler="on_genre_clicked" swapped="no" />
+                        <signal name="clicked" handler="on_genre_clicked" swapped="no"/>
                       </object>
                     </child>
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStack" id="app_stack"></object>
+                  <object class="GtkStack" id="app_stack">
+                    <property name="vexpand">True</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">home</property>
+                        <property name="title" translatable="yes">Home</property>
+                        <property name="child">
+                          <object class="AdwBin" id="home_bin"/>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">favs</property>
+                        <property name="title" translatable="yes">Favorites</property>
+                        <property name="child">
+                          <object class="AdwBin" id="favs_bin"/>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
                 </child>
                 <child>
                   <object class="AdwViewSwitcherBar">
@@ -55,26 +77,52 @@
             </property>
           </object>
         </child>
+      </object>
+    </child>
+  </template>
+  <object class="GtkBox" id="account_info">
+    <property name="margin-start">12</property>
+    <property name="margin-end">12</property>
+    <property name="margin-top">6</property>
+    <property name="margin-bottom">6</property>
+    <property name="spacing">12</property>
+    <child>
+      <object class="AdwAvatar" id="avatar_menu">
+        <property name="size">48</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <property name="homogeneous">True</property>
         <child>
-          <object class="GtkStackPage">
-            <property name="name">search_page</property>
-            <property name="child">
-              <object class="GtkLabel">
-                <property name="label">It was dark</property>
-              </object>
-            </property>
+          <object class="GtkLabel" id="username_menu">
+            <property name="xalign">0</property>
+            <property name="label">Username</property>
+            <style>
+              <class name="bold-label"/>
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="subscrition_menu">
+            <property name="xalign">0</property>
+            <property name="label">Subscription</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
         </child>
       </object>
     </child>
-  </template>
+  </object>
   <menu id="primary_menu">
     <section>
       <item>
         <attribute name="custom">account-info</attribute>
       </item>
       <item>
-        <attribute name="action">app.action</attribute>
+        <attribute name="action">app.logout</attribute>
         <attribute name="label" translatable="yes">Log Out</attribute>
       </item>
     </section>
@@ -94,3 +142,4 @@
     </section>
   </menu>
 </interface>
+

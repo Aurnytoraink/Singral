@@ -4,6 +4,7 @@
     <file>ui/main_window.ui</file>
     <file>ui/login_window.ui</file>
     <file>ui/home_page.ui</file>
+    <file>ui/no_internet_page.ui</file>
     <file>ui/preferences_window.ui</file>
     <file>css/style.css</file>
     <file preprocess="xml-stripblanks">icons/music-note-single-symbolic.svg</file>

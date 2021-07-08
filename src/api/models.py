@@ -70,3 +70,13 @@ class Playlist():
             self.cover = item["image_rectangle"][0] #Qobuz playlists
         else:
             self.cover = item["images300"] #User playlists
+
+class UserSession():
+    def __init__(self, item):
+        self.id = item["user"]["id"]
+        self.token = item["user_auth_token"]
+        self.username = item["user"]["display_name"]
+        self.zone = item["user"]["zone"]
+        self.store = item["user"]["store"]
+        self.subscription = item["user"]["subscription"]["offer"]
+        self.is_canceled = item["user"]["subscription"]["is_canceled"]

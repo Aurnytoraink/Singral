@@ -21,4 +21,4 @@ singral_sources = [
 
 install_data(singral_sources, install_dir: moduledir)
 install_subdir('api', install_dir: moduledir)
-install_subdir('windows', install_dir: moduledir)
+install_subdir('widgets', install_dir: moduledir)

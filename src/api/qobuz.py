@@ -1,6 +1,6 @@
-# session.py
+# qobuz.py
 #
-# Copyright 2020 Aurnytoraink
+# Copyright 2021 Aurnytoraink
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,26 +17,24 @@
 
 import time
 import hashlib
-import singral.api.spoofbuz as spoofbuz
-from singral.api.request import Requests
-from singral.api.models import Album, Artist, Track, Playlist
+# import singral.api.spoofbuz as spoofbuz
+# from singral.api.request import Requests
+# from singral.api.models import Album, Artist, Track, Playlist
 
 # FOR DEBUGING ONLY
 # from request import Requests
 # import spoofbuz
-# from models import *
-# import os
-# from dotenv import load_dotenv
+# from models import Album, Artist, Track, Playlist, UserSession
+# import json
 
-class Session():
+class Qobuz():
     def __init__(self):
-        self.id = 0
         self.base_url = "https://www.qobuz.com/api.json/0.2/"
+        self.spoofer = spoofbuz.Spoofer()
+        self.id = self.spoofer.getAppId()
+        self.request = Requests(self.id,"") #Key is set later
 
     def login(self,email=None,pwd=None,token=None):
-        spoofer = spoofbuz.Spoofer()
-        self.id = spoofer.getAppId()
-        self.request = Requests(self.id,"") #Key is set later
         params={
                 "email": email,
                 "password": pwd,
@@ -49,27 +47,25 @@ class Session():
         elif r.status_code == 400:
             return False, False
         result = r.json()
+
+        self.session = UserSession(result)
+
+        self.username = result["user"]["display_name"]
+        self.user_id = result["user"]["id"]
         self.uat = result["user_auth_token"]
         self.offer = result["user"]["subscription"]["offer"]
-        if self.offer ==  "studio": # Set the maximum quality by default depending on the user's offer
+        # Set the maximum quality by default depending on the user's offer
+        if self.offer ==  "studio":
             self.quality = 27
         else:
             self.quality = 6
 
-        if result["user"]["firstname"] is None:
-            self.username = result["user"]["display_name"]
-        elif result["user"]["lastname"] is None:
-            self.username = result["user"]["firstname"]
-        else:
-            self.username = result["user"]["firstname"] + " " + result["user"]["lastname"]
-
-        self.user_id = result["user"]["id"]
 
         self.request.update_session("X-User-Auth-Token",self.uat)
         self.request.update_session("X-Store",result["user"]["store"])
         self.request.update_session("X-Zone",result["user"]["zone"])
 
-        for secret in spoofer.getSecrets().values():
+        for secret in self.spoofer.getSecrets().values():
             if self.test_secret(secret):
                 self.request.key = secret
                 break
@@ -92,6 +88,8 @@ class Session():
             "request_sig": r_sig_hashed}
         r = self.request.get(self.base_url+'userLibrary/getAlbumsList?',params=params)
         return r.ok
+
+########## ACTIONS ##########
 
     def search(self,query,limit=10):
         params={
@@ -131,51 +129,49 @@ class Session():
         }
         r = self.request.get(self.base_url+"artist/get",params=params)
         return Artist(r.json())
-        
+
 ########## USERFAV ##########
 
-    def get_userfav_albums(self,limit=1000):
+    def get_userfav_albums(self,limit=50,offset=0):
         params = {
             "limit" : limit,
+            "offset" : offset,
             "type" : "albums",
             "user_id": self.user_id
         }
         r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Album(x),r.json()["albums"]["items"]))
 
-    def get_userfav_artists(self,limit=1000):
+    def get_userfav_artists(self,limit=50,offset=0):
         params = {
             "limit" : limit,
+            "offset" : offset,
             "type" : "artists",
             "user_id": self.user_id
         }
         r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Artist(x),r.json()["artists"]["items"]))
 
-    def get_userfav_tracks(self,limit=1000):
+    def get_userfav_tracks(self,limit=50,offset=0):
         params = {
             "limit" : limit,
+            "offset" : offset,
             "type" : "tracks",
             "user_id": self.user_id
         }
         r = self.request.get(self.base_url+"favorite/getUserFavorites",params=params)
         return list(map(lambda x: Track(x),r.json()["tracks"]["items"]))
 
-    def get_userfav_playlists(self,limit=1000):
+    def get_userfav_playlists(self,limit=50,offset=0):
         params = {
             "limit" : limit,
+            "offset" : offset,
             "user_id": self.user_id
         }
         r = self.request.get(self.base_url+"playlist/getUserPlaylists",params=params)
         return list(map(lambda x: Playlist(x),r.json()["playlists"]["items"]))
 
     def get_streamable_url(self,track):
-        """Quality:
-            MP3: 5
-            CD 16 bits/44.1kHz: 6
-            HiRes 24 bits/96kHz: 7
-            HiRes 24 bits/192kHz: 27
-        """
         unix = time.time()
         r_sig = f"trackgetFileUrlformat_id{self.quality}intentstreamtrack_id{track.id}{unix}{self.request.key}"
         r_sig_hashed = hashlib.md5(r_sig.encode('utf-8')).hexdigest()
@@ -193,11 +189,21 @@ class Session():
 
 
 
-# # FOR DEBUGING ONLY
-# load_dotenv()
-# session = Session()
-# session.login(token=os.getenv('token'))
-# session.login(os.getenv('email'),os.getenv('pwd'))
+# FOR DEBUGING ONLY
+# from pathlib import Path
+# PATH = Path("/home/aurnytoraink/Projets/Applications/Singral/src/api/")
+
+# session = Qobuz()
+
+# mail = json.loads(open(PATH/"config.json",'rb').read())["email"]
+# pwd = json.loads(open(PATH/"config.json",'rb').read())["pwd"]
+# session.login(mail,pwd)
+
+# token = json.loads(open(PATH/"config.json",'rb').read())["uat"]
+# session.login(token=token)
+
+# print("Logged!")
+# print(f"Welcome {session.username}")
 
 
 # query = str(input("Search: "))
@@ -211,7 +217,7 @@ class Session():
 # """ Get a track URL"""
 # track = session.get_track(62776106)
 # track = session.get_track(102280007)
-# result = track.get_url(27)
+# result = session.get_streamable_url(track)
 # print(f"⏯Playing: {track.title} from {track.artist.name}")
 # print(result)
 
@@ -220,7 +226,7 @@ class Session():
 # result = session.search(query,1)
 # track = session.get_track(result[1][0]["id"])
 # print(f"⏯Playing: {track.title} from {track.artist.name}")
-# print(track.get_url(27))
+# print(session.get_streamable_url(track))
 
 # session.logoff()
 # # Supposed to break at this point
@@ -228,9 +234,13 @@ class Session():
 # result = session.search(query,1)
 # track = session.get_track(result[1][0]["id"])
 # print(f"⏯Playing: {track.title} from {track.artist.name}")
-# print(track.get_url(27))
-
-# track = session.get_userfav_tracks()[0]
 # print(session.get_streamable_url(track))
-# data = session.get_cover_data(track.cover)
-# open('test.jpg','xb').write(data)
+
+# from random import choice
+
+# start = time.time()
+# tracks = session.get_userfav_tracks(50,50)
+# end = time.time()
+# track = choice(tracks)
+# print(end-start)
+# print(session.get_streamable_url(track))

@@ -1,6 +1,6 @@
 # main.py
 #
-# Copyright 2020 Aurnytoraink
+# Copyright 2021 Aurnytoraink
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,9 +22,9 @@ gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
 from gi.repository import Gtk, Gio, Adw, GLib, Gdk
 
-from singral.windows.main_window import MainWindow
-from singral.windows.login_window import LoginWindow
-from singral.windows.preferences_window import PreferencesWindow
+from singral.widgets.main_window import MainWindow
+from singral.widgets.login_window import LoginWindow
+from singral.widgets.preferences_window import PreferencesWindow
 
 
 class Application(Gtk.Application):
@@ -78,6 +78,7 @@ class Application(Gtk.Application):
             ('show-shortcuts', self.show_shortcuts_window, ('<Ctrl>question',)),
             ('show-about', self.show_about_dialog, None),
             ('quit', self.on_quit, ('<Ctrl>q',)),
+            ('logout', self.logout, None),
         ]
 
         for action, callback, accel in simple_actions:
@@ -121,6 +122,9 @@ class Application(Gtk.Application):
 
     def on_quit(self,*_):
         self.quit()
+
+    def logout(self,*_):
+        return
 
 def main(version):
     app = Application(version)
