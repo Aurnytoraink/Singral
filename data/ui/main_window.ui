@@ -3,9 +3,9 @@
   <requires lib="gtk+" version="4.0"/>
   <template class="MainWindow" parent="AdwApplicationWindow">
     <child>
-      <object class="GtkStack" id="main_stack">
+      <object class="AdwViewStack" id="main_stack">
         <child>
-          <object class="GtkStackPage">
+          <object class="AdwViewStackPage">
             <property name="name">main_page</property>
             <property name="child">
               <object class="GtkBox">
@@ -33,8 +33,15 @@
                       </object>
                     </child>
                     <child type="end">
-                      <object class="GtkButton" id="genre_button">
-                        <property name="icon-name">media-optical-cd-audio-symbolic</property>
+                      <object class="GtkButton" id="notification_button">
+                        <property name="icon-name">preferences-system-notifications-symbolic</property>
+                        <property name="sensitive">False</property>
+                        <signal name="clicked" handler="on_notification_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child type="end">
+                      <object class="GtkButton" id="radio_button">
+                        <property name="icon-name">sound-wave-symbolic</property>
                         <property name="sensitive">False</property>
                         <signal name="clicked" handler="on_genre_clicked" swapped="no"/>
                       </object>
@@ -42,22 +49,34 @@
                   </object>
                 </child>
                 <child>
-                  <object class="GtkStack" id="app_stack">
+                  <object class="AdwViewStack" id="app_stack">
                     <property name="vexpand">True</property>
                     <property name="hexpand">True</property>
                     <child>
-                      <object class="GtkStackPage">
-                        <property name="name">home</property>
-                        <property name="title" translatable="yes">Home</property>
+                      <object class="AdwViewStackPage">
+                        <property name="name">music</property>
+                        <property name="title" translatable="yes">Music</property>
+                        <property name="icon-name">emblem-music-symbolic</property>
                         <property name="child">
-                          <object class="AdwBin" id="home_bin"/>
+                          <object class="AdwBin" id="music_bin"/>
                         </property>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkStackPage">
+                      <object class="AdwViewStackPage">
+                        <property name="name">podcasts</property>
+                        <property name="title" translatable="yes">Podcasts</property>
+                        <property name="icon-name">podcast-symbolic</property>
+                        <property name="child">
+                          <object class="AdwBin" id="podcasts_bin"/>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwViewStackPage">
                         <property name="name">favs</property>
                         <property name="title" translatable="yes">Favorites</property>
+                        <property name="icon-name">emblem-favorite-symbolic</property>
                         <property name="child">
                           <object class="AdwBin" id="favs_bin"/>
                         </property>

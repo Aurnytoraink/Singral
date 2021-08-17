@@ -6,6 +6,7 @@
     <file>ui/home_page.ui</file>
     <file>ui/no_internet_page.ui</file>
     <file>ui/preferences_window.ui</file>
+    <file>ui/shortcuts_window.ui</file>
     <file>css/style.css</file>
     <file preprocess="xml-stripblanks">icons/music-note-single-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/playlist-symbolic.svg</file>
@@ -13,5 +14,7 @@
     <file preprocess="xml-stripblanks">icons/heart-outline-thin-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/add-toplaylist-symbolic.svg</file>
     <file preprocess="xml-stripblanks">icons/step-in-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/podcast-symbolic.svg</file>
+    <file preprocess="xml-stripblanks">icons/sound-wave-symbolic.svg</file>
   </gresource>
 </gresources>

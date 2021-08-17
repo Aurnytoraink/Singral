@@ -23,7 +23,9 @@ class MainWindow(Adw.ApplicationWindow):
 
     main_stack = Gtk.Template.Child()
     app_stack = Gtk.Template.Child()
-    home_bin = Gtk.Template.Child()
+
+    music_bin = Gtk.Template.Child()
+    podcasts_bin = Gtk.Template.Child()
     favs_bin = Gtk.Template.Child()
 
     menu_button = Gtk.Template.Child()

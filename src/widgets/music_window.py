@@ -18,9 +18,9 @@
 
 from gi.repository import Gtk, Adw, Gdk
 
-@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/home_page.ui')
-class HomePage(Gtk.ScrolledWindow):
-    __gtype_name__ = 'HomePage'
+@Gtk.Template(resource_path='/com/github/Aurnytoraink/Singral/ui/music_page.ui')
+class MusicPage(Gtk.ScrolledWindow):
+    __gtype_name__ = 'MusicPage'
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

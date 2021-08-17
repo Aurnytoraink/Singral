@@ -51,21 +51,6 @@ class Application(Gtk.Application):
 
         Adw.init()
 
-    def setup_actions(self):
-        simple_actions = [
-            ('show-preferences', self.show_preferences_window, ('<Ctrl>comma',)),
-            ('show-shortcuts', self.show_shortcuts_window, ('<Ctrl>question',)),
-            ('show-about', self.show_about_dialog, None),
-            ('quit', self.on_quit, ('<Ctrl>q',)),
-        ]
-
-        for action, callback, accel in simple_actions:
-            simple_action = Gio.SimpleAction.new(action, None)
-            simple_action.connect('activate', callback)
-            self.add_action(simple_action)
-            if accel:
-                self.set_accels_for_action(f'app.{action}', accel)
-
     def do_activate(self):
         self.win = self.props.active_window
         if not self.win:
@@ -112,7 +97,7 @@ class Application(Gtk.Application):
                 "Mathieu Heurtevin"
             ]
         )
-        about.set_comments(_("Qobuz client for GNOME"))
+        about.set_comments(_("Deezer client for GNOME"))
         about.set_wrap_license(True)
         about.set_license_type(Gtk.License.GPL_3_0)
         about.set_copyright(_("Copyright 2021 Mathieu Heurtevin"))
